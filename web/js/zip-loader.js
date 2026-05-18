@@ -1,16 +1,7 @@
 const ZipLoader = {
   async ensure() {
     const cached = Store.getPoems()
-    const storedEtag = Store.getZipEtag()
-
-    if (cached && cached.length) {
-      try {
-        const headResp = await fetch(`./poems.zip?_=${Date.now()}`, { method: 'HEAD' })
-        const etag = headResp.headers.get('ETag') || headResp.headers.get('Last-Modified') || headResp.headers.get('Content-Length') || ''
-        if (etag && etag === storedEtag) return cached
-      } catch { /* fall through to re-download */ }
-    }
-
+    if (cached && cached.length) return cached
     return this._download()
   },
 
