@@ -1,14 +1,35 @@
 const ZipLoader = {
   async ensure() {
-    const cached = Store.getPoems()
-    if (cached && cached.length) return cached
-
     // file:// 协议下 fetch 被 CORS 阻止，改用文件选择器
     if (location.protocol === 'file:') {
+      const cached = Store.getPoems()
+      if (cached && cached.length) return cached
       return this._loadFromFileInput()
     }
 
-    return this._download()
+    const cached = Store.getPoems()
+    if (!cached || !cached.length) {
+      return this._download()
+    }
+
+    // 有缓存，检查 ETag 是否变化
+    const cachedEtag = Store.getZipEtag()
+    try {
+      const headResp = await fetch('./poems.zip', { method: 'HEAD' })
+      const serverEtag = headResp.headers.get('ETag') || headResp.headers.get('Last-Modified') || String(headResp.headers.get('Content-Length') || '')
+
+      if (serverEtag === cachedEtag) {
+        return cached
+      }
+
+      // ETag 不一致，清除缓存并重新下载
+      Store.clear()
+      return this._download()
+    } catch (e) {
+      // HEAD 请求异常，降级到缓存
+      console.warn('ETag 检测失败，使用缓存:', e.message)
+      return cached
+    }
   },
 
   async _loadFromFileInput() {
@@ -28,7 +49,7 @@ const ZipLoader = {
       btn.style.border = '1px solid #8b7355'
       btn.style.background = '#fdfbf7'
       btn.style.color = '#5c4033'
-      btn.style.borderRadius = '4px'
+      btn.style.borderRadius = '3px'
 
       btn.addEventListener('click', () => {
         const input = document.createElement('input')
