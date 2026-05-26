@@ -1,0 +1,13 @@
+{
+  "headers": [
+    {
+      "source": "/(.*)", // 这将对所有路径生效
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, must-revalidate" // 核心指令：禁止存储，每次都必须重新验证
+        }
+      ]
+    }
+  ]
+}
