@@ -44,8 +44,8 @@ const DB = {
     const db = await this._open()
     return new Promise((resolve, reject) => {
       const tx = db.transaction(STORE_NAME, 'readonly')
-      const req = tx.objectStore(STORE_NAME).count(key)
-      req.onsuccess = () => resolve(req.result > 0)
+      const req = tx.objectStore(STORE_NAME).getKey(key)
+      req.onsuccess = () => resolve(req.result != null)
       req.onerror = () => reject(req.error)
     })
   }

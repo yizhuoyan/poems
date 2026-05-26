@@ -1,7 +1,12 @@
 let _poems = null
 
 async function init() {
-  _poems = await ZipLoader.ensure()
+  try {
+    _poems = await ZipLoader.ensure()
+  } catch (err) {
+    document.getElementById('loading-text').textContent = '加载失败，请刷新重试'
+    return
+  }
 
   document.getElementById('loading-overlay').classList.add('hidden')
 

@@ -10,6 +10,9 @@ const Home = {
     for (const p of filtered) {
       this._renderCard(el, p)
     }
+
+    const yearIdx = years.indexOf(latestYear)
+    Util.renderYearNav(el, years, yearIdx)
   },
 
   _renderCard(parent, poem) {
@@ -17,25 +20,12 @@ const Home = {
     card.className = 'poem-card'
     card.onclick = () => Router.go(`/detail/${encodeURIComponent(poem.id)}`)
 
-    const tags = []
-    if (poem.cipai) {
-      tags.push(poem.cipai)
-    } else if (poem.subGenre) {
-      tags.push(poem.subGenre)
-    }
-    if (poem.rhyme) tags.push(poem.rhyme)
-    if (poem.date && /^\d{4}-\d{2}-\d{2}$/.test(poem.date)) tags.push(poem.date)
+    const tags = Util.buildTags(poem)
 
     card.innerHTML = `
-      <div class="card-title">《${this._esc(poem.fullTitle)}》</div>
-      <div class="card-meta">${tags.map(t => `<span>${this._esc(t)}</span>`).join('')}</div>
+      <div class="card-title">《${Util.esc(poem.fullTitle)}》</div>
+      <div class="card-meta">${tags.map(t => `<span>${Util.esc(t)}</span>`).join('')}</div>
     `
     parent.appendChild(card)
-  },
-
-  _esc(s) {
-    const d = document.createElement('div')
-    d.textContent = s
-    return d.innerHTML
   }
 }

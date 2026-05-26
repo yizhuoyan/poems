@@ -1,95 +1,68 @@
 const ZipLoader = {
   async ensure() {
-    // file:// 协议下 fetch 被 CORS 阻止，改用文件选择器
-    if (location.protocol === 'file:') {
-      const cached = Store.getPoems()
-      if (cached && cached.length) return cached
-      return this._loadFromFileInput()
-    }
-
     const cached = Store.getPoems()
-    if (!cached || !cached.length) {
-      return this._download()
-    }
-
-    // 有缓存，检查 ETag 是否变化
-    const cachedEtag = Store.getZipEtag()
-    try {
-      const headResp = await fetch('./poems.zip', { method: 'HEAD' })
-      const serverEtag = headResp.headers.get('ETag') || headResp.headers.get('Last-Modified') || String(headResp.headers.get('Content-Length') || '')
-
-      if (serverEtag === cachedEtag) {
+    if (cached && cached.length) {
+      const etag = Store.getZipEtag()
+      if (etag && location.protocol !== 'file:') {
+        try {
+          const resp = await fetch('./poems.zip', {
+            headers: { 'If-None-Match': etag }
+          })
+          if (resp.status === 304) return cached
+          if (resp.ok) {
+            const blob = await resp.blob()
+            return await this._processZip(blob, resp)
+          }
+        } catch { /* fall through to full download */ }
+      } else {
         return cached
       }
-
-      // ETag 不一致，清除缓存并重新下载
-      Store.clear()
-      return this._download()
-    } catch (e) {
-      // HEAD 请求异常，降级到缓存
-      console.warn('ETag 检测失败，使用缓存:', e.message)
-      return cached
     }
-  },
-
-  async _loadFromFileInput() {
-    return new Promise((resolve, reject) => {
-      const overlay = document.getElementById('loading-overlay')
-      const text = document.getElementById('loading-text')
-      const content = overlay.querySelector('.loading-content')
-
-      text.textContent = '本地文件模式需要手动加载数据'
-
-      const btn = document.createElement('button')
-      btn.textContent = '选择 poems.zip'
-      btn.style.marginTop = '16px'
-      btn.style.padding = '8px 16px'
-      btn.style.fontSize = '16px'
-      btn.style.cursor = 'pointer'
-      btn.style.border = '1px solid #8b7355'
-      btn.style.background = '#fdfbf7'
-      btn.style.color = '#5c4033'
-      btn.style.borderRadius = '3px'
-
-      btn.addEventListener('click', () => {
-        const input = document.createElement('input')
-        input.type = 'file'
-        input.accept = '.zip'
-        input.addEventListener('change', async (e) => {
-          const file = e.target.files[0]
-          if (!file) return
-          if (btn.parentNode) btn.parentNode.removeChild(btn)
-          text.textContent = '正在读取文件...'
-          try {
-            const buffer = await file.arrayBuffer()
-            const zip = await JSZip.loadAsync(buffer)
-            const poems = await this._processZip(zip, file.name + '_' + file.size)
-            resolve(poems)
-          } catch (err) {
-            text.textContent = '加载失败：' + err.message
-            reject(err)
-          }
-        })
-        input.click()
-      })
-
-      content.appendChild(btn)
-    })
+    return this._download()
   },
 
   async _download() {
-    document.getElementById('loading-text').textContent = '正在下载诗词数据包...'
-    const resp = await fetch('./poems.zip')
-    const blob = await resp.blob()
-
-    document.getElementById('loading-text').textContent = '正在解压...'
-    const zip = await JSZip.loadAsync(blob)
-
-    const etag = resp.headers.get('ETag') || resp.headers.get('Last-Modified') || String(resp.headers.get('Content-Length') || '')
-    return this._processZip(zip, etag)
+    if (location.protocol === 'file:') {
+      return this._pickFile()
+    }
+    try {
+      document.getElementById('loading-text').textContent = '正在下载诗词数据包...'
+      const resp = await fetch('./poems.zip')
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`)
+      const blob = await resp.blob()
+      return await this._processZip(blob, resp)
+    } catch (err) {
+      document.getElementById('loading-text').textContent = '加载失败: ' + err.message
+      throw err
+    }
   },
 
-  async _processZip(zip, etag) {
+  async _pickFile() {
+    return new Promise((resolve, reject) => {
+      const input = document.createElement('input')
+      input.type = 'file'
+      input.accept = '.zip,application/zip'
+      input.onchange = async () => {
+        const file = input.files[0]
+        if (!file) return reject(new Error('未选择文件'))
+        document.getElementById('loading-text').textContent = '正在解压...'
+        const zip = await JSZip.loadAsync(file)
+        resolve(this._extractZip(zip))
+      }
+      input.click()
+    })
+  },
+
+  async _processZip(blob, resp) {
+    document.getElementById('loading-text').textContent = '正在解压...'
+    const zip = await JSZip.loadAsync(blob)
+    const result = await this._extractZip(zip)
+    const etag = resp.headers.get('ETag') || resp.headers.get('Last-Modified')
+    if (etag) Store.setZipEtag(etag)
+    return result
+  },
+
+  async _extractZip(zip) {
     document.getElementById('loading-text').textContent = '正在解析诗词文件...'
 
     const mdFiles = []
@@ -99,33 +72,27 @@ const ZipLoader = {
       if (entry.dir) return
       if (/\.md$/i.test(relativePath)) {
         if (/(?:^|\/)\d{4}\//.test(relativePath.replace(/\\/g, '/'))) mdFiles.push(relativePath)
-      } else if (/\.(jpg|jpeg|png|gif|webp|bmp)$/i.test(relativePath)) {
-        imageFiles.push(relativePath)
-      }
+      } else if (/\.(jpg|jpeg|png|gif|webp|bmp)$/i.test(relativePath)) imageFiles.push(relativePath)
     })
 
     const poems = []
     for (const path of mdFiles) {
       const content = await zip.files[path].async('string')
-      const poem = Parser.parse(content, path)
-      poems.push(poem)
+      poems.push(Parser.parse(content, path))
     }
 
-    // 去重（按 id）
     const seen = new Set()
     const unique = []
     for (const p of poems) {
-      if (!seen.has(p.id)) { seen.add(p.id); unique.push(p); }
+      if (!seen.has(p.id)) { seen.add(p.id); unique.push(p) }
     }
 
     Store.setPoems(unique)
-    Store.setZipEtag(etag)
 
-    // 存图片到 IndexedDB
     document.getElementById('loading-text').textContent = '正在缓存图片...'
     for (const path of imageFiles) {
-      const blob2 = await zip.files[path].async('blob')
-      await DB.set(path.replace(/\\/g, '/'), blob2)
+      const blob = await zip.files[path].async('blob')
+      await DB.set(path.replace(/\\/g, '/'), blob)
     }
 
     return unique

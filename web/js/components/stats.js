@@ -1,4 +1,6 @@
 const Stats = {
+  _pieColors: ['#8b7355', '#c4b08a', '#a8936e', '#6b5b4b', '#d4c9b8', '#5a4a3a'],
+
   render(poems) {
     const total = poems.length
     const years = [...new Set(poems.map(p => p.year))].sort()
@@ -52,7 +54,7 @@ const Stats = {
       const y = h - padB - barH
       bars += `<rect x="${x}" y="${y}" width="${barW}" height="${barH}" fill="#8b7355" rx="3" />
         <text x="${x + barW / 2}" y="${y - 6}" text-anchor="middle" font-size="12" fill="#5a4a3a">${d[valueKey]}</text>
-        <text x="${x + barW / 2}" y="${h - padB + 16}" text-anchor="middle" font-size="11" fill="#8b7355">${this._esc(d[labelKey])}</text>`
+        <text x="${x + barW / 2}" y="${h - padB + 16}" text-anchor="middle" font-size="11" fill="#8b7355">${Util.esc(d[labelKey])}</text>`
     }
 
     return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">
@@ -66,7 +68,6 @@ const Stats = {
     const total = items.reduce((s, i) => s + i.value, 0)
     if (total === 0) return '<p style="color:#8b7355;">暂无数据</p>'
 
-    const colors = ['#8b7355', '#c4b08a']
     const cx = 120
     const cy = 120
     const r = 100
@@ -87,10 +88,10 @@ const Stats = {
       const y2 = cy - r * Math.cos(endAngle * Math.PI / 180)
 
       const large = angle > 180 ? 1 : 0
-      const color = colors[i % colors.length]
+      const color = this._pieColors[i % this._pieColors.length]
 
       arcs += `<path d="M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2} Z" fill="${color}" stroke="#f5f2ed" stroke-width="2"/>`
-      legend.push(`<span style="display:inline-flex;align-items:center;gap:4px;margin:0 8px;font-size:13px;color:#5a4a3a;"><span style="width:12px;height:12px;border-radius:2px;background:${color};display:inline-block;"></span>${this._esc(item.label)} ${percent}%</span>`)
+      legend.push(`<span style="display:inline-flex;align-items:center;gap:4px;margin:0 8px;font-size:13px;color:#5a4a3a;"><span style="width:12px;height:12px;border-radius:2px;background:${color};display:inline-block;"></span>${Util.esc(item.label)} ${percent}%</span>`)
 
       startAngle = endAngle
     }
@@ -101,11 +102,5 @@ const Stats = {
       </svg>
       <div style="margin-top:8px;">${legend.join('')}</div>
     </div>`
-  },
-
-  _esc(s) {
-    const d = document.createElement('div')
-    d.textContent = s
-    return d.innerHTML
   }
 }

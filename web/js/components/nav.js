@@ -1,6 +1,6 @@
 const Nav = {
   render(poems) {
-    const years = [...new Set(poems.map(p => p.year))].sort().reverse()
+    const years = [...new Set(poems.map(p => p.year))].filter(y => /^\d{4}$/.test(y)).sort().reverse()
     const poemSubs = [...new Set(poems.filter(p => p.genre === '诗').map(p => p.subGenre).filter(Boolean))].sort()
     const cipais = [...new Set(poems.filter(p => p.genre === '词' && p.cipai).map(p => p.cipai))].sort()
     const rhymes = [...new Set(poems.map(p => p.rhyme).filter(r => r && r !== '未知'))].sort()
@@ -38,10 +38,18 @@ const Nav = {
 
     const stats = document.createElement('a')
     stats.className = 'stats-link'
-    stats.href = '/stats'
+    stats.href = '#/stats'
     stats.textContent = '📊 统计'
-    stats.addEventListener('click', (e) => { e.preventDefault(); Router.go('/stats') })
     nav.appendChild(stats)
+
+    if (!Nav._closeHandler) {
+      Nav._closeHandler = (e) => {
+        if (!e.target.closest('#top-nav .nav-item')) {
+          document.querySelectorAll('#top-nav .nav-item.active').forEach(el => el.classList.remove('active'))
+        }
+      }
+      document.addEventListener('click', Nav._closeHandler)
+    }
   },
 
   _addItem(parent, label, href, dropdown) {
@@ -49,11 +57,8 @@ const Nav = {
     item.className = 'nav-item'
     if (href) {
       const a = document.createElement('a')
-      a.href = href
+      a.href = '#' + href
       a.textContent = label
-      a.style.textDecoration = 'none'
-      a.style.color = 'inherit'
-      a.addEventListener('click', (e) => { e.preventDefault(); Router.go(href) })
       item.appendChild(a)
     } else {
       const span = document.createElement('span')
@@ -64,7 +69,16 @@ const Nav = {
       arrow.textContent = '▾'
       item.appendChild(arrow)
     }
-    if (dropdown) item.appendChild(dropdown)
+    if (dropdown) {
+      item.appendChild(dropdown)
+      item.addEventListener('click', (e) => {
+        e.stopPropagation()
+        document.querySelectorAll('#top-nav .nav-item.active').forEach(el => {
+          if (el !== item) el.classList.remove('active')
+        })
+        item.classList.toggle('active')
+      })
+    }
     parent.appendChild(item)
   },
 
@@ -74,12 +88,8 @@ const Nav = {
     for (const { label, href } of items) {
       const a = document.createElement('a')
       a.className = 'dropdown-item'
-      a.href = href
+      a.href = '#' + href
       a.textContent = label
-      a.style.display = 'block'
-      a.style.textDecoration = 'none'
-      a.style.color = 'inherit'
-      a.addEventListener('click', (e) => { e.preventDefault(); Router.go(href) })
       dd.appendChild(a)
     }
     return dd
