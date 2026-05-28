@@ -28,7 +28,7 @@ const Router = {
 
   start() {
     window.addEventListener('hashchange', () => this.resolve(location.hash))
-    this.resolve(location.hash || location.pathname + location.search)
+    this.resolve(location.hash || '#/')
   },
 
   go(path) {
