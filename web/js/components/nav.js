@@ -42,6 +42,12 @@ const Nav = {
     stats.textContent = '📊 统计'
     nav.appendChild(stats)
 
+    const otherLink = document.createElement('a')
+    otherLink.className = 'stats-link'
+    otherLink.href = 'other/index.html'
+    otherLink.textContent = '其他'
+    nav.appendChild(otherLink)
+
     if (!Nav._closeHandler) {
       Nav._closeHandler = (e) => {
         if (!e.target.closest('#top-nav .nav-item')) {
