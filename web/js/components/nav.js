@@ -39,7 +39,7 @@ const Nav = {
     const stats = document.createElement('a')
     stats.className = 'stats-link'
     stats.href = '#/stats'
-    stats.textContent = '📊 统计'
+    stats.textContent = '统计'
     nav.appendChild(stats)
 
     const otherLink = document.createElement('a')
