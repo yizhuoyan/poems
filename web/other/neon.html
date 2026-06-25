@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Author" content="YIZHUOYAN">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,minimum-scale=1.0,user-scalable=0" />
+    
+  <title>霓虹灯</title>
+  <style>
+	body{
+		height:100vh;
+		margin:0;
+	}
+	
+  </style>
+ </head>
+ <body>
+	<script>
+		var createView=function(n){
+			var maxWidth=document.body.offsetWidth;
+			var maxHeight=document.body.offsetHeight;
+			var parent=document.body;
+			var paddingHeight=(maxHeight/(n*2))+"px";
+			var paddingWidth=(maxWidth/(n*2))+"px";
+			while(n--){
+				var div=document.createElement("div");
+				div.style.padding=paddingHeight+" "+paddingWidth;
+				div.style.backgroundColor=randomColor();
+				parent.appendChild(div);
+				parent=div;
+			}
+		};
+		
+		var randomColor=function(){
+			return "#"+(parseInt(Math.random().toString().substr(2)).toString(16).substring(0,6));
+		};
+		
+		var start=function(){
+			createView(32);
+			var boxes=document.getElementsByTagName("div");
+			var run=function(){
+				var tempColor=boxes[0].style.backgroundColor;
+				for(var i=0,len=boxes.length-1;i<len;i++){
+					boxes[i].style.backgroundColor=boxes[i+1].style.backgroundColor;
+				}
+				boxes[boxes.length-1].style.backgroundColor=tempColor;
+			}
+			setInterval(run,100);
+		}
+		start();
+	</script>
+ </body>
+</html>
