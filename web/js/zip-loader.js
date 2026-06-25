@@ -49,7 +49,10 @@ const ZipLoader = {
         const zip = await JSZip.loadAsync(file)
         resolve(this._extractZip(zip))
       }
-      input.click()
+	   let p=document.getElementById('loading-text');
+	   p.innerHTML = '<b>请选择本地数据文件</b><br>'
+	   p.appendChild(input)
+      //input.click()
     })
   },
 

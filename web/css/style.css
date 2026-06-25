@@ -194,3 +194,12 @@ body { font-family: -apple-system, 'Microsoft YaHei', 'PingFang SC', sans-serif;
 #stats-footer .stats-row span {
   white-space: nowrap;
 }
+
+#poemer-link{
+	position:fixed;
+	bottom:2em;
+	right:1em;
+	z-index:999;
+	display:block;
+	
+}

@@ -42,6 +42,7 @@ const Nav = {
     stats.textContent = '统计'
     nav.appendChild(stats)
 
+	
     const otherLink = document.createElement('a')
     otherLink.className = 'stats-link'
     otherLink.href = 'other/index.html'

@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>诗词创作工具</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif; background: #f5f0eb; color: #3d2c1e; min-height: 100vh; }
+#app { max-width: 860px; margin: 0 auto; padding: 24px 20px 60px; }
+header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+header h1 { font-size: 28px; font-weight: 700; letter-spacing: 4px; color: #5a3825; }
+
+.ref-menu-btn { background: #e8ddd3; border: none; border-radius: 6px; padding: 8px 16px; font-size: 14px; color: #5a3825; cursor: pointer; font-weight: 500; transition: background .2s; }
+.ref-menu-btn:hover { background: #ddd0c4; }
+.ref-menu-btn.active { background: #8b5e3c; color: #fff; }
+
+.ref-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.3); z-index: 100; }
+.ref-overlay.show { display: block; }
+.ref-panel { position: fixed; top: 0; right: 0; width: 440px; max-width: 90vw; height: 100vh; background: #fff; box-shadow: -4px 0 16px rgba(0,0,0,.1); z-index: 101; padding: 24px 20px; overflow-y: auto; transform: translateX(100%); transition: transform .3s ease; }
+.ref-panel.show { transform: translateX(0); }
+.ref-panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.ref-panel-header h2 { font-size: 18px; color: #5a3825; }
+.ref-close-btn { background: none; border: none; font-size: 24px; color: #8a7564; cursor: pointer; padding: 4px 8px; line-height: 1; }
+.ref-close-btn:hover { color: #3d2c1e; }
+
+.controls { background: #fff; border-radius: 10px; padding: 18px 20px; box-shadow: 0 1px 4px rgba(0,0,0,.06); display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; align-items: flex-end; }
+.controls .form-group { flex: 1; min-width: 160px; }
+.controls label { display: block; font-size: 12px; color: #8a7564; margin-bottom: 4px; font-weight: 500; }
+.controls select { width: 100%; height: 36px; border: 1px solid #d9cdc0; border-radius: 6px; background: #fff; font-size: 14px; color: #3d2c1e; padding: 0 10px; outline: none; transition: border-color .2s; }
+.controls select:focus { border-color: #b8957a; }
+
+.input-section { background: #fff; border-radius: 10px; padding: 18px 20px; box-shadow: 0 1px 4px rgba(0,0,0,.06); margin-bottom: 16px; }
+.input-section .pattern-display { font-size: 15px; color: #5a3825; letter-spacing: 2px; margin-bottom: 10px; display: none; text-align: center; }
+.input-section .pattern-display code { background: #f5f0eb; padding: 2px 6px; border-radius: 4px; margin-right: 8px; }
+.input-section .pattern-display .pattern-row { margin-bottom: 4px; }
+.input-section textarea { width: 100%; min-height: 160px; border: 1px solid #d9cdc0; border-radius: 6px; padding: 12px; font-size: 16px; font-family: 'KaiTi', 'STKaiti', 'Microsoft YaHei', serif; line-height: 1.8; resize: vertical; outline: none; transition: border-color .2s; color: #3d2c1e; background: #fdfcfa; }
+.input-section textarea:focus { border-color: #b8957a; }
+.input-section textarea::placeholder { color: #bfb0a2; font-size: 14px; }
+.input-section .btn-group { display: flex; gap: 8px; margin-top: 12px; }
+.input-section .btn-group button { flex: 1; height: 36px; border-radius: 6px; font-size: 14px; cursor: pointer; font-weight: 600; border: 1px solid; }
+.btn-primary { background: #8b5e3c; color: #fff; border-color: #8b5e3c; }
+.btn-primary:hover { background: #754d2e; border-color: #754d2e; }
+.btn-secondary { background: #e8ddd3; color: #5a3825; border-color: #d9cdc0; }
+.btn-secondary:hover { background: #ddd0c4; }
+
+.results { display: none; }
+.results-card { background: #fff; border-radius: 10px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,.06); margin-bottom: 16px; }
+.results-card h3 { font-size: 15px; color: #5a3825; margin-bottom: 12px; font-weight: 600; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.results-card h3 .badge { font-size: 11px; font-weight: 400; padding: 2px 8px; border-radius: 10px; }
+.badge-pass { background: #e6f4e0; color: #3a7d2c; }
+.badge-fail { background: #fde8e8; color: #c0392b; }
+.badge-warn { background: #fef5e0; color: #b8860b; }
+
+.line-result { display: flex; flex-wrap: wrap; gap: 4px; padding: 6px 0; border-bottom: 1px solid #f0e9e2; }
+.line-result:last-child { border-bottom: none; }
+.line-num { width: 32px; font-size: 12px; color: #8a7564; line-height: 32px; flex-shrink: 0; }
+.line-chars { display: flex; flex-wrap: wrap; gap: 4px; flex: 1; }
+.char-card { display: inline-flex; flex-direction: column; align-items: center; padding: 3px 6px; border-radius: 4px; font-size: 16px; min-width: 28px; }
+.char-card .char { font-family: 'KaiTi', 'STKaiti', serif; }
+.char-card .tone-label { font-size: 10px; margin-top: 1px; opacity: .7; }
+.char-match { background: #e6f4e0; }
+.char-match .tone-label { color: #3a7d2c; }
+.char-mismatch { background: #fce4e4; border: 1.5px solid #e74c3c; border-radius: 3px; }
+.char-mismatch .char-hanzi { color: #c0392b; font-weight: bold; }
+.char-mismatch .tone-label { color: #c0392b; font-weight: bold; }
+.char-unknown { background: #f0f0f0; }
+.char-unknown .tone-label { color: #999; }
+.char-ambiguous { background: #fef5e0; }
+.char-ambiguous .tone-label { color: #b8860b; }
+
+.notes-area { margin-top: 12px; padding-top: 12px; border-top: 1px solid #f0e9e2; font-size: 13px; color: #5a3825; display: flex; flex-direction: column; gap: 6px; }
+.notes-area .note-item { display: flex; align-items: center; gap: 4px; }
+
+.rhyme-tag { display: inline-flex; align-items: center; font-size: 12px; padding: 0 4px; border-radius: 3px; line-height: 1.6; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+.rhyme-tag.rhyme-pass { color: #3a7d2c; }
+.rhyme-tag.rhyme-fail { color: #c0392b; }
+.rhyme-tag:hover { background: #f0e9e2; }
+
+.rhyme-popup { display: none; position: fixed; z-index: 200; background: #fff; border: 1px solid #d9cdc0; border-radius: 8px; padding: 12px 14px; box-shadow: 0 4px 16px rgba(0,0,0,.12); max-height: 300px; overflow-y: auto; min-width: 220px; }
+.rhyme-popup.show { display: block; }
+.rhyme-popup h4 { font-size: 14px; color: #5a3825; margin-bottom: 8px; font-weight: 600; }
+.rhyme-popup .chars-grid { display: flex; flex-wrap: wrap; gap: 4px; }
+.rhyme-popup .chars-grid span { font-family: 'KaiTi', 'STKaiti', serif; font-size: 16px; padding: 2px 6px; border-radius: 3px; background: #f5f0eb; color: #3d2c1e; cursor: default; }
+
+.result-section-title { font-size: 13px; color: #8a7564; font-weight: 500; margin: 16px 0 8px; padding-bottom: 4px; border-bottom: 1px solid #f0e9e2; }
+.result-section-title:first-child { margin-top: 0; }
+
+.ref-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.ref-table th, .ref-table td { padding: 5px 8px; border: 1px solid #e8ddd3; text-align: center; }
+.ref-table th { background: #f5f0eb; color: #5a3825; font-weight: 500; }
+.ref-table td { color: #3d2c1e; }
+.ref-table .finals { font-family: 'Consolas', monospace; color: #8a7564; font-size: 12px; }
+
+.empty-hint { color: #bfb0a2; font-size: 14px; text-align: center; padding: 30px 0; }
+
+@media (max-width: 600px) {
+  header { flex-direction: column; gap: 12px; text-align: center; }
+  .ref-panel { width: 100vw; }
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1>诗词创作工具</h1>
+    <button class="ref-menu-btn" id="refMenuBtn">韵部参考</button>
+  </header>
+
+  <div class="ref-overlay" id="refOverlay"></div>
+  <div class="ref-panel" id="refPanel">
+    <div class="ref-panel-header">
+      <h2>《中华通韵》十六韵部</h2>
+      <button class="ref-close-btn" id="refCloseBtn">&times;</button>
+    </div>
+    <table class="ref-table" id="refTable"></table>
+  </div>
+
+  <div class="controls">
+    <div class="form-group">
+      <label>体裁</label>
+      <select id="poemType"></select>
+    </div>
+    <div class="form-group">
+      <label>格式</label>
+      <select id="poemPattern"></select>
+    </div>
+  </div>
+
+  <div class="input-section">
+    <div class="pattern-display" id="patternDisplay">
+      <div class="patterns" id="patternText"></div>
+    </div>
+    <textarea id="poemInput" placeholder="每行一句，如：&#10;白日依山尽&#10;黄河入海流&#10;欲穷千里目&#10;更上一层楼"></textarea>
+    <div class="btn-group">
+      <button class="btn-primary" id="checkBtn">校验</button>
+      <button class="btn-secondary" id="clearBtn">清空</button>
+    </div>
+  </div>
+
+  <div class="results" id="results">
+    <div class="results-card">
+      <h3>检验结果</h3>
+      <div id="toneResult"></div>
+      <div class="notes-area" id="notesArea"></div>
+    </div>
+  </div>
+</div>
+
+<div class="rhyme-popup" id="rhymePopup">
+  <h4 id="rhymePopupTitle"></h4>
+  <div class="chars-grid" id="rhymePopupChars"></div>
+</div>
+
+<script src="data.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  function buildCharMap(rhymeBook) {
+    const map = new Map();
+    const toneMap = {
+      yinpingChars: '平', yangpingChars: '平',
+      shangshengChars: '仄', qushengChars: '仄'
+    };
+    for (const cat of rhymeBook.rhymeCategories) {
+      for (const [key, tone] of Object.entries(toneMap)) {
+        for (const ch of cat[key]) {
+          if (!map.has(ch)) map.set(ch, []);
+          map.get(ch).push({ tone, category: cat });
+        }
+      }
+    }
+    return map;
+  }
+
+  const charMap = buildCharMap(zhtyRhymeBook);
+
+  const poemTypeSel = document.getElementById('poemType');
+  const poemPatternSel = document.getElementById('poemPattern');
+  const patternDisplay = document.getElementById('patternDisplay');
+  const patternText = document.getElementById('patternText');
+  const poemInput = document.getElementById('poemInput');
+  const checkBtn = document.getElementById('checkBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const results = document.getElementById('results');
+
+  for (const mt of ShiMetricalPatternArray) {
+    const opt = document.createElement('option');
+    opt.value = mt.name;
+    opt.textContent = mt.name;
+    poemTypeSel.appendChild(opt);
+  }
+
+  function updatePatterns() {
+    const mtName = poemTypeSel.value;
+    const mt = ShiMetricalPatternArray.find(m => m.name === mtName);
+    if (!mt) return;
+    poemPatternSel.innerHTML = '';
+    for (const pz of mt.pzPatterns) {
+      const opt = document.createElement('option');
+      opt.value = pz.name;
+      opt.textContent = pz.name;
+      poemPatternSel.appendChild(opt);
+    }
+    showPattern();
+  }
+
+  function showPattern() {
+    const mtName = poemTypeSel.value;
+    const pzName = poemPatternSel.value;
+    const mt = ShiMetricalPatternArray.find(m => m.name === mtName);
+    if (!mt) return;
+    const pz = mt.pzPatterns.find(p => p.name === pzName);
+    if (!pz) return;
+    patternDisplay.style.display = 'block';
+    let html = '';
+    for (let i = 0; i < pz.patterns.length; i += 2) {
+      html += '<div class="pattern-row">';
+      html += `<code>${pz.patterns[i]}</code>`;
+      if (i + 1 < pz.patterns.length) html += `<code>${pz.patterns[i + 1]}</code>`;
+      html += '</div>';
+    }
+    patternText.innerHTML = html;
+  }
+
+  poemTypeSel.addEventListener('change', updatePatterns);
+  poemPatternSel.addEventListener('change', showPattern);
+  updatePatterns();
+
+  function getCharInfo(ch) {
+    const entries = charMap.get(ch);
+    if (!entries || entries.length === 0) return null;
+    const tones = [...new Set(entries.map(e => e.tone))];
+    const cats = [...new Set(entries.map(e => e.category.name))];
+    const hasPing = tones.includes('平');
+    const hasZe = tones.includes('仄');
+    return {
+      tones,
+      categories: cats,
+      isPing: hasPing,
+      isZe: hasZe,
+      isAmbiguous: hasPing && hasZe,
+      primaryTone: tones.length === 1 ? tones[0] : '通',
+      isKnown: true
+    };
+  }
+
+  function checkToneForLine(line, patternStr) {
+    const chars = [...line.replace(/\s/g, '')];
+    const results = [];
+    for (let i = 0; i < patternStr.length; i++) {
+      const ch = chars[i] || '';
+      const expected = patternStr[i];
+      const info = getCharInfo(ch);
+      let status = 'unknown';
+      let actualTone = '?';
+      if (info) {
+        if (info.isAmbiguous) {
+          actualTone = '通';
+          status = expected === '通' ? 'match' : 'ambiguous';
+        } else {
+          actualTone = info.primaryTone;
+          if (expected === '通') status = 'match';
+          else status = actualTone === expected ? 'match' : 'mismatch';
+        }
+      }
+      results.push({ char: ch, expected, actual: actualTone, status, info });
+    }
+    for (let i = patternStr.length; i < chars.length; i++) {
+      const ch = chars[i];
+      const info = getCharInfo(ch);
+      results.push({ char: ch, expected: '-', actual: info ? (info.isAmbiguous ? '通' : info.primaryTone) : '?', status: 'extra', info });
+    }
+    return results;
+  }
+
+  function getRhymeIndices(pzName, totalLines) {
+    const 押韵首句 = pzName.includes('首句押韵');
+    const indices = [];
+    for (let i = 0; i < totalLines; i++) {
+      if (i === 0 && 押韵首句) indices.push(i);
+      else if (i % 2 === 1) indices.push(i);
+    }
+    return indices;
+  }
+
+  function checkRhyme(lines, rhymeIndices) {
+    const results = [];
+    for (const idx of rhymeIndices) {
+      const line = lines[idx] || '';
+      const chars = [...line.replace(/\s/g, '')];
+      const lastChar = chars[chars.length - 1] || '';
+      const info = getCharInfo(lastChar);
+      results.push({ lineIdx: idx, char: lastChar, info });
+    }
+    const cats = results.filter(r => r.info).map(r => r.info.categories[0]);
+    const counts = {};
+    for (const c of cats) counts[c] = (counts[c] || 0) + 1;
+    let dominantCat = null, maxCount = 0;
+    for (const [c, n] of Object.entries(counts)) {
+      if (n > maxCount) { maxCount = n; dominantCat = c; }
+    }
+    const rhymeCat = zhtyRhymeBook.rhymeCategories.find(c => c.name === dominantCat);
+    return { results, dominantCat, rhymeCat, allMatch: cats.every(c => c === dominantCat) };
+  }
+
+  function render() {
+    rhymePopup.classList.remove('show');
+    const lines = poemInput.value.split('\n').filter(l => l.trim().length > 0);
+    const mtName = poemTypeSel.value;
+    const pzName = poemPatternSel.value;
+    const mt = ShiMetricalPatternArray.find(m => m.name === mtName);
+    const pz = mt ? mt.pzPatterns.find(p => p.name === pzName) : null;
+
+    if (lines.length === 0 || !pz) {
+      results.style.display = 'none';
+      return;
+    }
+
+    results.style.display = 'block';
+
+    const expectedLines = pz.patterns.length;
+    const perLineLen = pz.patterns[0].length;
+
+    const toneResults = [];
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const pattern = i < expectedLines ? pz.patterns[i] : '';
+      const tr = pattern ? checkToneForLine(line, pattern) : [];
+      toneResults.push(tr);
+    }
+
+    let totalChars = 0, matchedChars = 0, unknownChars = 0;
+    for (const tr of toneResults) {
+      for (const r of tr) {
+        if (r.expected === '-' || r.expected === undefined) continue;
+        totalChars++;
+        if (r.status === 'match') matchedChars++;
+        else if (r.status === 'unknown') unknownChars++;
+        else if (r.status === 'ambiguous' && r.expected !== '通') {
+          matchedChars++;
+        }
+      }
+    }
+
+    const matchRate = totalChars > 0 ? (matchedChars / totalChars * 100) : 0;
+
+    const rhymeIndices = getRhymeIndices(pzName, expectedLines);
+    const rhymeResult = checkRhyme(lines, rhymeIndices);
+
+    const toneDiv = document.getElementById('toneResult');
+    toneDiv.innerHTML = '';
+    for (let i = 0; i < Math.max(lines.length, expectedLines); i++) {
+      const line = lines[i] || '';
+      const tr = i < toneResults.length ? toneResults[i] : [];
+      const isRhymeLine = rhymeIndices.includes(i);
+
+      let lastCharIdx = -1;
+      if (isRhymeLine) {
+        for (let j = tr.length - 1; j >= 0; j--) {
+          if (tr[j].char) { lastCharIdx = j; break; }
+        }
+      }
+
+      const div = document.createElement('div');
+      div.className = 'line-result';
+
+      const num = document.createElement('div');
+      num.className = 'line-num';
+      num.textContent = i + 1;
+      div.appendChild(num);
+
+      const charsDiv = document.createElement('div');
+      charsDiv.className = 'line-chars';
+
+      if (tr.length === 0 && line.trim()) {
+        const span = document.createElement('span');
+        span.className = 'char-card char-unknown';
+        span.innerHTML = `<span class="char">超出格律行</span>`;
+        charsDiv.appendChild(span);
+      }
+
+      for (let j = 0; j < tr.length; j++) {
+        const r = tr[j];
+
+        const card = document.createElement('span');
+        card.className = 'char-card';
+        if (r.status === 'match') card.classList.add('char-match');
+        else if (r.status === 'mismatch') card.classList.add('char-mismatch');
+        else if (r.status === 'ambiguous') card.classList.add('char-ambiguous');
+        else if (r.status === 'extra') card.classList.add('char-unknown');
+        else card.classList.add('char-unknown');
+
+        const toneLabel = r.expected === '-' ? '多余' : (r.status === 'match' ? '✓' : (r.status === 'mismatch' ? '✗' : (r.status === 'ambiguous' ? '∼' : '?')));
+        const actualDisplay = r.actual === '?' ? '?' : r.actual;
+
+        card.innerHTML = `<span class="char">${r.char || '□'}</span><span class="tone-label">${actualDisplay}${toneLabel}</span>`;
+        if (r.char) charsDiv.appendChild(card);
+      }
+
+      div.appendChild(charsDiv);
+
+      if (isRhymeLine) {
+        const lastR = lastCharIdx >= 0 ? tr[lastCharIdx] : null;
+        if (lastR && lastR.info) {
+          const cat = zhtyRhymeBook.rhymeCategories.find(c => c.name === lastR.info.categories[0]);
+          if (cat && rhymeResult.dominantCat) {
+            const matches = lastR.info.categories.includes(rhymeResult.dominantCat);
+            let toneGroup = '';
+            if (lastR.char) {
+              if (cat.yinpingChars && cat.yinpingChars.includes(lastR.char)) toneGroup = '阴平';
+              else if (cat.yangpingChars && cat.yangpingChars.includes(lastR.char)) toneGroup = '阳平';
+              else if (cat.shangshengChars && cat.shangshengChars.includes(lastR.char)) toneGroup = '上声';
+              else if (cat.qushengChars && cat.qushengChars.includes(lastR.char)) toneGroup = '去声';
+            }
+            const tag = document.createElement('a');
+            tag.href = 'javascript:void(0)';
+            tag.className = 'rhyme-tag ' + (matches ? 'rhyme-pass' : 'rhyme-fail');
+            tag.textContent = `（${cat.seq}${cat.name}·${toneGroup}）`;
+            tag.dataset.catSeq = cat.seq;
+            tag.addEventListener('click', function (e) {
+              showRhymePopup(e.target, parseInt(this.dataset.catSeq));
+            });
+            charsDiv.appendChild(tag);
+          }
+        } else if (lastR) {
+          const tag = document.createElement('span');
+          tag.className = 'rhyme-tag rhyme-fail';
+          tag.textContent = '（未收录）';
+          charsDiv.appendChild(tag);
+        }
+      }
+
+      toneDiv.appendChild(div);
+    }
+
+    // Collect notes
+    const charFreq = {};
+    const ambiguousSet = new Set();
+    const unknownSet = new Set();
+    for (const tr of toneResults) {
+      for (const r of tr) {
+        if (!r.char) continue;
+        charFreq[r.char] = (charFreq[r.char] || 0) + 1;
+        if (!r.info) unknownSet.add(r.char);
+        else if (r.info.isAmbiguous) ambiguousSet.add(r.char);
+      }
+    }
+    const notes = [];
+    const dupes = Object.entries(charFreq).filter(([c, n]) => n > 1).sort((a, b) => b[1] - a[1]);
+    if (dupes.length) notes.push(`<span class="note-item">🔁 重字: ${dupes.map(([c, n]) => `「${c}」(${n}处)`).join('、')}</span>`);
+    if (ambiguousSet.size) notes.push(`<span class="note-item">🔊 多音字: ${[...ambiguousSet].map(c => `「${c}」`).join('、')}</span>`);
+    if (unknownSet.size) notes.push(`<span class="note-item">❓ 未收录: ${[...unknownSet].map(c => `「${c}」`).join('、')}</span>`);
+    if (lines.length !== expectedLines) notes.push(`<span class="note-item" style="color:#c0392b">⚠️ 输入${lines.length}句, 格律需要${expectedLines}句</span>`);
+    document.getElementById('notesArea').innerHTML = notes.length ? notes.join('') : '<span class="note-item" style="color:#8a7564">✅ 暂无提醒</span>';
+  }
+
+  const refMenuBtn = document.getElementById('refMenuBtn');
+  const refPanel = document.getElementById('refPanel');
+  const refOverlay = document.getElementById('refOverlay');
+  const refCloseBtn = document.getElementById('refCloseBtn');
+
+  function toggleRef() {
+    const show = !refPanel.classList.contains('show');
+    refPanel.classList.toggle('show', show);
+    refOverlay.classList.toggle('show', show);
+    refMenuBtn.classList.toggle('active', show);
+  }
+
+  refMenuBtn.addEventListener('click', toggleRef);
+  refCloseBtn.addEventListener('click', toggleRef);
+  refOverlay.addEventListener('click', toggleRef);
+
+  const refTable = document.getElementById('refTable');
+  let refHtml = '<tr><th>韵部</th><th>韵目</th><th>韵基 (韵母)</th></tr>';
+  for (const cat of zhtyRhymeBook.rhymeCategories) {
+    refHtml += `<tr><td>第${cat.seq}部</td><td style="font-size:18px;font-family:'KaiTi','STKaiti',serif">${cat.name}</td><td class="finals">${cat.finals.join(', ')}</td></tr>`;
+  }
+  refTable.innerHTML = refHtml;
+
+  const rhymePopup = document.getElementById('rhymePopup');
+  const rhymePopupTitle = document.getElementById('rhymePopupTitle');
+  const rhymePopupChars = document.getElementById('rhymePopupChars');
+
+  function showRhymePopup(anchor, catSeq) {
+    const cat = zhtyRhymeBook.rhymeCategories.find(c => c.seq === catSeq);
+    if (!cat) return;
+    rhymePopupTitle.textContent = `第${cat.seq}部「${cat.name}」平声字`;
+    rhymePopupChars.innerHTML = '';
+    const allPing = [...cat.yinpingChars, ...cat.yangpingChars];
+    for (const ch of allPing) {
+      const span = document.createElement('span');
+      span.textContent = ch;
+      rhymePopupChars.appendChild(span);
+    }
+    const rect = anchor.getBoundingClientRect();
+    const popupW = Math.min(400, window.innerWidth - 24);
+    let left = rect.left;
+    if (left + popupW > window.innerWidth - 12) left = window.innerWidth - 12 - popupW;
+    if (left < 12) left = 12;
+    rhymePopup.style.left = left + 'px';
+    rhymePopup.style.top = (rect.bottom + 6) + 'px';
+    rhymePopup.style.width = popupW + 'px';
+    rhymePopup.classList.add('show');
+  }
+
+  document.addEventListener('click', function (e) {
+    if (rhymePopup.classList.contains('show') && !rhymePopup.contains(e.target) && !e.target.classList.contains('rhyme-tag')) {
+      rhymePopup.classList.remove('show');
+    }
+  });
+
+  checkBtn.addEventListener('click', render);
+  clearBtn.addEventListener('click', function () {
+    poemInput.value = '';
+    results.style.display = 'none';
+    rhymePopup.classList.remove('show');
+  });
+
+  poemInput.value = '白日依山尽\n黄河入海流\n欲穷千里目\n更上一层楼';
+  render();
+})();
+</script>
+</body>
+</html>
