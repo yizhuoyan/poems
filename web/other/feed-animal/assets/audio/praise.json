@@ -1,0 +1,58 @@
+{
+  "format": {
+    "sampleRate": 16000,
+    "channels": 1,
+    "bits": 16,
+    "pcm": true
+  },
+  "gapMs": 50,
+  "file": "praise.wav",
+  "segments": {
+    "cheer": {
+      "start": 0,
+      "duration": 1.87,
+      "end": 1.87
+    },
+    "correct": {
+      "start": 1.9201,
+      "duration": 1.455,
+      "end": 3.3751
+    },
+    "hello": {
+      "start": 3.4251,
+      "duration": 2.345,
+      "end": 5.7701
+    },
+    "praise_1": {
+      "start": 5.8202,
+      "duration": 1.895,
+      "end": 7.7152
+    },
+    "praise_2": {
+      "start": 7.7652,
+      "duration": 2.115,
+      "end": 9.8803
+    },
+    "retry": {
+      "start": 9.9303,
+      "duration": 1.72,
+      "end": 11.6503
+    },
+    "start": {
+      "start": 11.7004,
+      "duration": 1.91,
+      "end": 13.6104
+    },
+    "win": {
+      "start": 13.6604,
+      "duration": 1.47,
+      "end": 15.1304
+    },
+    "wow": {
+      "start": 15.1805,
+      "duration": 2.235,
+      "end": 17.4155
+    }
+  },
+  "totalDuration": 17.4155
+}

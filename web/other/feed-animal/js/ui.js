@@ -1,0 +1,16 @@
+var UIManager=(function(){var menuScreen,gameIframe,settingsIframe,confirmOverlay,levelGrid;function initElements(){menuScreen=document.getElementById('menu-screen');gameIframe=document.getElementById('game-iframe');settingsIframe=document.getElementById('settings-iframe');confirmOverlay=document.getElementById('confirm-overlay');levelGrid=document.getElementById('level-grid');}
+function showMenu(){menuScreen.classList.add('active');gameIframe.style.display='none';settingsIframe.style.display='none';confirmOverlay.classList.remove('active');}
+function showGame(){menuScreen.classList.remove('active');gameIframe.style.display='block';settingsIframe.style.display='none';}
+function showSettings(){menuScreen.classList.remove('active');gameIframe.style.display='none';settingsIframe.style.display='block';settingsIframe.contentWindow.postMessage({type:'open'},'*');}
+function showConfirm(){confirmOverlay.classList.add('active');}
+function hideConfirm(){confirmOverlay.classList.remove('active');}
+function renderMenu(){levelGrid.innerHTML='';var specialLevels={10:true,20:true,30:true};for(var i=0;i<GAME_CONFIG.MAX_LEVELS;i++){var levelId=i+1;var animalId=ANIMAL_ORDER[i];var animal=ANIMALS[animalId];if(!animal)continue;var unlocked=StorageManager.isLevelUnlocked(levelId);var saved=StorageManager.getLevelData(levelId);var isSpecial=specialLevels[levelId];var card=document.createElement('div');card.className='level-card'+(unlocked?' unlocked':' locked')+(isSpecial?' special':'');if(unlocked)card.setAttribute('data-level',levelId);var starsHtml='';if(saved&&saved.stars){for(var s=0;s<3;s++)starsHtml+='<span class="mini-star'+(s<saved.stars?' filled':'')+'">⭐</span>';}
+else{for(var s2=0;s2<3;s2++)starsHtml+='<span class="mini-star empty">⭐</span>';}
+card.innerHTML='<div class="card-emoji">'+animal.emoji+'</div>'+
+'<div class="card-name">'+animal.name+'</div>'+
+'<div class="card-en">'+animal.en+'</div>'+
+'<div class="card-stars">'+starsHtml+'</div>'+
+(unlocked?'':'<div class="lock-icon">🔒</div>')+
+(isSpecial?'<div class="special-badge">✨</div>':'');levelGrid.appendChild(card);}}
+function bindEvents(onLevelClick,onOpenSettings){levelGrid.addEventListener('click',function(e){var card=e.target.closest('.level-card.unlocked');if(!card)return;var levelId=parseInt(card.getAttribute('data-level'));if(levelId){AudioManager.resumeContext();onLevelClick(levelId);}});document.getElementById('btn-settings-open').addEventListener('click',function(){AudioManager.resumeContext();onOpenSettings();});document.getElementById('btn-confirm-yes').addEventListener('click',function(){StorageManager.resetProgress();AudioManager.stopBGM();AudioManager.setMusic(true);AudioManager.setSfx(true);StorageManager.updateSettings('music',true);StorageManager.updateSettings('sfx',true);AudioManager.startBGM();hideConfirm();renderMenu();});document.getElementById('btn-confirm-no').addEventListener('click',hideConfirm);}
+return{initElements:initElements,showMenu:showMenu,showGame:showGame,showSettings:showSettings,showConfirm:showConfirm,hideConfirm:hideConfirm,renderMenu:renderMenu,bindEvents:bindEvents,};})();
