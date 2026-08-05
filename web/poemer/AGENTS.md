@@ -23,10 +23,11 @@
 - 备注区 (`#notesArea`) 只显示：重字、多音字、未收录字、行数不匹配；无统计汇总
 - 图案模式在 `.pattern-display` 中每两行一组（`.pattern-row`）
 - 弹出浮层 `.rhyme-popup` 通过 fixed 定位，在 document click 时关闭（排除 `.rhyme-tag` 点击）
-- 默认示例：登鹳雀楼（`poemInput.value` 初始赋值后立即 `render()`）
+- 输入框无默认值；`input` 事件实时清理内容（`cleanInput`，仅保留汉字与 `，。？！` 及换行）并自动识别体裁（`autoDetect`），不自动校验
 
 ## 修改注意事项
 
 - 所有样式在 `<style>` 内联，无外部 CSS 文件
 - 修改 `.char-card` 结构时，确保 `card.innerHTML` 模板字符串同步更新
 - 添加新的声调类型时需要同步更新 CSS class 和 `render()` 中的 class 判断逻辑
+- 韵书数据（`data.js`）排查约定：轻声视为阴平；多音字以普通话标准读音为准，删除无实义读法；同一字不应同时出现在阴平与阳平（混调）
