@@ -307,7 +307,7 @@ header h1 { font-size: 28px; font-weight: 700; letter-spacing: 4px; color: #5a38
 
   function render() {
     rhymePopup.classList.remove('show');
-    const lines = poemInput.value.split('\n').filter(l => l.trim().length > 0);
+    const lines = poemInput.value.split(/[^\u4e00-\u9fa5]+/).filter(Boolean);
     const mtName = poemTypeSel.value;
     const pzName = poemPatternSel.value;
     const mt = ShiMetricalPatternArray.find(m => m.name === mtName);
