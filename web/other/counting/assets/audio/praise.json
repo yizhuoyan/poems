@@ -1,0 +1,88 @@
+{
+  "format": {
+    "sampleRate": 16000,
+    "channels": 1,
+    "bits": 16,
+    "pcm": true
+  },
+  "gapMs": 50,
+  "file": "praise.wav",
+  "segments": {
+    "hello_1": {
+      "start": 0,
+      "duration": 2.4224,
+      "end": 2.4224
+    },
+    "hello_2": {
+      "start": 2.4724,
+      "duration": 2.2567,
+      "end": 4.7291
+    },
+    "hello_3": {
+      "start": 4.7791,
+      "duration": 1.6129,
+      "end": 6.392
+    },
+    "hello_4": {
+      "start": 6.442,
+      "duration": 1.1836,
+      "end": 7.6256
+    },
+    "praise_1": {
+      "start": 7.6756,
+      "duration": 1.7645,
+      "end": 9.4401
+    },
+    "praise_2": {
+      "start": 9.4901,
+      "duration": 1.3807,
+      "end": 10.8708
+    },
+    "praise_3": {
+      "start": 10.9208,
+      "duration": 1.2844,
+      "end": 12.2052
+    },
+    "praise_4": {
+      "start": 12.2553,
+      "duration": 1.5829,
+      "end": 13.8382
+    },
+    "praise_5": {
+      "start": 13.8882,
+      "duration": 1.9152,
+      "end": 15.8034
+    },
+    "praise_6": {
+      "start": 15.8534,
+      "duration": 2.0221,
+      "end": 17.8755
+    },
+    "praise_7": {
+      "start": 17.9255,
+      "duration": 0.9197,
+      "end": 18.8452
+    },
+    "retry_1": {
+      "start": 18.8952,
+      "duration": 1.5741,
+      "end": 20.4693
+    },
+    "retry_2": {
+      "start": 20.5193,
+      "duration": 1.7625,
+      "end": 22.2818
+    },
+    "retry_3": {
+      "start": 22.3318,
+      "duration": 1.9291,
+      "end": 24.2609
+    },
+    "retry_4": {
+      "start": 24.3109,
+      "duration": 1.6339,
+      "end": 25.9448
+    }
+  },
+  "totalDuration": 25.9448
+}

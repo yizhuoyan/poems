@@ -1,0 +1,350 @@
+/* 数一数 Counting —— 游戏页样式（iframe 内） */
+
+#game-screen {
+  justify-content: flex-start;
+}
+
+/* 游戏顶栏 */
+.game-header {
+  width: 100%;
+  height: 64px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+  z-index: 20;
+}
+
+.game-header .avatar-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 2px solid rgba(255, 215, 0, 0.4);
+}
+
+.game-header .avatar-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-bounce { animation: avatarBounce 0.5s ease; }
+
+@keyframes avatarBounce {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.3); }
+  60% { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+
+/* 进度显示 */
+.progress-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.progress-dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transition: background 0.3s, transform 0.3s;
+}
+
+.dot.filled {
+  background: #ffd666;
+  box-shadow: 0 0 8px rgba(255, 200, 50, 0.6);
+  transform: scale(1.15);
+}
+
+.progress-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* 返回按钮 */
+.btn-back {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn-back:active { background: rgba(255, 255, 255, 0.25); }
+
+/* 头栏设置按钮 */
+.header-settings { display: flex; gap: 6px; }
+
+.header-settings .btn-setting {
+  width: 36px;
+  height: 36px;
+  font-size: 16px;
+  border-width: 1px;
+}
+
+/* 提问文字（位于 game-area 之外，不会被渲染清空） */
+.question-text {
+  position: absolute;
+  bottom: 12%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 26px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 4px;
+  pointer-events: none;
+  z-index: 5;
+  transition: opacity 0.4s;
+}
+
+.question-text.hidden { opacity: 0; }
+
+.question-text.fade-out {
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+/* 游戏区域 */
+.game-area {
+  flex: 1;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 测验模式——物件仅展示 */
+.game-area.quiz-mode .game-object {
+  cursor: default;
+  pointer-events: none;
+}
+
+/* 游戏物件 */
+.game-object {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.object-emoji {
+  display: block;
+  line-height: 1;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.3));
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s;
+  animation: breathe 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.game-object:nth-child(1) .object-emoji { animation-delay: 0s; }
+.game-object:nth-child(2) .object-emoji { animation-delay: 0.4s; }
+.game-object:nth-child(3) .object-emoji { animation-delay: 0.8s; }
+.game-object:nth-child(4) .object-emoji { animation-delay: 1.2s; }
+.game-object:nth-child(5) .object-emoji { animation-delay: 1.6s; }
+
+.object-glow {
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0) 0%, transparent 70%);
+  pointer-events: none;
+  transition: background 0.3s;
+}
+
+.game-object.clicked .object-glow {
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.4) 20%, rgba(255, 200, 50, 0.15) 50%, transparent 70%);
+}
+
+.game-object.clicked .object-emoji {
+  animation: none;
+  filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.7));
+  opacity: 0.6;
+}
+
+.game-object.just-bounced .object-emoji {
+  animation: bounceAnim 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes bounceAnim {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.35); }
+  55% { transform: scale(0.88); }
+  75% { transform: scale(1.12); }
+  100% { transform: scale(1.08); }
+}
+
+/* 计数徽章 */
+.count-badge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 215, 0, 0.92);
+  color: #1a0a40;
+  font-size: 26px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+  z-index: 3;
+}
+
+.count-badge.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.game-object.clicked { pointer-events: none; }
+
+/* 撒花 */
+#confetti-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.confetti-piece {
+  position: absolute;
+  top: -40px;
+  animation: confettiFall linear forwards;
+}
+
+@keyframes confettiFall {
+  0% {
+    transform: translateY(0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  80% { opacity: 1; }
+  100% {
+    transform: translateY(110vh) rotate(720deg) scale(0.5);
+    opacity: 0;
+  }
+}
+
+/* 进阶数字卡 */
+.number-cards {
+  position: absolute;
+  bottom: 4%;
+  left: 0;
+  right: 0;
+  display: none;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 0 20px;
+  z-index: 30;
+}
+
+.number-cards.show { display: flex; }
+
+.number-cards.hidden { display: none; }
+
+.number-card {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  color: #fff;
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+  opacity: 0;
+  animation: cardSlideUp 0.4s ease forwards;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.number-card:nth-child(1)  { background: rgba(255, 107, 107, 0.4); } /* 红 */
+.number-card:nth-child(2)  { background: rgba(255, 165, 50,  0.4); } /* 橙 */
+.number-card:nth-child(3)  { background: rgba(255, 215, 0,   0.4); } /* 金 */
+.number-card:nth-child(4)  { background: rgba(80,  200, 120, 0.4); } /* 绿 */
+.number-card:nth-child(5)  { background: rgba(64,  150, 255, 0.4); } /* 蓝 */
+.number-card:nth-child(6)  { background: rgba(128, 90,  240, 0.4); } /* 紫 */
+.number-card:nth-child(7)  { background: rgba(255, 100, 180, 0.4); } /* 粉 */
+.number-card:nth-child(8)  { background: rgba(0,   200, 200, 0.4); } /* 青 */
+.number-card:nth-child(9)  { background: rgba(220, 180, 100, 0.4); } /* 棕 */
+
+.number-card:active { transform: scale(0.9); }
+
+.number-card.correct {
+  border-color: #ffd666;
+  box-shadow: 0 0 20px rgba(255, 200, 50, 0.6);
+  transform: scale(1.12);
+}
+
+.card-num-cn {
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.card-num-en {
+  font-size: 12px;
+  opacity: 0.7;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.number-card.shake { animation: cardShake 0.4s ease; }
+
+@keyframes cardSlideUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes cardShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(4px); }
+}
+
+@media (max-width: 480px) {
+  .number-card { width: 68px; height: 68px; }
+  .card-num-cn { font-size: 24px; }
+  .card-num-en { font-size: 10px; }
+}
+
+@media (min-width: 768px) {
+  .game-area {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+}

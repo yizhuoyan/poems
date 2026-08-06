@@ -1,0 +1,26 @@
+{
+  "format": { "sampleRate": 16000, "channels": 1, "bits": 16, "pcm": true },
+  "gapMs": 50,
+  "file": "nums.wav",
+  "segments": {
+    "num_1": {"start": 0, "duration": 1.13, "end": 1.13},
+    "num_2": {"start": 1.18, "duration": 1.13, "end": 2.31},
+    "num_3": {"start": 2.36, "duration": 1.22, "end": 3.58},
+    "num_4": {"start": 3.63, "duration": 1.19, "end": 4.82},
+    "num_5": {"start": 4.87, "duration": 1.205, "end": 6.075},
+    "num_6": {"start": 6.125, "duration": 1.2561, "end": 7.3811},
+    "num_7": {"start": 7.4311, "duration": 1.3221, "end": 8.7532},
+    "num_8": {"start": 8.8032, "duration": 1.2625, "end": 10.0657},
+    "num_9": {"start": 10.1157, "duration": 1.3049, "end": 11.4206},
+    "total_1": {"start": 11.4706, "duration": 1.635, "end": 13.1056},
+    "total_2": {"start": 13.1556, "duration": 1.71, "end": 14.8656},
+    "total_3": {"start": 14.9156, "duration": 1.73, "end": 16.6456},
+    "total_4": {"start": 16.6956, "duration": 1.69, "end": 18.3856},
+    "total_5": {"start": 18.4356, "duration": 1.64, "end": 20.0756},
+    "total_6": {"start": 20.1256, "duration": 1.8816, "end": 22.0072},
+    "total_7": {"start": 22.0572, "duration": 1.8987, "end": 23.9559},
+    "total_8": {"start": 24.0059, "duration": 2.0104, "end": 26.0163},
+    "total_9": {"start": 26.0663, "duration": 1.8891, "end": 27.9554}
+  },
+  "totalDuration": 27.9554
+}

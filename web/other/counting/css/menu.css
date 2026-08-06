@@ -1,0 +1,113 @@
+/* 数一数 Counting —— 首页（菜单 + iframe 容器） */
+
+#menu-screen {
+  justify-content: center;
+  gap: 12px;
+  padding: 20px;
+}
+
+.menu-title {
+  font-size: 48px;
+  font-weight: 800;
+  background: linear-gradient(180deg, #ffe08a 0%, #ffd666 40%, #ffc53d 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 2px 8px rgba(255, 200, 50, 0.5));
+  letter-spacing: 8px;
+}
+
+.menu-level {
+  font-size: 16px;
+  color: rgba(255, 215, 0, 0.7);
+  letter-spacing: 3px;
+  margin-top: 6px;
+}
+
+.menu-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(255, 215, 0, 0.5);
+  box-shadow: 0 0 30px rgba(255, 200, 50, 0.3);
+  margin: 8px 0;
+  animation: breathe 3s ease-in-out infinite;
+}
+
+.btn-start {
+  margin-top: 16px;
+  padding: 16px 64px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a0a40;
+  background: linear-gradient(180deg, #ffd666 0%, #ffc53d 50%, #faad14 100%);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(255, 200, 50, 0.5);
+  transition: transform 0.15s, box-shadow 0.15s;
+  letter-spacing: 4px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn-start:active {
+  transform: scale(0.94);
+  box-shadow: 0 2px 10px rgba(255, 200, 50, 0.4);
+}
+
+.menu-settings {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.menu-settings .btn-setting {
+  width: 48px;
+  height: 48px;
+  font-size: 20px;
+}
+
+.btn-reset {
+  margin-top: 16px;
+  padding: 8px 24px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  cursor: pointer;
+  letter-spacing: 2px;
+  transition: color 0.2s, border-color 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn-reset:active {
+  color: rgba(255, 255, 255, 0.8);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* === iframe 游戏容器 === */
+#game-frame {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  border: 0;
+  display: none;
+  z-index: 20;
+  background: #0a0a2e;
+}
+
+#game-frame.active { display: block; }
+
+@media (max-width: 480px) {
+  .menu-title { font-size: 36px; }
+  .btn-start { padding: 14px 48px; font-size: 24px; }
+  .menu-avatar { width: 96px; height: 96px; }
+}
+
+@media (min-width: 768px) {
+  .menu-title { font-size: 64px; }
+}
