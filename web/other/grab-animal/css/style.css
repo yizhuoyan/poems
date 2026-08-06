@@ -1,0 +1,515 @@
+/* 卷卷抓小动物 - 全局样式（水族馆/泡泡主题） */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-top: #cfeaff;
+  --bg-bottom: #e6d9ff;
+  --text-main: #5a6bd8;
+  --text-soft: #8a97e0;
+  --white: #ffffff;
+}
+
+html, body {
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  overscroll-behavior: none;
+  font-family: "Comic Sans MS", "Chalkboard SE", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+/* 禁止 iOS 橡皮筋滚动 */
+body { position: fixed; inset: 0; }
+
+/* ---------- 屏幕切换 ---------- */
+.screen {
+  position: absolute;
+  inset: 0;
+  display: none;
+  overflow: hidden;
+}
+.screen.active { display: block; }
+
+/* ---------- 主菜单 ---------- */
+.menu-content {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding-bottom: 24px;
+}
+
+.game-title {
+  font-size: clamp(44px, 10vw, 72px);
+  letter-spacing: 6px;
+  color: transparent;
+  background: linear-gradient(180deg, #8fd0ff, #a98cff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: drop-shadow(0 6px 10px rgba(120, 140, 255, .35));
+}
+
+.game-subtitle {
+  font-size: clamp(18px, 4.5vw, 26px);
+  letter-spacing: 6px;
+  color: var(--text-soft);
+}
+
+.avatar-wrap {
+  border-radius: 50%;
+  overflow: hidden;
+  border: 5px solid #fff;
+  box-shadow: 0 8px 24px rgba(90, 110, 220, .3);
+}
+.avatar-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.avatar-menu { width: 132px; height: 132px; }
+
+.btn-start {
+  width: min(70vw, 280px);
+  padding: 18px 0;
+  font-size: 34px;
+  letter-spacing: 12px;
+  color: #fff;
+  font-family: inherit;
+  background: radial-gradient(circle at 30% 25%, #ffb9cf, #ff8fb0);
+  border: none;
+  border-radius: 999px;
+  box-shadow: 0 10px 26px rgba(255, 140, 175, .45), inset 0 -6px 12px rgba(255, 120, 160, .5);
+  animation: start-pulse 1.6s ease-in-out infinite;
+  cursor: pointer;
+}
+
+.menu-stats {
+  font-size: 22px;
+  color: var(--text-soft);
+}
+
+.toggle-row { display: flex; gap: 18px; }
+.toggle-btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  font-size: 26px;
+  background: rgba(255, 255, 255, .85);
+  box-shadow: 0 6px 14px rgba(90, 110, 220, .2);
+  cursor: pointer;
+}
+.toggle-btn.off { filter: grayscale(1); opacity: .55; }
+.toggle-btn.reset-btn { font-size: 22px; }
+.fullscreen-btn { font-size: 24px; }
+
+/* 菜单装饰泡泡 */
+.deco-bubble {
+  position: absolute;
+  top: 0;
+  left: var(--x);
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 30%, rgba(255, 255, 255, .85), rgba(170, 210, 255, .25));
+  border: 2px solid rgba(255, 255, 255, .8);
+  pointer-events: none;
+  animation: bubble-float var(--dur) linear var(--delay) infinite;
+}
+
+/* ---------- 游戏画面顶部栏 ---------- */
+.game-top {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 78px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  padding: 12px 16px;
+  background: linear-gradient(180deg, rgba(200, 225, 255, .8), rgba(200, 225, 255, 0));
+}
+
+.btn-back {
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  background: rgba(255, 255, 255, .85);
+  font-size: 32px;
+  line-height: 1;
+  color: var(--text-main);
+  box-shadow: 0 6px 14px rgba(90, 110, 220, .2);
+  cursor: pointer;
+}
+
+.avatar-hud { width: 54px; height: 54px; flex-shrink: 0; }
+.avatar-hud.happy img { animation: avatar-happy .5s ease; }
+
+.goal-hud {
+  flex-shrink: 0;
+  margin-left: auto;
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 3px solid #fff;
+  background: rgba(255, 255, 255, .85);
+  box-shadow: 0 6px 14px rgba(90, 110, 220, .2);
+  font-size: 26px;
+  font-weight: bold;
+  color: var(--text-main);
+}
+#goal-count.bump { animation: star-bump .35s ease; }
+
+.level-hud {
+  flex-shrink: 0;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 3px solid #fff;
+  background: rgba(255, 255, 255, .85);
+  box-shadow: 0 6px 14px rgba(90, 110, 220, .2);
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--accent);
+}
+
+/* 已收集小动物栏（顶部中央，图标下方显示英文） */
+.collected-row {
+  position: absolute;
+  top: 84px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 15;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  max-width: 92vw;
+  pointer-events: none;
+}
+.collected-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  animation: icon-pop .4s cubic-bezier(.2, 1.6, .4, 1);
+}
+.collected-icon {
+  font-size: 34px;
+  line-height: 1;
+  filter: drop-shadow(0 3px 6px rgba(120, 140, 255, .4));
+}
+.collected-word {
+  font-size: 13px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  color: var(--text-main);
+  text-shadow: 0 0 4px #fff, 0 0 4px #fff;
+}
+
+.bubble-field {
+  position: absolute;
+  top: 78px; left: 0; right: 0; bottom: 0;
+  touch-action: none;
+}
+
+/* ---------- 泡泡 ---------- */
+.bubble {
+  position: absolute;
+  top: 0;
+  left: var(--x);
+  animation: bubble-float var(--dur) linear forwards;
+  will-change: transform;
+}
+.bubble-inner {
+  position: relative;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, var(--light), var(--c) 72%);
+  border: 2px solid rgba(255, 255, 255, .85);
+  box-shadow:
+    inset -6px -8px 18px rgba(255, 255, 255, .3),
+    inset 6px 8px 14px rgba(255, 255, 255, .55),
+    0 4px 18px rgba(120, 160, 255, .25);
+  animation: bubble-sway var(--sway) ease-in-out infinite alternate;
+}
+.bubble-inner::before {
+  content: '';
+  position: absolute;
+  top: 14%; left: 18%;
+  width: 22%; height: 13%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .9);
+  transform: rotate(-20deg);
+}
+.bubble-inner::after {
+  content: '';
+  position: absolute;
+  bottom: 16%; right: 22%;
+  width: 12%; height: 8%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .55);
+}
+/* 泡泡序号数字（居中，随泡泡大小缩放） */
+.bubble-num {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(var(--size) * .48);
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(90, 110, 220, .55);
+  pointer-events: none;
+  user-select: none;
+}
+.bubble.popping .bubble-inner { animation: bubble-pop .35s ease-out forwards; }
+
+/* ---------- 粒子 ---------- */
+.particle {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: particle-fly .55s ease-out forwards;
+  will-change: transform, opacity;
+}
+
+/* ---------- 小动物 ---------- */
+/* 从泡泡里蹦出 */
+.animal {
+  position: absolute;
+  font-size: 56px;
+  line-height: 1;
+  pointer-events: none;
+  z-index: 5;
+  animation: animal-pop .6s cubic-bezier(.2, 1.6, .4, 1) forwards;
+  will-change: transform, opacity;
+}
+/* 跳跃后飞向顶部收集栏 */
+.animal-fly {
+  position: absolute;
+  font-size: 56px;
+  line-height: 1;
+  pointer-events: none;
+  z-index: 30;
+  will-change: transform, opacity;
+  transition: transform .8s cubic-bezier(.5, .1, .8, .4), opacity .8s ease;
+}
+.animal-hop { animation: animal-hop .55s ease; }
+
+/* ---------- 快速飘过的小动物（奖励） ---------- */
+.animal-pass {
+  position: absolute;
+  left: 0;
+  font-size: 56px;
+  line-height: 1;
+  z-index: 6;
+  cursor: pointer;
+  will-change: transform;
+  animation: animal-cross var(--cross) linear forwards;
+}
+.animal-pass::before {
+  content: '';
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .8);
+  box-shadow: 0 4px 16px rgba(120, 140, 220, .35);
+  z-index: -1;
+}
+
+/* ---------- 直接模式漂浮小动物（11~20 关，无泡泡） ---------- */
+.animal-direct {
+  position: absolute;
+  top: 0;
+  left: var(--x);
+  font-size: 64px;
+  line-height: 1;
+  z-index: 6;
+  cursor: pointer;
+  will-change: transform;
+  animation: bubble-float var(--dur) linear forwards;
+}
+.animal-direct::before {
+  content: '';
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, rgba(255, 255, 255, .9), rgba(170, 210, 255, .3));
+  border: 2px solid rgba(255, 255, 255, .8);
+  z-index: -1;
+}
+
+/* ---------- 关卡开场横幅 ---------- */
+.level-banner {
+  position: absolute;
+  left: 50%; top: 40%;
+  transform: translate(-50%, -50%) scale(0);
+  background: rgba(255, 255, 255, .93);
+  border: 4px solid #ffd36b;
+  border-radius: 999px;
+  padding: 16px 36px;
+  font-size: clamp(26px, 6.5vw, 40px);
+  letter-spacing: 4px;
+  color: #ff9d4d;
+  box-shadow: 0 12px 40px rgba(255, 180, 80, .5);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 20;
+}
+.level-banner.show { animation: banner-in .5s cubic-bezier(.2, 1.4, .4, 1) forwards; }
+.level-banner.compact { animation: banner-shrink .5s ease forwards; }
+
+/* ---------- 过关庆祝 ---------- */
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(90, 110, 200, .35);
+}
+.overlay.show { display: flex; }
+
+.win-panel {
+  width: min(88vw, 520px);
+  padding: 30px 24px 34px;
+  border-radius: 40px;
+  border: 5px solid #ffd36b;
+  background: rgba(255, 255, 255, .96);
+  box-shadow: 0 20px 60px rgba(90, 110, 220, .35);
+  text-align: center;
+  animation: panel-in .5s cubic-bezier(.2, 1.4, .4, 1);
+}
+.win-title {
+  font-size: clamp(40px, 9vw, 60px);
+  letter-spacing: 6px;
+  color: transparent;
+  background: linear-gradient(180deg, #8fd0ff, #a98cff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: drop-shadow(0 4px 8px rgba(120, 140, 255, .3));
+}
+.win-parade {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 18px 0 8px;
+  min-height: 64px;
+}
+.win-parade .parade-animal {
+  font-size: 44px;
+  animation: parade-hop .6s ease-in-out infinite alternate;
+}
+.win-text {
+  font-size: clamp(22px, 5.5vw, 32px);
+  color: #ff9d4d;
+  letter-spacing: 4px;
+  margin-bottom: 20px;
+}
+/* 失败弹窗 */
+.fail-title {
+  font-size: clamp(36px, 8vw, 52px);
+  letter-spacing: 4px;
+  color: var(--text-main);
+  margin-bottom: 12px;
+}
+.fail-text {
+  font-size: clamp(20px, 5vw, 28px);
+  color: var(--text-soft);
+  letter-spacing: 3px;
+  margin-bottom: 20px;
+}
+.btn-next {
+  width: min(60vw, 240px);
+  padding: 16px 0;
+  font-size: 30px;
+  letter-spacing: 8px;
+}
+
+/* ---------- 动画 ---------- */
+@keyframes bubble-float {
+  from { transform: translateY(104vh); }
+  to   { transform: translateY(-32vh); }
+}
+@keyframes bubble-sway {
+  from { transform: translateX(-24px); }
+  to   { transform: translateX(24px); }
+}
+@keyframes bubble-pop {
+  to { transform: scale(1.4); opacity: 0; }
+}
+@keyframes particle-fly {
+  from { transform: translate(0, 0) scale(1); opacity: 1; }
+  to   { transform: translate(var(--dx), var(--dy)) scale(.15); opacity: 0; }
+}
+@keyframes animal-pop {
+  0%   { transform: scale(0) rotate(-25deg); opacity: 0; }
+  45%  { transform: scale(1.25) rotate(8deg); opacity: 1; }
+  65%  { transform: scale(.95) rotate(-3deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+@keyframes animal-hop {
+  0%, 100% { transform: translateY(0) scale(1); }
+  30% { transform: translateY(-26px) scale(1.1); }
+  60% { transform: translateY(0) scale(.95); }
+  80% { transform: translateY(-12px) scale(1.05); }
+}
+@keyframes animal-cross {
+  from { transform: translateX(var(--from)); }
+  to   { transform: translateX(var(--to)); }
+}
+@keyframes icon-pop {
+  0% { transform: scale(0); }
+  60% { transform: scale(1.4); }
+  100% { transform: scale(1); }
+}
+@keyframes banner-in {
+  0%   { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+  60%  { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+@keyframes banner-shrink {
+  from { top: 40%; transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  to   { top: 0;   transform: translate(-50%, -2px) scale(.55); opacity: 1; }
+}
+@keyframes panel-in {
+  0% { transform: scale(.3) translateY(60px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+@keyframes parade-hop {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-14px); }
+}
+@keyframes avatar-happy {
+  0%, 100% { transform: scale(1); }
+  30% { transform: scale(1.18) rotate(-6deg); }
+  65% { transform: scale(.94) rotate(4deg); }
+}
+@keyframes star-bump {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.45) rotate(-8deg); }
+  100% { transform: scale(1); }
+}
+@keyframes start-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}

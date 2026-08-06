@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>游戏</title>
+<link rel="stylesheet" href="css/animations.css">
+<link rel="stylesheet" href="css/game.css">
+</head>
+<body>
+<div id="game-app" class="screen">
+  <div class="game-header">
+    <button id="btn-back" class="btn-back">← 返回</button>
+    <div class="score-display">得分：<span id="score-value">0</span></div>
+    <div id="level-display" class="level-display"></div>
+    <div class="combo-display">连击：<span id="combo-value">0</span></div>
+    <img id="game-avatar" class="game-avatar" src="assets/images/avatar.png" alt="卷卷">
+  </div>
+
+  <div id="progress-dots" class="progress-dots"></div>
+
+  <div id="item-zone" class="item-zone">
+    <div id="item-glow" class="item-wrapper">
+      <span id="item-display" class="item-display">🍎</span>
+      <div id="item-name-label" class="item-name-label">
+        <span class="item-cn"></span>
+        <span class="item-en"></span>
+      </div>
+    </div>
+  </div>
+
+  <div id="encourage-text" class="encourage-text"></div>
+
+  <div id="box-tray" class="box-tray"></div>
+
+  <div id="float-score" class="float-score">+10</div>
+  <div id="float-heart" class="float-heart">💗</div>
+</div>
+
+<!-- 过关弹窗 -->
+<div id="level-complete-overlay" class="level-complete-overlay">
+  <div class="overlay-content">
+    <div id="confetti-container" class="confetti-container"></div>
+    <h2 class="overlay-title">
+      <span class="title-cn">过关啦！</span>
+      <span class="title-en">Level Complete!</span>
+    </h2>
+    <div id="stars-display" class="stars-display">
+      <span class="star">⭐</span><span class="star">⭐</span><span class="star">⭐</span>
+    </div>
+    <div class="overlay-score">得分：<span id="final-score">0</span> 分</div>
+    <div class="overlay-buttons">
+      <button id="btn-next-level" class="btn-primary">下一关 ➜</button>
+      <button id="btn-back-menu" class="btn-secondary">回主菜单</button>
+    </div>
+  </div>
+</div>
+
+<!-- 拖拽层 -->
+<div id="drag-layer" class="drag-layer"></div>
+
+<script src="js/data.js?v=11"></script>
+<script src="js/storage.js?v=11"></script>
+<script src="js/tts.js?v=11"></script>
+<script src="js/game.js?v=11"></script>
+<script src="js/game-ui.js?v=11"></script>
+<script src="js/game-init.js?v=11"></script>
+</body>
+</html>

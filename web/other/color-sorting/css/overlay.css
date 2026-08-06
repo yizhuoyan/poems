@@ -1,0 +1,48 @@
+/* 颜色小分类 - 弹窗/遮罩补充样式 */
+
+.confirm-content { max-width:380px; }
+.confirm-text { font-size:18px; color:var(--text); margin-bottom:20px; line-height:1.6; }
+.btn-danger-confirm {
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:12px 30px; border:none; border-radius:50px;
+  background:#e74c3c; color:#fff; font-size:16px; cursor:pointer;
+  transition:transform .15s;
+}
+.btn-danger-confirm:active { transform:scale(.95); }
+
+/* 语音选择面板 */
+.voice-overlay {
+  position:fixed; top:0; left:0; width:100%; height:100%; height:100dvh;
+  background:rgba(0,0,0,.45); z-index:300;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:14px; padding:20px;
+}
+.voice-list {
+  background:var(--bg-card); border-radius:20px; padding:14px;
+  width:min(420px,92vw); max-height:65vh; overflow-y:auto;
+  box-shadow:0 8px 40px rgba(0,0,0,.15);
+  display:flex; flex-direction:column; gap:8px;
+}
+.voice-row {
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  padding:12px 14px; border-radius:14px; border:2px solid var(--border);
+  background:#fff; cursor:pointer; transition:transform .15s;
+}
+.voice-row:active { transform:scale(.97); }
+.voice-row.selected {
+  border-color:var(--pink); background:var(--pink-light);
+}
+.voice-name {
+  font-size:15px; color:var(--text); flex:1; line-height:1.4;
+}
+.voice-play {
+  flex-shrink:0; padding:6px 16px; border:none; border-radius:20px;
+  background:linear-gradient(135deg,var(--rainbow-3),var(--rainbow-4));
+  color:#fff; font-size:14px; cursor:pointer;
+}
+.voice-close {
+  padding:12px 46px; border:none; border-radius:50px;
+  background:var(--rainbow-1); color:#fff; font-size:17px; cursor:pointer;
+  box-shadow:0 4px 15px rgba(0,0,0,.15); transition:transform .15s;
+}
+.voice-close:active { transform:scale(.95); }

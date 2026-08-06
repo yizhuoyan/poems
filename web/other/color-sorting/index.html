@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="assets/images/icon-180.png">
+<title>卷卷认颜色</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/animations.css">
+<link rel="stylesheet" href="css/menu.css">
+<link rel="stylesheet" href="css/overlay.css">
+</head>
+<body>
+
+<!-- 主菜单 -->
+<div id="menu-screen" class="screen active menu-screen">
+  <div class="deco-rainbow">🌈</div>
+  <div class="menu-dots"></div>
+  <div class="menu-header">
+    <h1 class="game-title">
+      <span class="title-cn">卷卷认颜色</span>
+      <span class="title-en">Color Sorting</span>
+    </h1>
+    <div class="menu-decoration">
+      <span class="deco-emoji deco-red">🍎</span>
+      <span class="deco-emoji deco-blue">💧</span>
+      <span class="deco-emoji deco-green">🌿</span>
+    </div>
+    <img id="menu-avatar" class="avatar menu-avatar" src="assets/images/avatar.png" alt="卷卷">
+  </div>
+  <div class="menu-buttons">
+    <button id="btn-start" class="btn-primary btn-rainbow">开　始</button>
+  </div>
+  <div class="menu-level">第 <span id="level-num">1</span> / <span id="level-total">12</span> 关</div>
+  <div class="menu-toggles">
+    <button id="btn-music" title="音乐开关">🎵</button>
+    <button id="btn-sfx" title="音效开关">🔊</button>
+    <button id="btn-voice" title="语音设置">🎙️</button>
+    <button id="btn-reset" title="重置进度">🔄</button>
+  </div>
+</div>
+
+<!-- 游戏 iframe -->
+<iframe id="game-iframe" src="game.html" class="screen-iframe"></iframe>
+
+<script src="js/data.js?v=11"></script>
+<script src="js/storage.js?v=11"></script>
+<script src="js/tts.js?v=11"></script>
+<script src="js/audio.js?v=11"></script>
+<script src="js/ui.js?v=11"></script>
+<script src="js/main.js?v=11"></script>
+</body>
+</html>
