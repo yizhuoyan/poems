@@ -1,0 +1,163 @@
+{
+  "format": {
+    "sampleRate": 16000,
+    "channels": 1,
+    "bits": 16,
+    "pcm": true
+  },
+  "gapMs": 50,
+  "file": "animals.wav",
+  "segments": {
+    "bear": {
+      "start": 0,
+      "duration": 1.385,
+      "end": 1.385
+    },
+    "bee": {
+      "start": 1.4351,
+      "duration": 1.255,
+      "end": 2.6901
+    },
+    "calf": {
+      "start": 2.7401,
+      "duration": 1.485,
+      "end": 4.2251
+    },
+    "cat": {
+      "start": 4.2752,
+      "duration": 1.395,
+      "end": 5.6702
+    },
+    "chick": {
+      "start": 5.7203,
+      "duration": 1.47,
+      "end": 7.1902
+    },
+    "crab": {
+      "start": 7.2403,
+      "duration": 1.455,
+      "end": 8.6953
+    },
+    "crocodile": {
+      "start": 8.7454,
+      "duration": 1.8,
+      "end": 10.5454
+    },
+    "dinosaur": {
+      "start": 10.5954,
+      "duration": 1.685,
+      "end": 12.2804
+    },
+    "dog": {
+      "start": 12.3305,
+      "duration": 1.405,
+      "end": 13.7355
+    },
+    "duck": {
+      "start": 13.7856,
+      "duration": 1.405,
+      "end": 15.1906
+    },
+    "elephant": {
+      "start": 15.2406,
+      "duration": 1.66,
+      "end": 16.9006
+    },
+    "fox": {
+      "start": 16.9507,
+      "duration": 1.635,
+      "end": 18.5857
+    },
+    "giraffe": {
+      "start": 18.6358,
+      "duration": 1.61,
+      "end": 20.2458
+    },
+    "hamster": {
+      "start": 20.2958,
+      "duration": 1.745,
+      "end": 22.0408
+    },
+    "hedgehog": {
+      "start": 22.0909,
+      "duration": 1.65,
+      "end": 23.7409
+    },
+    "kangaroo": {
+      "start": 23.7909,
+      "duration": 1.595,
+      "end": 25.3859
+    },
+    "koala": {
+      "start": 25.436,
+      "duration": 1.52,
+      "end": 26.956
+    },
+    "lamb": {
+      "start": 27.0061,
+      "duration": 1.445,
+      "end": 28.4511
+    },
+    "lion": {
+      "start": 28.5011,
+      "duration": 1.55,
+      "end": 30.0511
+    },
+    "monkey": {
+      "start": 30.1012,
+      "duration": 1.47,
+      "end": 31.5712
+    },
+    "octopus": {
+      "start": 31.6212,
+      "duration": 1.64,
+      "end": 33.2612
+    },
+    "panda": {
+      "start": 33.3113,
+      "duration": 1.475,
+      "end": 34.7863
+    },
+    "parrot": {
+      "start": 34.8364,
+      "duration": 1.525,
+      "end": 36.3614
+    },
+    "penguin": {
+      "start": 36.4114,
+      "duration": 1.725,
+      "end": 38.1364
+    },
+    "pig": {
+      "start": 38.1865,
+      "duration": 1.405,
+      "end": 39.5915
+    },
+    "pony": {
+      "start": 39.6416,
+      "duration": 1.415,
+      "end": 41.0566
+    },
+    "rabbit": {
+      "start": 41.1066,
+      "duration": 1.51,
+      "end": 42.6166
+    },
+    "squirrel": {
+      "start": 42.6667,
+      "duration": 1.635,
+      "end": 44.3017
+    },
+    "turtle": {
+      "start": 44.3518,
+      "duration": 1.425,
+      "end": 45.7767
+    },
+    "whale": {
+      "start": 45.8268,
+      "duration": 1.405,
+      "end": 47.2318
+    }
+  },
+  "totalDuration": 47.2318
+}

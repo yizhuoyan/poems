@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>卷卷数一数</title>
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/game.css">
+</head>
+<body>
+
+  <!-- 星空背景 -->
+  <div id="stars-bg"></div>
+
+  <!-- 撒花层 -->
+  <div id="confetti-layer"></div>
+
+  <!-- 游戏画面 -->
+  <div id="game-screen" class="screen active">
+    <!-- 顶栏 -->
+    <div class="game-header">
+      <div class="avatar-wrap">
+        <img src="assets/images/avatar.png" alt="卷卷" onerror="this.style.display='none'">
+      </div>
+      <div class="progress-area">
+        <div id="progress-dots" class="progress-dots"></div>
+        <span id="progress-text" class="progress-text">0/0</span>
+      </div>
+      <div class="header-settings">
+        <button id="btn-music" class="btn-setting">🔊</button>
+        <button id="btn-sfx" class="btn-setting">🔔</button>
+      </div>
+      <button id="btn-back" class="btn-back">←</button>
+    </div>
+
+    <!-- 提问文字（在 game-area 之外，不会被渲染清空） -->
+    <div id="question-text" class="question-text">数一数？</div>
+
+    <!-- 游戏区域（只放物件） -->
+    <div id="game-area" class="game-area"></div>
+
+    <!-- 进阶数字卡 -->
+    <div id="number-cards" class="number-cards hidden"></div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/unlock.js"></script>
+  <script src="js/game.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,97 @@
+/* 颜色小分类 - 主菜单样式 */
+
+.menu-screen {
+  justify-content:center; gap:clamp(12px,2vh,20px);
+  background:linear-gradient(170deg,#fef9e7 0%,#e8f5e9 30%,#fffde7 70%,#fff3e0 100%);
+  overflow:visible;
+}
+
+.menu-header {
+  display:flex; flex-direction:column; align-items:center; gap:8px;
+}
+
+.menu-decoration {
+  display:flex; gap:clamp(8px,2vw,16px);
+}
+.deco-emoji {
+  display:inline-block; font-size:clamp(36px,7vw,56px);
+  animation:menu-bounce 2s ease-in-out infinite;
+}
+.deco-red  { animation-delay:0s; }
+.deco-blue { animation-delay:.25s; }
+.deco-green{ animation-delay:.5s; }
+
+.game-title {
+  text-align:center;
+}
+.title-cn {
+  display:block; font-size:clamp(28px,6vw,38px); color:var(--text); font-weight:bold;
+}
+.title-en {
+  display:block; font-size:clamp(14px,3vw,18px); color:var(--text-dim); margin-top:2px;
+}
+
+.menu-avatar {
+  width:clamp(90px,18vw,130px); height:clamp(90px,18vw,130px);
+}
+
+.menu-buttons {
+  display:flex; flex-direction:column; align-items:center; gap:12px; margin-top:4px;
+}
+
+.menu-level {
+  font-size:clamp(16px,3vw,20px); color:var(--text-dim); margin-top:4px;
+}
+.menu-level span {
+  color:var(--pink); font-weight:bold;
+}
+
+.menu-toggles {
+  display:flex; gap:16px; margin-top:4px;
+}
+
+.menu-toggles button {
+  width:50px; height:50px; border-radius:50%; border:2px solid var(--border);
+  background:var(--bg-card); font-size:22px; cursor:pointer; display:flex;
+  align-items:center; justify-content:center; transition:transform .15s;
+}
+.menu-toggles button:active { transform:scale(.9); }
+
+/* 彩虹天空装饰 */
+.deco-rainbow {
+  position:absolute; pointer-events:none;
+  top:-10%; left:-10%;
+  font-size:clamp(200px,40vw,400px); opacity:.15;
+  transform:rotate(-20deg);
+}
+
+/* 云朵装饰 */
+.menu-screen::before, .menu-screen::after {
+  content:'☁️'; position:fixed; pointer-events:none; font-size:clamp(40px,8vw,80px); opacity:.2;
+  animation:cloud-float 12s ease-in-out infinite;
+}
+.menu-screen::before { top:8%; left:10%; }
+.menu-screen::after  { top:15%; right:8%; animation-duration:15s; animation-direction:reverse; }
+
+/* 彩色圆点装饰 */
+.menu-dots {
+  position:fixed; pointer-events:none; z-index:0;
+}
+.menu-dots::before {
+  content:''; position:fixed; bottom:10%; left:5%;
+  width:30px; height:30px; border-radius:50%; background:var(--rainbow-1); opacity:.25;
+}
+.menu-dots::after {
+  content:''; position:fixed; bottom:15%; right:8%;
+  width:20px; height:20px; border-radius:50%; background:var(--rainbow-3); opacity:.25;
+}
+
+/* 彩虹渐变按钮 */
+.btn-rainbow {
+  background:linear-gradient(90deg,var(--rainbow-1),var(--rainbow-2),var(--rainbow-3),var(--rainbow-4),var(--rainbow-5));
+  background-size:300% 100%; animation:rainbow-shift 3s ease-in-out infinite;
+}
+
+#btn-start {
+  padding:14px 100px; font-size:clamp(36px,8vw,52px);
+}

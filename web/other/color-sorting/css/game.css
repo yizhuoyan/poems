@@ -1,0 +1,219 @@
+/* 颜色小分类 - 游戏页面样式（game.html 内） */
+
+:root {
+  --pink: #e88baE;
+  --pink-light: #ffb3c6;
+  --text: #5a4a3a;
+  --text-dim: #a09080;
+  --border: #e0d5c0;
+  --bg-card: #fdfaf5;
+  --shadow: rgba(0,0,0,.08);
+  --bg-cream: #fef9f0;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+html, body {
+  width:100%; height:100vh; height:100dvh; overflow:hidden;
+  position:fixed; top:0; left:0;
+  font-family:'PingFang SC','Hiragino Sans GB','Microsoft YaHei','Noto Sans SC',system-ui,-apple-system,sans-serif;
+  -webkit-user-select:none; user-select:none;
+  -webkit-tap-highlight-color:transparent;
+  -webkit-touch-callout:none;
+  touch-action:manipulation;
+  background:var(--bg-cream);
+}
+
+.screen {
+  width:100%; height:100vh; height:100dvh;
+  display:flex; flex-direction:column; align-items:center; overflow:hidden;
+}
+
+/* 顶部栏 */
+.game-header {
+  width:100%; display:flex; align-items:center; gap:12px;
+  padding:8px 16px; flex-shrink:0;
+}
+
+.btn-back {
+  background:none; border:none; font-size:clamp(18px,3vw,22px); color:var(--text);
+  cursor:pointer; padding:4px 8px;
+}
+
+.score-display {
+  font-size:clamp(15px,2.5vw,18px); color:var(--text); font-weight:bold;
+}
+.level-display {
+  font-size:clamp(14px,2.5vw,16px); color:var(--pink); font-weight:bold;
+  text-align:center; flex:1;
+}
+.combo-display {
+  font-size:clamp(14px,2vw,16px); color:var(--text-dim); margin-left:auto;
+}
+
+.game-avatar {
+  width:clamp(45px,8vw,58px); height:clamp(45px,8vw,58px);
+  border-radius:50%; object-fit:cover; box-shadow:0 2px 8px var(--shadow);
+  border:2px solid #fff;
+}
+
+/* 进度点 */
+.progress-dots {
+  display:flex; gap:8px; justify-content:center; padding:4px 0; flex-shrink:0;
+}
+.progress-dot {
+  font-size:clamp(22px,4vw,28px); transition:transform .2s;
+}
+.progress-dot.filled { transform:scale(1.15); animation:progress-fill .4s ease-out; }
+
+/* 物件区 */
+.item-zone {
+  flex:1; display:flex; align-items:center; justify-content:center;
+  position:relative; touch-action:none;
+}
+.item-wrapper {
+  width:clamp(130px,30vw,165px); height:clamp(130px,30vw,165px);
+  border-radius:50%; border:3px solid; border-color:rgba(0,0,0,.08);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
+  background:rgba(255,255,255,.85);
+  box-shadow:0 0 20px rgba(0,0,0,.06);
+  animation:item-glow-pulse 2s ease-in-out infinite;
+  position:relative; touch-action:none;
+}
+.item-display {
+  font-size:clamp(48px,12vw,64px); line-height:1; flex-shrink:0;
+  pointer-events:none; transition:transform .2s;
+}
+.item-display.being-dragged { opacity:0; }
+.item-display.pop-in { animation:pop-in .4s ease-out; }
+.item-wrapper:hover { cursor:grab; }
+.item-wrapper:active { cursor:grabbing; }
+
+/* 鼓励文字 */
+.encourage-text {
+  font-size:clamp(18px,3vw,22px); color:var(--pink); font-weight:bold;
+  text-align:center; min-height:32px; opacity:0; transition:opacity .3s;
+  flex-shrink:0;
+}
+.encourage-text.show { opacity:1; animation:encourage-pop .4s ease-out; }
+
+/* 物品名称标签 */
+.item-name-label {
+  display:none; flex-direction:column; align-items:center; gap:0;
+  flex-shrink:0; line-height:1.1;
+}
+.item-cn {
+  font-size:clamp(12px,2.5vw,18px); font-weight:bold; color:var(--text);
+}
+.item-en {
+  font-size:clamp(10px,2vw,14px); color:var(--text-dim);
+}
+
+/* 收纳盒区 */
+.box-tray {
+  display:flex; gap:clamp(24px,6vw,48px); justify-content:center;
+  padding:12px 16px clamp(16px,3vh,24px); flex-shrink:0;
+}
+.color-box {
+  width:clamp(80px,18vw,110px); height:clamp(90px,20vw,125px);
+  border-radius:24px; border:4px solid;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:2px; transition:transform .15s; position:relative;
+  box-shadow:0 3px 12px var(--shadow);
+}
+.color-box:active { transform:scale(.95); }
+.color-box { animation:box-breathe 3s ease-in-out infinite; }
+.color-box.drag-hover {
+  transform:scale(1.08);
+  box-shadow:0 6px 24px rgba(0,0,0,.18), 0 0 0 6px currentColor;
+  animation:none;
+  z-index:1;
+}
+.color-box:nth-child(2) { animation-delay: .5s; }
+.color-box:nth-child(3) { animation-delay: 1s; }
+.color-box:nth-child(4) { animation-delay: 1.5s; }
+.box-emoji { font-size:clamp(28px,6vw,38px); line-height:1; transition:all .3s; }
+.box-label { font-size:clamp(14px,2.5vw,17px); color:var(--text); font-weight:bold; }
+.box-en { font-size:clamp(10px,1.8vw,12px); color:var(--text-dim); }
+
+/* 拖拽层 */
+.drag-layer {
+  position:fixed; top:0; left:0; width:100%; height:100%; height:100dvh;
+  pointer-events:none; z-index:1000;
+}
+.drag-clone {
+  position:fixed; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
+  border-radius:50%; border:3px solid; border-color:rgba(0,0,0,.08);
+  background:rgba(255,255,255,.9);
+  box-shadow:0 0 20px rgba(0,0,0,.06);
+  pointer-events:none; z-index:1001;
+}
+.drag-clone.active { display:flex; }
+
+/* 浮动文字 */
+.float-score {
+  position:fixed; font-size:24px; color:var(--pink); font-weight:bold;
+  pointer-events:none; z-index:1100; opacity:0;
+}
+.float-score.show { animation:float-score-up 1s ease-out forwards; }
+.float-heart {
+  position:fixed; font-size:32px; pointer-events:none; z-index:1100; opacity:0;
+}
+.float-heart.show { animation:heart-float 1.2s ease-out forwards; }
+
+/* 过关弹窗 */
+.level-complete-overlay {
+  position:fixed; top:0; left:0; width:100%; height:100%; height:100dvh;
+  background:rgba(0,0,0,.45); z-index:200; display:none;
+  align-items:center; justify-content:center;
+}
+.level-complete-overlay.active { display:flex; }
+.overlay-content {
+  background:var(--bg-card); border-radius:24px; padding:clamp(20px,4vw,30px);
+  text-align:center; max-width:90vw; box-shadow:0 8px 40px rgba(0,0,0,.15);
+  position:relative;
+}
+.overlay-title .title-cn { font-size:clamp(24px,5vw,32px); color:var(--text); font-weight:bold; }
+.overlay-title .title-en { font-size:clamp(12px,2vw,15px); color:var(--text-dim); }
+.overlay-score { font-size:18px; color:var(--text-dim); margin:10px 0; }
+.overlay-buttons { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:16px; }
+
+/* 星星 */
+.stars-display { margin:16px 0; }
+.stars-display .star {
+  font-size:clamp(32px,7vw,48px); margin:0 4px; transition:all .3s;
+}
+.stars-display .star.lit { animation:star-light .5s ease-out forwards; }
+
+/* 撒花 */
+.confetti-container {
+  position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:210;
+}
+.confetti-piece {
+  position:absolute; top:-20px; animation:confetti-fall linear forwards;
+}
+
+.btn-primary {
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:14px 40px; border:none; border-radius:50px;
+  background:linear-gradient(135deg,#2ecc71,#3498db);
+  color:#fff; font-size:clamp(20px,4vw,26px); font-weight:bold;
+  cursor:pointer; box-shadow:0 4px 15px rgba(0,0,0,.15);
+  transition:transform .15s;
+}
+.btn-primary:active { transform:scale(.95); }
+
+.btn-secondary {
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:12px 30px; border:2px solid var(--border); border-radius:50px;
+  background:var(--bg-card); color:var(--text);
+  font-size:clamp(16px,3vw,20px); cursor:pointer;
+  transition:transform .15s;
+}
+.btn-secondary:active { transform:scale(.95); }
+
+/* 粒子爆发 */
+.particle {
+  position:fixed; pointer-events:none; z-index:1050; line-height:1;
+  animation:particle-burst .65s ease-out forwards;
+}

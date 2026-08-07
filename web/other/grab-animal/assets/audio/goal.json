@@ -1,0 +1,38 @@
+{
+  "format": {
+    "sampleRate": 16000,
+    "channels": 1,
+    "bits": 16,
+    "pcm": true
+  },
+  "gapMs": 50,
+  "file": "goal.wav",
+  "segments": {
+    "goal_2": {
+      "start": 0,
+      "duration": 2.395,
+      "end": 2.395
+    },
+    "goal_3": {
+      "start": 2.445,
+      "duration": 2.41,
+      "end": 4.855
+    },
+    "goal_4": {
+      "start": 4.905,
+      "duration": 2.395,
+      "end": 7.3
+    },
+    "goal_5": {
+      "start": 7.35,
+      "duration": 2.365,
+      "end": 9.715
+    },
+    "goal_6": {
+      "start": 9.765,
+      "duration": 2.37,
+      "end": 12.135
+    }
+  },
+  "totalDuration": 12.135
+}

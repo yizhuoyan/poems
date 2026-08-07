@@ -1,0 +1,20 @@
+{
+  "name": "卷卷抓小动物",
+  "short_name": "抓小动物",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#cfeaff",
+  "theme_color": "#ff9d4d",
+  "icons": [
+    {
+      "src": "assets/images/icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/images/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
