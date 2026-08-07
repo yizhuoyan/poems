@@ -32,12 +32,17 @@ header h1 { font-size: 28px; font-weight: 700; letter-spacing: 4px; color: #5a38
 
 .input-section { background: #fff; border-radius: 10px; padding: 18px 20px; box-shadow: 0 1px 4px rgba(0,0,0,.06); margin-bottom: 16px; }
 .input-section .pattern-display { font-size: 15px; color: #5a3825; letter-spacing: 2px; margin-bottom: 10px; display: none; text-align: center; }
-.input-section .pattern-display code { background: #f5f0eb; padding: 2px 6px; border-radius: 4px; margin-right: 8px; }
+.input-section .pattern-display code { padding: 2px 6px; margin-right: 8px; }
 .input-section .pattern-display .pattern-row { margin-bottom: 4px; }
 .input-section .pattern-display .pz-flex { color: #b0a294; opacity: .6; }
 .input-section textarea { width: 100%; min-height: 160px; border: 1px solid #d9cdc0; border-radius: 6px; padding: 12px; font-size: 16px; font-family: 'KaiTi', 'STKaiti', 'Microsoft YaHei', serif; line-height: 1.8; resize: vertical; outline: none; transition: border-color .2s; color: #3d2c1e; background: #fdfcfa; }
 .input-section textarea:focus { border-color: #b8957a; }
 .input-section textarea::placeholder { color: #bfb0a2; font-size: 14px; }
+.input-section .input-wrap { position: relative; }
+.input-section .input-wrap textarea { display: block; }
+.input-section .clip-btns { position: absolute; right: 0; bottom: 0; display: flex; gap: 4px; }
+.input-section .clip-btn { background: #f5f0eb; border: 1px solid #d9cdc0; border-radius: 6px; padding: 4px 8px; font-size: 16px; line-height: 1; cursor: pointer; }
+.input-section .clip-btn:hover { background: #e8ddd3; }
 .input-section .btn-group { display: flex; gap: 8px; margin-top: 12px; }
 .input-section .btn-group button { flex: 1; height: 36px; border-radius: 6px; font-size: 14px; cursor: pointer; font-weight: 600; border: 1px solid; }
 .btn-primary { background: #8b5e3c; color: #fff; border-color: #8b5e3c; }
@@ -133,7 +138,12 @@ header h1 { font-size: 28px; font-weight: 700; letter-spacing: 4px; color: #5a38
     <div class="pattern-display" id="patternDisplay">
       <div class="patterns" id="patternText"></div>
     </div>
-    <textarea id="poemInput" placeholder="每行一句，如：&#10;白日依山尽&#10;黄河入海流&#10;欲穷千里目&#10;更上一层楼"></textarea>
+    <div class="input-wrap">
+      <textarea id="poemInput" placeholder="每行一句，如：&#10;白日依山尽&#10;黄河入海流&#10;欲穷千里目&#10;更上一层楼"></textarea>
+      <div class="clip-btns">
+        <button class="clip-btn" id="copyBtn" title="复制内容">📋</button>
+      </div>
+    </div>
     <div class="btn-group">
       <button class="btn-primary" id="checkBtn">校验</button>
       <button class="btn-secondary" id="clearBtn">清空</button>
@@ -632,6 +642,19 @@ header h1 { font-size: 28px; font-weight: 700; letter-spacing: 4px; color: #5a38
     poemInput.value = '';
     results.style.display = 'none';
     rhymePopup.classList.remove('show');
+  });
+  document.getElementById('copyBtn').addEventListener('click', function () {
+    if (!poemInput.value) return;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(poemInput.value);
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = poemInput.value;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
   });
   poemInput.addEventListener('input', function (e) {
     if (e.isComposing) return;
