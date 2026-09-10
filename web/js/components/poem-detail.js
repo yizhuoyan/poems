@@ -33,7 +33,7 @@ const PoemDetail = {
     let imageHtml = ''
     if (poem.images && poem.images.length) {
       const img = poem.images[0]
-      const url = await ZipLoader.getImageBlobUrl(img.src, poem.year)
+      const url = ZipLoader.getImageUrl(img.src, poem.year)
       if (url) {
         imageHtml = `<div class="detail-image"><img src="${url}" alt="${Util.esc(img.alt)}" /></div>`
       }

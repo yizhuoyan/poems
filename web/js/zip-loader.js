@@ -69,13 +69,12 @@ const ZipLoader = {
     document.getElementById('loading-text').textContent = '正在解析诗词文件...'
 
     const mdFiles = []
-    const imageFiles = []
 
     zip.forEach((relativePath, entry) => {
       if (entry.dir) return
       if (/\.md$/i.test(relativePath)) {
         if (/(?:^|\/)\d{4}\//.test(relativePath.replace(/\\/g, '/'))) mdFiles.push(relativePath)
-      } else if (/\.(jpg|jpeg|png|gif|webp|bmp)$/i.test(relativePath)) imageFiles.push(relativePath)
+      }
     })
 
     const poems = []
@@ -92,26 +91,11 @@ const ZipLoader = {
 
     Store.setPoems(unique)
 
-    document.getElementById('loading-text').textContent = '正在缓存图片...'
-    for (const path of imageFiles) {
-      const blob = await zip.files[path].async('blob')
-      await DB.set(path.replace(/\\/g, '/'), blob)
-    }
-
     return unique
   },
 
-  async getImageBlobUrl(src, poemYear) {
-    const searchPaths = [
-      src,
-      `${poemYear}/${src}`,
-      src.replace(/^images\//, '')
-    ]
-    for (const p of searchPaths) {
-      const norm = p.replace(/\\/g, '/')
-      const blob = await DB.get(norm)
-      if (blob) return URL.createObjectURL(blob)
-    }
-    return null
+  getImageUrl(src, poemYear) {
+    const name = src.replace(/\\/g, '/').replace(/^images\//, '')
+    return `img/${poemYear}/${name}`
   }
 }

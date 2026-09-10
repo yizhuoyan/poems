@@ -6,7 +6,8 @@
 web/                    # 网站根目录（nginx root 指向此）
 ├── AGENTS.md
 ├── index.html          # SPA 入口（<base href="/">）
-├── poems.zip           # 诗词数据包（build-zip.ps1 生成）
+├── poems.zip           # 诗词数据包（build-zip.ps1 生成，不含图片）
+├── img/                # 图片静态目录（build-zip.ps1 生成，按年份分目录 img/<year>/）
 ├── css/
 │   └── style.css       # 全局样式（响应式，古典风格）
 ├── js/
@@ -40,9 +41,9 @@ SPA 路由使用 hash（`#/...`），无需服务器端回退配置（try_files 
 
 ## 数据流
 
-**首次访问** → 下载 poems.zip → JSZip 解压 → zip-loader 过滤 `YYYY/` 下 `.md` + 图片 → parser 解析 `.md` 为 JSON → 存入 localStorage → 图片存入 IndexedDB → 渲染。  
+**首次访问** → 下载 poems.zip → JSZip 解压 → zip-loader 过滤 `YYYY/` 下 `.md` → parser 解析为 JSON → 存入 localStorage → 渲染；图片不入 zip，直接以相对路径 `img/<year>/<name>` 加载 `web/img/` 下的静态文件。  
 **再次访问** → 直接读 localStorage（ETag/HEAD 未变则不重复下载）。  
-**file:// 协议** → fetch 不可用，弹出文件选择器让用户手动选择 `poems.zip`，后续流程同 HTTP。
+**file:// 协议** → fetch 不可用，弹出文件选择器让用户手动选择 `poems.zip`，后续流程同 HTTP；图片走相对路径，本地同样可显示。
 
 ## 路由
 
@@ -85,7 +86,7 @@ SPA 路由使用 hash（`#/...`），无需服务器端回退配置（try_files 
 ## 关键设计
 
 - **parser.js 新增词牌时**：`_knownCipai` 数组需补充新词牌名  
-- **图片加载**：`ZipLoader.getImageBlobUrl()` 按 `src → year/src → images/去除` 三个路径尝试从 IndexedDB 获取  
+- **图片加载**：图片不打包进 zip，`build-zip.ps1` 会把各年份 `images/` 复制到 `web/img/<year>/`；前端由 `ZipLoader.getImageUrl(src, year)` 生成相对路径 `img/<year>/<name>` 直接引用  
 - **Nav 导航栏**：年份倒序、诗按子体裁分组、词按词牌分组、韵书自动收集有数据的项  
   - 全部使用 `<a href="#/...">`，浏览器自然跟随 hash，无 `e.preventDefault()`  
   - dropdown 通过 `.nav-item` 的 click 事件切换 `.active` 类控制显隐（hover 已移除）  
