@@ -35,7 +35,7 @@ window.ScoreIndicator=function(window){
        for(var i=0;i<str.length;i++){
           frame=this.numbersRect[parseInt(str[i])]; 
           g.drawImage(this.image,frame.x,frame.y,frame.width,frame.height
-                      ,x+w*i,this.y,this.charWidth,this.height);
+                      ,x+this.charWidth*i,this.y,this.charWidth,this.height);
        }
     }
     return Constructor;

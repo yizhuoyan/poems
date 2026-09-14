@@ -11,29 +11,32 @@ window.Background=(function(window,document){
         this.groundY=this.skyHeight;
         this.groundX=0;
         this.skyX=0;
+        //滚动速度（像素/秒）
+        this.skySpeed=24;
+        this.groundSpeed=60;
     }
     
+    Constructor.prototype.update=function(dt){
+        this.skyX-=this.skySpeed*dt;
+        if(this.skyX<=-this.maxWidth){
+            this.skyX+=this.maxWidth;
+        }
+        this.groundX-=this.groundSpeed*dt;
+        if(this.groundX<=-this.maxWidth){
+            this.groundX+=this.maxWidth;
+        }
+    }
     Constructor.prototype.paintSky=function(g){
         g.drawImage(this.sky,this.skyX,0
             ,this.maxWidth,this.skyHeight);
         g.drawImage(this.sky,this.skyX+this.maxWidth,0
             ,this.maxWidth,this.skyHeight);
-        this.skyX-=0.4;    
-        if(this.skyX<=-this.maxWidth){
-            this.skyX=0;
-        }
     }
     Constructor.prototype.paintGround=function(g){
-        var ground=this.ground;
-        var stage=this.stage;
-            g.drawImage(ground,this.groundX--,this.groundY
-                ,this.maxWidth,this.groundHeight);
-            g.drawImage(ground,this.maxWidth+this.groundX,this.groundY
-                ,this.maxWidth,this.groundHeight);  
-                
-        if(this.groundX<=-this.maxWidth){
-            this.groundX=0;
-        }
+        g.drawImage(this.ground,this.groundX,this.groundY
+            ,this.maxWidth,this.groundHeight);
+        g.drawImage(this.ground,this.groundX+this.maxWidth,this.groundY
+            ,this.maxWidth,this.groundHeight);
     }
     
     return Constructor;

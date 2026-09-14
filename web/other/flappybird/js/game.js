@@ -7,7 +7,10 @@ window.R=(function(){
                     audio.src=b;
                     audio.replay=function(){
                         this.currentTime=0;
-                        this.play();
+                        var promise=this.play();
+                        if(promise&&promise.catch){
+                            promise.catch(function(){});
+                        }
                     }
                     document.body.appendChild(audio);   
                 }else{
@@ -33,17 +36,19 @@ R("holdback","asset/holdback.png");
 R("number","asset/number.png");
 R("over","asset/over.png");
 R("ready","asset/ready.png");
-R("@fly","asset/fly.png","audio");
-R("@die","asset/die.png","audio");
-R("@buzzy","asset/buzzy.png","audio");
-R("@score","asset/score.png","audio");
+R("@fly","asset/fly.wav","audio");
+R("@die","asset/die.wav","audio");
+R("@buzzy","asset/buzzy.wav","audio");
+R("@score","asset/score.wav","audio");
 
 window.onload = function(){
     game.init();
 }
 
 var game={
-    fps:1000/30,
+    lastTime:0,
+    //单帧最大时间跨度（秒），防止切回标签页时位移跳变
+    maxDelta:0.1,
     unitWidth:0,
     unitHeight:0,
     gameState:"ready",//ready,playing,pause,over
@@ -74,21 +79,21 @@ var game={
         this.bindListener();
         //开始
         this.run=this.run.bind(this);
-        this.run();
+        window.requestAnimationFrame(this.run);
     },
     initStage:function(){
-        var cvs=this.canvas=document.getElementsByTagName("canvas")[0];
+        var cvs=this.canvas=document.getElementById("canvas");
         this.g=cvs.getContext("2d");
         var screenWidth=document.body.offsetWidth;
         var screenHeight=document.body.offsetHeight;
-        canvas.width=Math.min(screenWidth,cvs.width);
-        canvas.height=Math.min(screenHeight,cvs.height);
-        this.unitWidth=canvas.width/9;
-        this.unitHeight=canvas.height/16;
+        cvs.width=Math.min(screenWidth,440);
+        cvs.height=Math.min(screenHeight,740);
+        this.unitWidth=cvs.width/9;
+        this.unitHeight=cvs.height/16;
     },
     bindListener:function(){
-        
-        var handler=function(){
+        var handler=function(e){
+            e.preventDefault();
             switch(this.gameState){
                 case "ready":
                     this.play();
@@ -100,13 +105,10 @@ var game={
                     this.replay();
                     break;    
             }
-            
         }.bind(this);
-        if('ontouchstart' in window){
-            this.canvas.addEventListener("touchstart",handler);
-        }else{
-            this.canvas.addEventListener("mousedown",handler);
-        }
+        var eventName=window.PointerEvent?"pointerdown"
+            :("ontouchstart" in window?"touchstart":"mousedown");
+        this.canvas.addEventListener(eventName,handler);
     },
     play:function(){
         this.gameState="playing";  
@@ -120,14 +122,19 @@ var game={
     },
     gameOver:function(){
          this.gameState="over";
-         this.holdback.move=false;
     },
     throughOneHose:function(){
         this.scoreIndicator.gotScore();
+        this.holdback.applyDifficulty(this.scoreIndicator.score);
     },
-    run:function(){
-       var begin=Date.now();
-       
+    update:function(dt){
+       this.background.update(dt);
+       if(this.gameState==="playing"){
+           this.holdback.update(dt);
+       }
+       this.bird.update(dt);
+    },
+    render:function(){
        var g= this.g;
        this.background.paintSky(g);
        switch(this.gameState){
@@ -147,17 +154,13 @@ var game={
        this.bird.paint(g);
       
        this.background.paintGround(g);
-       /*
-       var left=this.fps-(Date.now()-begin);
-       if(left<=0){
-         setTimeout(this.run);    
-       }else{
-         setTimeout(this.run,this.left);   
-       }
-       */
-      window.requestNextAnimationFrame(this.run);
-                   
-       
+    },
+    run:function(now){
+       var dt=this.lastTime?Math.min((now-this.lastTime)/1000,this.maxDelta):0;
+       this.lastTime=now;
+       this.update(dt);
+       this.render();
+       window.requestAnimationFrame(this.run);
     }
 }
     
