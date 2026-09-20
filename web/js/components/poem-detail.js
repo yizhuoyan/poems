@@ -63,7 +63,6 @@ const PoemDetail = {
         else if (a.dataset.bc === 'year') Router.go(`/year/${poem.year}`)
         else {
           Router.go(`/detail/${encodeURIComponent(a.dataset.id)}`)
-          window.scrollTo(0, 0)
         }
       })
     })

@@ -18,12 +18,14 @@ const Router = {
       if (m) {
         handler(m, qs || '')
         if (this._after) this._after()
+        window.scrollTo(0, 0)
         return
       }
     }
     const fallback = this._routes.find(r => r.pattern === 'home')
     if (fallback) fallback.handler(null, '')
     if (this._after) this._after()
+    window.scrollTo(0, 0)
   },
 
   start() {
