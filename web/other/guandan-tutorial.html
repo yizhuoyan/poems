@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>掼蛋教学</title>
+<style>
+/* shared/common.css */:root{--gd-green:#2f7d5b;--gd-green-dark:#246148;--gd-green-deep:#14382a;--gd-red:#d2352c;--gd-gold:#d9a520;--gd-ink:#23302a;--gd-muted:#6b7a72;--gd-line:#dde5df;--gd-bg:#f3f7f4;--gd-panel:#ffffff}*{box-sizing:border-box}html,body{margin:0;padding:0}body{font-family:"Microsoft YaHei","PingFang SC","Noto Sans SC","Segoe UI",sans-serif;color:var(--gd-ink);background:var(--gd-bg);font-size:15px;line-height:1.7}a{color:var(--gd-green-dark)}.page{max-width:1080px;margin:0 auto;padding:18px 20px 60px}.site-header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;padding:12px 0 14px;border-bottom:2px solid var(--gd-green);margin-bottom:18px}.site-header .site-title{font-size:20px;font-weight:700;margin:0;color:var(--gd-green-deep)}.site-header .site-title small{font-size:12px;font-weight:400;color:var(--gd-muted);margin-left:8px}.lesson-nav{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin:8px 0 18px}.lesson-nav .nav-group{display:flex;gap:8px;flex-wrap:wrap}.btn{display:inline-block;padding:7px 16px;border-radius:8px;border:1px solid var(--gd-green-dark);background:var(--gd-green);color:#fff;cursor:pointer;font-size:14px;font-family:inherit;line-height:1.4;text-decoration:none;transition:background .15s,transform .05s}.btn:hover{background:var(--gd-green-dark)}.btn:active{transform:translateY(1px)}.btn:disabled,.btn[disabled]{opacity:.45;cursor:not-allowed;transform:none}.btn--ghost{background:#fff;color:var(--gd-green-dark)}.btn--ghost:hover{background:#e9f3ed}.btn--gold{background:var(--gd-gold);border-color:#b3860f}.btn--gold:hover{background:#c1921a}.btn--danger{background:#b6483f;border-color:#93382f}.btn--danger:hover{background:#93382f}.btn--sm{padding:4px 10px;font-size:13px}.panel{background:var(--gd-panel);border:1px solid var(--gd-line);border-radius:12px;padding:16px 20px;margin:14px 0;box-shadow:0 1px 3px rgba(20,56,42,.06)}.panel h2,.panel h3{margin-top:0;color:var(--gd-green-deep)}.panel h2{font-size:19px}.panel h3{font-size:16px}.section-title{font-size:17px;font-weight:700;color:var(--gd-green-deep);margin:22px 0 8px;padding-left:10px;border-left:4px solid var(--gd-green)}.muted{color:var(--gd-muted)}.small{font-size:13px}.center{text-align:center}.note{background:#fdf7e3;border:1px solid #f0e0ad;border-left:4px solid var(--gd-gold);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:14px}.warn-note{background:#fdecea;border:1px solid #f3c1bc;border-left:4px solid var(--gd-red);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:14px}.term{border-bottom:1.5px dashed var(--gd-gold);cursor:help;font-weight:600}.chip{display:inline-block;padding:2px 10px;border-radius:999px;background:#e9f3ed;border:1px solid #cbe2d5;color:var(--gd-green-dark);font-size:13px;margin:2px 4px 2px 0}.chip--gold{background:#fdf3d8;border-color:#eed9a0;color:#8a6a10}.gd-card{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;background:#fff;border:1px solid #b9c4bd;border-radius:6px;box-shadow:0 1px 2px rgba(0,0,0,.18);font-family:"Segoe UI","Microsoft YaHei",sans-serif;user-select:none;vertical-align:middle;flex:0 0 auto}.gd-card--red{color:var(--gd-red)}.gd-card--black{color:#1d1d1d}.gd-card--sm{width:30px;height:42px;font-size:12px}.gd-card--md{width:42px;height:60px;font-size:14px}.gd-card--lg{width:56px;height:80px;font-size:17px}.gd-card .gd-card-suit{line-height:1}.gd-card .gd-card-rank{font-weight:700;line-height:1.1}.gd-card--joker .gd-card-rank{writing-mode:vertical-rl;letter-spacing:2px;font-size:.85em}.gd-card--back{background:repeating-linear-gradient(45deg,#2b5d8a,#2b5d8a 5px,#3d719f 5px,#3d719f 10px);border-color:#1e4266;color:transparent}.gd-card--selected{transform:translateY(-10px);box-shadow:0 0 0 2px var(--gd-gold),0 4px 10px rgba(0,0,0,.35)}.gd-card--ghost{opacity:.35}.cards-row{display:flex;flex-wrap:wrap;gap:5px;align-items:flex-end}.cards-row--overlap{gap:0}.cards-row--overlap .gd-card{margin-right:-14px}.cards-row--overlap .gd-card:last-child{margin-right:0}.gd-card--inline{width:26px;height:36px;font-size:11px;margin:0 1px;border-radius:4px}.gd-card--inline .gd-card-rank{font-size:11px}.gd-card--inline.gd-card--joker .gd-card-rank{letter-spacing:1px}.question-box{background:#f7fbf8;border:1px solid var(--gd-line);border-radius:10px;padding:14px 16px;margin:12px 0}.question-text{font-size:15px;margin-bottom:10px}.options{display:flex;flex-direction:column;gap:8px}.option{display:block;width:100%;text-align:left;padding:9px 14px;border:1px solid #c9d6cd;border-radius:8px;background:#fff;cursor:pointer;font-size:14px;font-family:inherit;color:var(--gd-ink);transition:background .12s,border-color .12s}.option:hover{background:#eef7f1;border-color:var(--gd-green)}.option:disabled{cursor:default;opacity:1}.option.is-correct{background:#e7f6ec;border-color:#4caf72;font-weight:600}.option.is-wrong{background:#fdecea;border-color:#d2352c}.feedback{margin-top:10px;font-size:14px}.feedback.ok{color:#2e7d4f}.feedback.bad{color:var(--gd-red)}.explain{margin-top:8px;padding:9px 12px;background:#f2f6f3;border-radius:8px;font-size:13.5px;color:#41514a}.gd-table{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0}.gd-table th,.gd-table td{border:1px solid var(--gd-line);padding:7px 10px;text-align:left;vertical-align:top}.gd-table th{background:#eef5f0;color:var(--gd-green-deep)}.gd-table tr:nth-child(even) td{background:#fafcfb}.module-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;margin:14px 0}.module-card{display:block;background:#fff;border:1px solid var(--gd-line);border-radius:12px;padding:14px 16px;text-decoration:none;color:var(--gd-ink);box-shadow:0 1px 3px rgba(20,56,42,.06);transition:transform .12s,box-shadow .12s,border-color .12s}.module-card:hover{transform:translateY(-3px);box-shadow:0 6px 14px rgba(20,56,42,.12);border-color:var(--gd-green)}.module-card .mc-no{display:inline-block;font-size:12px;font-weight:700;color:#fff;background:var(--gd-green);border-radius:6px;padding:1px 8px;margin-bottom:6px}.module-card .mc-title{font-size:16px;font-weight:700;color:var(--gd-green-deep)}.module-card .mc-desc{font-size:13px;color:var(--gd-muted);margin-top:4px}.stepper{border:1px solid var(--gd-line);border-radius:12px;padding:14px;background:#fff}.stepper .step-track{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}.stepper .step-dot{padding:4px 10px;border-radius:999px;background:#eef3ef;border:1px solid var(--gd-line);font-size:13px;color:var(--gd-muted)}.stepper .step-dot.active{background:var(--gd-green);border-color:var(--gd-green-dark);color:#fff;font-weight:700}.stepper .step-dot.done{background:#e7f6ec;color:var(--gd-green-dark)}.stepper .step-body{min-height:96px;padding:12px 14px;background:#f7fbf8;border-radius:8px;font-size:14.5px}.stepper .step-actions{margin-top:10px;display:flex;gap:8px}@media (max-width:720px){.page{padding:12px 12px 40px}.panel{padding:12px 14px}}@media (max-width:640px){html{-webkit-text-size-adjust:100%}body{font-size:14.5px}.page{padding:10px 10px 36px}.panel{padding:12px 12px;margin:10px 0}.panel h2{font-size:17px}.site-header{padding:8px 0 10px;margin-bottom:12px}.site-header .site-title{font-size:17px}.site-header .site-title small{font-size:11px;margin-left:6px}.lesson-nav{margin:6px 0 12px;gap:6px}.lesson-nav .nav-group{gap:6px}.btn{padding:8px 14px}.btn--sm{padding:6px 10px}.btn,.option,.dt-btn,.gd-card{touch-action:manipulation}.question-box{padding:10px 12px}.option{padding:11px 12px;font-size:13.5px}.gd-table{font-size:12.5px}.gd-table th,.gd-table td{padding:5px 6px}.gd-table th[style*="width"]{width:auto !important}.stepper{padding:10px}.stepper .step-body{min-height:0;padding:10px;font-size:14px}.section-title{font-size:16px;margin:16px 0 6px}}
+/* style.css */.hero{background:linear-gradient(135deg,#eef7f1 0%,#ffffff 60%);border-left:6px solid var(--gd-green)}.hero h2{font-size:22px}.hero p{font-size:15px}.hero-stats{margin:10px 0 14px}.term-hit{background:#fdf3d8 !important;transition:background .3s}#terms-table td:first-child{white-space:nowrap}@media (max-width:640px){.hero h2{font-size:19px}.hero p{font-size:14.5px}.hero-stats{margin:8px 0 12px}}
+/* modules/01-basics/style.css */.seat-diagram{display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:auto auto auto;gap:8px;max-width:460px;margin:14px auto}.seat-diagram .seat{border:1px solid var(--gd-line);border-radius:10px;padding:10px;text-align:center;font-size:14px;background:#f7fbf8}.seat-diagram .north{grid-column:2;grid-row:1;background:#e7f6ec;border-color:#a8d8ba;font-weight:700}.seat-diagram .west{grid-column:1;grid-row:2}.seat-diagram .center{grid-column:2;grid-row:2;background:#2f7d5b;color:#fff;font-weight:700}.seat-diagram .east{grid-column:3;grid-row:2}.seat-diagram .south{grid-column:2;grid-row:3;background:#e7f6ec;border-color:#a8d8ba;font-weight:700}.seat-diagram .order-badge{display:inline-block;margin-left:6px;width:18px;height:18px;line-height:18px;border-radius:50%;background:var(--gd-green);color:#fff;font-size:12px;font-weight:700;vertical-align:1px}.seat-diagram .dir-note{font-size:12px;font-weight:400;color:#d9efe2}.illustration{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;margin:10px 0}.illustration .sep{color:var(--gd-muted)}@media (max-width:640px){.seat-diagram{gap:6px;margin:10px auto}.seat-diagram .seat{padding:8px 4px;font-size:13px}.seat-diagram .order-badge{margin-left:4px}}
+/* modules/02-card-power/style.css */.order-row{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:12px 0}.order-row .gt{color:var(--gd-muted);font-weight:700}.order-level{display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border:1px dashed var(--gd-gold);border-radius:8px;background:#fdf7e3}.order-level em{font-style:normal;font-size:12px;color:#8a6a10}#sorted-row{display:inline-flex;flex-wrap:wrap;gap:4px;vertical-align:middle}
+/* modules/03-card-types/style.css */.type-block{border-left:4px solid var(--gd-green);padding:2px 0 2px 14px;margin:16px 0}.type-block h3{margin:0 0 6px}.type-block p{margin:6px 0}
+/* modules/04-wild-card/style.css */.order-mini{display:inline-flex;align-items:center;gap:4px;flex-wrap:wrap;vertical-align:middle}.type-block{border-left:4px solid var(--gd-green);padding:2px 0 2px 14px;margin:14px 0}.type-block h3{margin:0 0 6px}.type-block ul{margin:6px 0;padding-left:20px}.type-block li{margin:4px 0}
+/* modules/05-play-rules/style.css */.bomb-chain{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:12px 0}.bomb-item{padding:5px 12px;border-radius:8px;background:#eef5f0;border:1px solid var(--gd-line);font-weight:600;font-size:14px}.bomb-item.gold{background:#fdf3d8;border-color:#eed9a0;color:#8a6a10}.bomb-item.red{background:#fdecea;border-color:#f3c1bc;color:#a33227}.bomb-chain .gt{color:var(--gd-muted);font-weight:700}
+/* modules/06-tribute/style.css */.panel ul{margin:8px 0;padding-left:22px}.panel li{margin:5px 0}
+/* modules/07-level-up/style.css */.panel ul{margin:8px 0;padding-left:22px}.panel li{margin:5px 0}.illustration{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:10px 0}.illustration .arrow{font-weight:700;color:var(--gd-green-dark)}
+/* modules/08-quiz/style.css */#quiz-panel h2{margin-bottom:4px}
+/* modules/09-practice-game/style.css */body{background:#eef3ef}.game-page{max-width:1180px;margin:0 auto;padding:12px 16px 50px}.game-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:8px 0 10px}.game-header .gh-title{margin:0;font-size:20px;color:var(--gd-green-deep)}.game-header .gh-actions{display:flex;gap:8px}.game-header .gh-left{display:flex;gap:8px}.game-info-bar{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 10px}.game-info-bar .chip{font-size:13px}.game-table{display:grid;grid-template-columns:170px 1fr 170px;grid-template-rows:auto 1fr auto;gap:10px}.seat{background:#fff;border:1px solid var(--gd-line);border-radius:12px;padding:8px 10px;min-height:74px}.seat .seat-name{font-weight:700;font-size:14px;color:var(--gd-green-deep)}.seat .seat-team{font-size:12px;color:var(--gd-muted)}.seat .seat-backrow{display:flex;margin:6px 0 4px;min-height:30px}.seat .seat-backrow .gd-card{margin-right:-22px}.seat .seat-backrow .gd-card:last-child{margin-right:0}.seat .seat-count{font-size:12px;color:var(--gd-muted)}.seat .seat-rank{font-size:13px;font-weight:700;color:var(--gd-red)}.seat-top{grid-column:2;grid-row:1;text-align:center}.seat-left{grid-column:1;grid-row:2}.seat-right{grid-column:3;grid-row:2}.seat.seat-active{border-color:var(--gd-gold);box-shadow:0 0 0 3px rgba(217,165,32,.35)}.table-center{grid-column:2;grid-row:2;position:relative;background:linear-gradient(160deg,#2f7d5b,#246148);border-radius:16px;padding:14px;min-height:235px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#eef7f1}.center-play{min-height:66px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px}.center-label{font-size:14px;color:#d9efe2;text-align:center}.center-sub{font-size:12.5px;color:#b7d8c6;text-align:center}.center-label:empty,.center-sub:empty{display:none}.rank-track{display:flex;flex-wrap:wrap;gap:4px;justify-content:center}.rank-track .chip{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.3);color:#f2fbf5;font-size:12px}.center-actions{display:flex;gap:10px}.center-actions .btn{padding:9px 30px;font-size:15px}.draw-item{display:flex;flex-direction:column;align-items:center;gap:4px}.draw-item .draw-who{font-size:12px;color:#cfe8da}.draw-item.leader .gd-card{outline:3px solid var(--gd-gold);outline-offset:2px}.trick-board{position:absolute;inset:0}.trick-slot{position:absolute;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:2px 0;min-height:38px}.trick-slot .gd-card{width:26px;height:37px;font-size:11px;margin-right:-8px}.trick-slot .gd-card:last-child{margin-right:0}.trick-slot .trick-pass{font-size:13px;color:#cfe8da}.trick-slot.tb-max .gd-card{outline:2px solid var(--gd-gold);outline-offset:1px}.tb-top{top:6px;left:50%;transform:translateX(-50%);max-width:92%}.tb-bottom{bottom:6px;left:50%;transform:translateX(-50%);max-width:92%}.tb-left{left:8px;top:50%;transform:translateY(-50%);max-width:48%}.tb-right{right:8px;top:50%;transform:translateY(-50%);max-width:48%}.table-bottom{grid-column:1 / span 3;grid-row:3;background:#fff;border:1px solid var(--gd-line);border-radius:12px;padding:10px 14px}.hand-head{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--gd-green-deep);margin-bottom:6px}.hand-tip{min-height:20px;text-align:center;font-size:13px;color:var(--gd-muted)}.player-hand{display:flex;flex-wrap:nowrap;overflow-x:auto;align-items:flex-end;justify-content:center;justify-content:safe center;min-height:78px;padding-top:12px}.player-hand .gd-card{margin-right:-18px}.player-hand .gd-card:last-child{margin-right:0}.player-hand .gd-card--selected{position:relative;z-index:1}.hint-bar{min-height:24px;font-size:13.5px;margin:8px 0 4px;color:var(--gd-ink)}.hint-bar .ok{color:#2e7d4f;font-weight:600}.hint-bar .bad{color:var(--gd-red);font-weight:600}.declared-types{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0}.declared-types .dt-btn{border:1px solid var(--gd-line);background:#f7fbf8;border-radius:8px;padding:4px 10px;font-size:13px;cursor:pointer;font-family:inherit}.declared-types .dt-btn.active{border-color:var(--gd-gold);background:#fdf3d8;font-weight:700}.play-actions{display:flex;gap:10px;margin-top:6px}.log-panel{margin-top:14px;background:#fff;border:1px solid var(--gd-line);border-radius:12px;padding:10px 14px}.log-panel h3{margin:0 0 6px;font-size:15px;color:var(--gd-green-deep)}.log{height:150px;overflow-y:auto;font-size:13px;line-height:1.65;background:#fafcfb;border:1px solid #eef3ef;border-radius:8px;padding:8px 10px}.log .line{border-bottom:1px dashed #f0f4f1;padding:1px 0}.log .line.sys{color:var(--gd-muted)}.log .line.me{color:var(--gd-green-dark);font-weight:600}.modal-mask{position:fixed;inset:0;background:rgba(20,40,30,.45);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px}.modal{background:#fff;border-radius:14px;padding:18px 22px;max-width:640px;width:100%;max-height:86vh;overflow-y:auto;box-shadow:0 12px 40px rgba(0,0,0,.3)}.modal h3{margin:0 0 10px;color:var(--gd-green-deep)}.modal .modal-actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}.modal .rank-list{margin:8px 0;padding-left:20px}.modal .rank-list li{margin:3px 0}.modal .return-cards{display:flex;flex-wrap:wrap;gap:5px;margin:10px 0}.modal .return-cards .gd-card{cursor:pointer}.modal .gd-card.selectable{box-shadow:0 0 0 2px rgba(217,165,32,.0);border-color:#c9d6cd}.modal .gd-card.not-selectable{opacity:.35;cursor:not-allowed}.modal .gd-card.picked{outline:3px solid var(--gd-gold)}.modal .err{color:var(--gd-red);font-size:13.5px}@media (max-width:860px){.game-table{grid-template-columns:104px 1fr 104px}}@media (max-width:640px){.game-page{padding:8px 8px 40px}.game-header{gap:6px;padding:6px 0 8px}.game-header .gh-title{font-size:17px}.game-info-bar{margin:2px 0 8px}.game-info-bar .chip{font-size:12px;padding:2px 8px}.game-table{grid-template-columns:60px 1fr 60px;gap:6px}.seat{min-height:52px;padding:6px;border-radius:10px}.seat .seat-name{font-size:12px;line-height:1.35}.seat .seat-team{font-size:11px}.seat .seat-rank{font-size:11px}.seat .seat-backrow{display:none}.table-center{min-height:214px;padding:8px;border-radius:12px}.tb-top{top:4px}.tb-bottom{bottom:4px}.tb-left{left:4px}.tb-right{right:4px}.center-actions .btn{padding:10px 28px;font-size:16px}.table-bottom{padding:8px 10px}.hand-head{font-size:13px;flex-wrap:wrap;gap:4px}.player-hand{min-height:66px;padding-top:8px;flex-wrap:wrap;overflow-x:visible;row-gap:10px}.player-hand .gd-card{margin-right:-10px}.hint-bar{font-size:13px;margin:6px 0 4px}.play-actions{gap:8px}.play-actions .btn{flex:1;text-align:center;padding:10px 0}.log-panel{padding:8px 10px}.log{height:120px;font-size:12.5px}.modal{padding:14px}.modal .return-cards{gap:4px}}
+body{background:var(--gd-bg)}#view-09{background:#eef3ef}
+</style>
+</head>
+<body>
+<section class="app-view" id="view-home">
+<div class="page">
+<header class="site-header">
+<h1 class="site-title">掼蛋教学<small>零基础 · 分模块学习 · 互动练习 · 人机对局</small></h1>
+</header>
+<section class="hero panel">
+<h2>掼蛋是什么？</h2>
+<p>
+掼蛋是一款四人纸牌游戏：<strong>两副牌共 108 张</strong>，每桌 4 人，<strong>对家两人为一队</strong>，
+每人发 27 张牌。双方轮流出牌、比大小，<strong>谁先出完手中的牌，谁的队伍就能升级</strong>；
+从打 2 开始一路升级，先"过 A"的一方赢得整轮（大轮）。
+</p>
+<p>
+它入门快、变化多：有"逢人配"（红桃级牌当万能牌）、炸弹、同花顺，还有进贡、回贡、抗贡等环节。
+本教学按 8 个知识模块 + 1 个人机对局，带你从零学会主流标准规则。
+</p>
+<div class="hero-stats">
+<span class="chip">108 张牌</span>
+<span class="chip">4 人 2 队</span>
+<span class="chip">每人 27 张</span>
+<span class="chip">目标：过 A</span>
+<span class="chip">逢人配 · 炸弹 · 进贡</span>
+</div>
+<a class="btn btn--gold" href="#modules">开始学习 →</a>
+</section>
+<h2 class="section-title" id="modules">学习路径（建议按顺序学习）</h2>
+<div class="module-grid">
+<a class="module-card" href="#view-01">
+<span class="mc-no">01</span>
+<div class="mc-title">认识掼蛋</div>
+<div class="mc-desc">两副牌、两队对抗、一局流程总览与常用术语</div>
+</a>
+<a class="module-card" href="#view-02">
+<span class="mc-no">02</span>
+<div class="mc-title">牌的大小</div>
+<div class="mc-desc">单张牌点顺序、级牌、大小王与花色</div>
+</a>
+<a class="module-card" href="#view-03">
+<span class="mc-no">03</span>
+<div class="mc-title">牌型大全</div>
+<div class="mc-desc">10 种牌型的构成、示例与常见的"不合法"</div>
+</a>
+<a class="module-card" href="#view-04">
+<span class="mc-no">04</span>
+<div class="mc-title">级牌与逢人配</div>
+<div class="mc-desc">打几与级别、红桃级牌当万能牌怎么用</div>
+</a>
+<a class="module-card" href="#view-05">
+<span class="mc-no">05</span>
+<div class="mc-title">出牌、压牌与接风</div>
+<div class="mc-desc">怎么压牌、炸弹族顺序、过牌与接风</div>
+</a>
+<a class="module-card" href="#view-06">
+<span class="mc-no">06</span>
+<div class="mc-title">进贡与回贡</div>
+<div class="mc-desc">单下/双下、进贡回贡规则与抗贡</div>
+</a>
+<a class="module-card" href="#view-07">
+<span class="mc-no">07</span>
+<div class="mc-title">升级与过 A</div>
+<div class="mc-desc">名次、升级档位、打 A 阶段与过 A 条件</div>
+</a>
+<a class="module-card" href="#view-08">
+<span class="mc-no">08</span>
+<div class="mc-title">综合测验</div>
+<div class="mc-desc">随机题库、即时判分与解析、正确率统计</div>
+</a>
+<a class="module-card" href="#view-09">
+<span class="mc-no">09</span>
+<div class="mc-title">人机对局</div>
+<div class="mc-desc">与 3 个电脑玩家打完"从打 2 到过 A"的完整对局</div>
+</a>
+</div>
+<h2 class="section-title">术语速查表</h2>
+<div class="panel">
+<p class="small muted">学习过程中遇到不认识的词，随时回到这里查。点"随机查一个"可以快速复习。</p>
+<p>
+<button class="btn btn--ghost btn--sm" id="random-term-btn">随机查一个</button>
+</p>
+<table class="gd-table" id="terms-table">
+<thead>
+<tr><th style="width:150px">术语</th><th>通俗解释</th></tr>
+</thead>
+<tbody>
+<tr id="term-头游"><td><strong>头游</strong></td><td>一局中<strong>第一个</strong>出完手牌的玩家，名次第 1。</td></tr>
+<tr id="term-二游"><td><strong>二游</strong></td><td>一局中第 2 个出完手牌的玩家。</td></tr>
+<tr id="term-三游"><td><strong>三游</strong></td><td>一局中第 3 个出完手牌的玩家。</td></tr>
+<tr id="term-末游"><td><strong>末游</strong></td><td>一局中最后一位玩家（名次第 4），下一局要给头游"进贡"。</td></tr>
+<tr id="term-双下"><td><strong>双下</strong></td><td>一队的两人包揽了<strong>三游和末游</strong>（也就是对方两人是头游+二游）。双下时输方两人都要进贡。</td></tr>
+<tr id="term-单下"><td><strong>单下</strong></td><td>输方只有<strong>末游一人</strong>进贡的情形（上局头游与三游同队，或头游与末游同队）。</td></tr>
+<tr id="term-级牌"><td><strong>级牌</strong></td><td>本轮"打几"，几就是级牌。例如打 10 时，4 张 10（两副牌共 8 张）都是级牌，单张、对子比大小时仅排在大小王之下。</td></tr>
+<tr id="term-逢人配"><td><strong>逢人配</strong></td><td>两张<strong>红桃级牌</strong>（例：打 10 时的红桃 10）是"万能牌"：可替代除大小王外的任意一张牌来组牌型，也叫"配牌"。</td></tr>
+<tr id="term-接风"><td><strong>接风</strong></td><td>一名玩家出完手牌后，若其最后一手牌没人压得过，就由他的<strong>搭档</strong>获得出牌权，代替他继续出牌。</td></tr>
+<tr id="term-进贡"><td><strong>进贡</strong></td><td>每局开始前，上局输方（末游/双下的两人）要把手中"红桃级牌除外的最大一张牌"交给对方（头游/二游）。</td></tr>
+<tr id="term-回贡"><td><strong>回贡（还贡）</strong></td><td>收到贡牌的一方要回赠 1 张牌点不大于 10 的牌。</td></tr>
+<tr id="term-抗贡"><td><strong>抗贡</strong></td><td>需要进贡的一方合计持有<strong>两张大王</strong>，就可以免于进贡，由头游先出牌。</td></tr>
+<tr id="term-级别"><td><strong>级别（级数）</strong></td><td>每队当前"打到几"，从 2 开始升到 A；下一局就"打"获胜方的级别。</td></tr>
+<tr id="term-大轮"><td><strong>大轮</strong></td><td>从打 2 一路打到"过 A"的整个过程，也叫一整轮；先过 A 的一方赢得大轮。</td></tr>
+<tr id="term-木板"><td><strong>木板</strong></td><td>三连对（如 44 55 66）的俗称，由 3 对连续的对子组成。</td></tr>
+<tr id="term-钢板"><td><strong>钢板</strong></td><td>两个连续三张（如 555 666）的俗称，也叫"二连三"。</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section class="app-view" id="view-01" style="display:none">
+<div class="page">
+<header class="site-header">
+<h1 class="site-title">01 认识掼蛋<small>掼蛋教学 · 模块一</small></h1>
+<nav class="lesson-nav">
+<span class="nav-group"><a class="btn btn--ghost btn--sm" href="#view-home">返回首页</a></span>
+<span class="nav-group">
+<span class="muted small" style="align-self:center">第 1 / 9 课</span>
+<a class="btn btn--sm" href="#view-02">下一课：牌的大小 →</a>
+</span>
+</nav>
+</header>
+<section class="panel">
+<h2>掼蛋初印象</h2>
+<p>
+掼蛋是四人合作的纸牌游戏，用<strong>两副牌、共 108 张</strong>，每人发 <strong>27 张</strong>。
+你和坐在<strong>对面</strong>的玩家是一队（<span class="term" title="对家：坐在你正对面的玩家，也是你的队友">对家</span>为队友），
+左右两边的玩家属于另一队，两队对抗。
+</p>
+<div class="seat-diagram">
+<div class="seat north">对家（队友）<span class="order-badge">③</span></div>
+<div class="seat west">上家（对手）<span class="order-badge">④</span></div>
+<div class="seat center">牌桌<br><span class="dir-note">↺ 逆时针</span></div>
+<div class="seat east">下家（对手）<span class="order-badge">②</span></div>
+<div class="seat south">你<span class="order-badge">①</span></div>
+</div>
+<p class="center">
+出牌顺序<strong>按逆时针方向轮转</strong>（图中以"你先出牌"为例）：
+<strong>你 → 下家（右边）→ 对家（正对面）→ 上家（左边）→ 回到你</strong>……；
+第一局的先出方由抽牌决定。
+</p>
+<div class="illustration">
+<span data-markup="[♠A] [♥A] [♣A] [♦A]"></span>
+<span class="sep">×</span>
+<span data-markup="[♠K] [♥K] [♣K] [♦K] [♠Q]"></span>
+<span class="sep">…</span>
+<span class="small muted">两副牌拼成 108 张（含 4 张王牌）</span>
+</div>
+</section>
+<section class="panel">
+<h2>怎么算赢？名次与升级</h2>
+<p>
+一局中，<strong>谁先出完手里的牌，谁的名次就靠前</strong>：依次是
+<span class="term" title="头游：一局中第一个出完牌的玩家">头游</span>、
+<span class="term" title="二游：第二个出完牌的玩家">二游</span>、
+<span class="term" title="三游：第三个出完牌的玩家">三游</span>、
+<span class="term" title="末游：最后一位玩家，下一局要进贡">末游</span>。
+</p>
+<p>
+每局只有头游一方能升级，升几级取决于队友的名次：头游+二游升 3 级、头游+三游升 2 级、头游+末游升 1 级。
+双方从"打 2"开始，谁先打到并<strong>成功过 A</strong>，谁就赢得整轮（<span class="term" title="大轮：从打 2 到过 A 的整个过程">大轮</span>）。
+</p>
+<div class="note">先有个大概印象即可：升级与过 A 的细节后面会专门讲解。</div>
+</section>
+<section class="panel">
+<h2>一局流程总览</h2>
+<p class="muted small">点击"下一步"，跟一遍一局的完整流程（互动演示）。</p>
+<div class="stepper" id="flow-stepper">
+<div class="step-track" id="step-track"></div>
+<div class="step-body" id="step-body"></div>
+<div class="step-actions">
+<button class="btn btn--sm" id="step-prev" type="button">上一步</button>
+<button class="btn btn--sm" id="step-next" type="button">下一步</button>
+</div>
+</div>
+</section>
+<section class="panel">
+<h2>小练习：你记住了吗？</h2>
+<p class="muted small">覆盖本课每个重点：牌张与人数、队伍、出牌方向、名次、一局流程、胜负条件、首局先出；答完每题会给解析。</p>
+<div id="quiz01"></div>
+</section>
+<section class="panel">
+<h2>常用术语</h2>
+<p>
+本课出现的术语：头游 / 二游 / 三游 / 末游 / 对家 / 大轮。
+更多术语（双下、单下、级牌、逢人配、接风、进贡、回贡、抗贡、级别、木板、钢板）可到
+<a href="#view-home">首页的术语速查表</a>随时查阅。
+</p>
+</section>
+<nav class="lesson-nav">
+<span class="nav-group"><a class="btn btn--ghost btn--sm" href="#view-home">返回首页</a></span>
+<span class="nav-group"><a class="btn btn--sm" href="#view-02">下一课：牌的大小 →</a></span>
+</nav>
+</div>
+</section>
+<section class="app-view" id="view-02" style="display:none">
+<div class="page">
+<header class="site-header">
+<h1 class="site-title">02 牌的大小<small>掼蛋教学 · 模块二</small></h1>
+<nav class="lesson-nav">
+<span class="nav-group">
+<a class="btn btn--ghost btn--sm" href="#view-home">返回首页</a>
+<a class="btn btn--ghost btn--sm" href="#view-01">← 上一课：认识掼蛋</a>
+</span>
+<span class="nav-group">
+<span class="muted small" style="align-self:center">第 2 / 9 课</span>
+<a class="btn btn--sm" href="#view-03">下一课：牌型大全 →</a>
+</span>
+</nav>
+</header>
+<section class="panel">
+<h2>单张牌点顺序</h2>
+<p>单张比大小只看牌点，顺序是：</p>
+<div class="order-row">
+<span data-markup="[大王]"></span><span class="gt">&gt;</span>
+<span data-markup="[小王]"></span><span class="gt">&gt;</span>
+<span class="order-level"><span data-markup="[♠10]"></span><em>级牌</em></span><span class="gt">&gt;</span>
+<span data-markup="[♠A]"></span><span class="gt">&gt;</span>
+<span data-markup="[♠K]"></span><span class="gt">&gt;</span>
+<span data-markup="[♠Q]"></span><span class="gt">&gt;</span>
+<span data-markup="[♠J]"></span><span class="gt">&gt;</span>
+<span data-markup="[♠10]"></span><span class="gt">&gt;</span>
+<span class="muted">…</span><span class="gt">&gt;</span>
+<span data-markup="[♠3]"></span><span class="gt">&gt;</span>
+<span data-markup="[♠2]"></span>
+</div>
+<p class="small muted center">上图以"打 10"为例：大王 &gt; 小王 &gt; 级牌(10) &gt; A &gt; K &gt; Q &gt; J &gt; 9 … &gt; 3 &gt; 2。</p>
+<div class="note">
+<strong>级牌</strong>：本局"打几"，几就是级牌。打 10 时，两副牌里的 8 张 10 都是级牌，
+单张、对子、三张等比大小时，级牌提升到<strong>仅次于大小王</strong>的位置（比 A 还大）。
+</div>
+</section>
+<section class="panel">
+<h2>红桃级牌：逢人配（万能牌）</h2>
+<p>
+8 张级牌里，<strong>红桃那 2 张</strong>很特别（打 10 时是两张 <span data-markup="[♥10] [♥10]"></span>），它们是
+<span class="term" title="逢人配：红桃级牌，可替代除大小王外任意一张牌的万能牌">逢人配</span>（万能牌）：
+<strong>可以替代除大小王以外的任意一张牌</strong>来组成牌型——补顺子、补炸弹、补同花顺都行。
+</p>
+<p class="small muted">例如打 10 时：<span data-markup="[♥10] [♠2] [♥3] [♣4] [♦6]"></span> —— 红桃 10 当 5 用，与 2、3、4、6 凑成 23456 顺子。</p>
+</section>
+<section class="panel">
+<h2>大小王</h2>
+<p>
+<span data-markup="[大王]"></span> <strong>大王最大</strong>，<span data-markup="[小王]"></span>
+<strong>小王次之</strong>，各 2 张（两副牌各一张）。它们不能被"逢人配"替代，也不能参与顺子、同花顺等牌型，
+只能出单张或对子（对大王、对小王）。
+</p>
+</section>
+<section class="panel">
+<h2>花色</h2>
+<p>
+<span data-markup="[♠A]"></span><span data-markup="[♥A]"></span><span data-markup="[♣A]"></span><span data-markup="[♦A]"></span>
+四种花色<strong>本身不分大小</strong>（黑桃 A 和红桃 A 一样大）。花色的意义在于组成
+<span class="term" title="同花顺：5 张同花色的连续牌，如 ♠56789">同花顺</span>：
+5 张<strong>同花色</strong>的连续牌（如 ♠5 ♠6 ♠7 ♠8 ♠9）比普通顺子更大。
+</p>
+</section>
+<section class="panel">
+<h2>互动：排一排</h2>
+<p class="muted small">下面这手牌（打 10），点击按钮看它们从小到大的正确顺序。</p>
+<p>乱序：<span data-markup="[♣3] [♦8] [♠J] [♥A] [♠10] [大王] [♦2]"></span></p>
+<button class="btn btn--sm" id="sort-btn" type="button">按从小到大排好</button>
+<p style="margin-top:10px">正确顺序：<span id="sorted-row" class="muted">（点击按钮后显示）</span></p>
+<div id="sort-explain" class="explain" style="display:none"></div>
+</section>
+<section class="panel">
+<h2>互动：比大小练习</h2>
+<p class="muted small">覆盖本课重点：单张顺序、级牌大小、逢人配、大小王、花色。</p>
+<div id="quiz02"></div>
+</section>
+<nav class="lesson-nav">
+<span class="nav-group">
+<a class="btn btn--ghost btn--sm" href="#view-home">返回首页</a>
+<a class="btn btn--ghost btn--sm" href="#view-01">← 上一课：认识掼蛋</a>
+</span>
+<span class="nav-group"><a class="btn btn--sm" href="#view-03">下一课：牌型大全 →</a></span>
+</nav>
+</div>
+</section>
+<section class="app-view" id="view-03" style="display:none">
+<div class="page">
+<header class="site-header">
+<h1 class="site-title">03 牌型大全<small>掼蛋教学 · 模块三</small></h1>
+<nav class="lesson-nav">
+<span class="nav-group">
+<a class="btn btn--ghost btn--sm" href="#view-home">返回首页</a>
+<a class="btn btn--ghost btn--sm" href="#view-02">← 上一课：牌的大小</a>
+</span>
+<span class="nav-group">
+<span class="muted small" style="align-self:center">第 3 / 9 课</span>
+<a class="btn btn--sm" href="#view-04">下一课：级牌与逢人配 →</a>
+</span>
+</nav>
+</header>
+<section class="panel">
+<h2>10 种牌型总览</h2>
+<p>掼蛋一共有 <strong>10 种合法牌型</strong>，分成两类：<strong>普通牌型（7 种）</strong>和<strong>炸弹牌型（3 种）</strong>。出牌时必须能说清自己出的是哪种牌型：</p>
+<h3>普通牌型（7 种）：只有牌型相同、张数相同才能比大小</h3>
+<table class="gd-table">
+<thead><tr><th style="width:130px">牌型</th><th>构成</th><th>关键点</th></tr></thead>
+<tbody>
+<tr><td><strong>单张</strong></td><td>任意 1 张牌</td><td>按牌点比，不分花色</td></tr>
+<tr><td><strong>对子</strong></td><td>2 张同点（含对大王、对小王）</td><td>按牌点比</td></tr>
+<tr><td><strong>三同张</strong></td><td>3 张同点</td><td>按牌点比</td></tr>
+<tr><td><strong>三带二</strong></td><td>3 张同点 + 1 对（如 KKK 带 77）</td><td>只比三张部分</td></tr>
+<tr><td><strong>顺子</strong></td><td>恰好 5 张连续单牌（不分花色）</td><td>A2345 最小、10JQKA 最大；JQKA2 无效</td></tr>
+<tr><td><strong>三连对</strong>（木板）</td><td>恰好 3 对连续对子</td><td>AA2233 最小、QQKKAA 最大</td></tr>
+<tr><td><strong>钢板</strong>（二连三）</td><td>恰好 2 个连续三张</td><td>AAA222 最小、KKKAAA 最大</td></tr>
+</tbody>
+</table>
+<h3>炸弹牌型（炸弹族，3 种）：可以压任意普通牌型</h3>
+<table class="gd-table">
+<thead><tr><th style="width:130px">牌型</th><th>构成</th><th>关键点</th></tr></thead>
+<tbody>
+<tr><td><strong>炸弹</strong></td><td>4 张及以上同点</td><td>张数越多越大；普通最多 8 张、配逢人配最多 10 张</td></tr>
+<tr><td><strong>同花顺</strong></td><td>5 张同花色连续牌</td><td>A2345 最小、10JQKA 最大；比 5 张炸大、比 6 张炸小</td></tr>
+<tr><td><strong>四大天王</strong></td><td>4 张王（两王各 2 张）</td><td>最大牌型，比任何炸弹都大</td></tr>
+</tbody>
+</table>
+<div class="note">炸弹牌型之间也分大小：4 张炸 &lt; 5 张炸 &lt; 同花顺 &lt; 6 张炸 &lt; …… &lt; 四大天王。</div>
+</section>
+<section class="panel">
+<h2>逐个认识（看看示例）</h2>
+<div class="type-block">
+<h3>1. 单张</h3>
+<p>任意一张牌，比如 <span data-markup="[♠A]"></span>。按牌点顺序比大小。</p>
+</div>
+<div class="type-block">
+<h3>2. 对子</h3>
+<p>两张同点：<span data-markup="[♠8] [♥8]"></span>；大小王也可以成对：<span data-markup="[大王] [大王]"></span>。</p>
+</div>
+<div class="type-block">
+<h3>3. 三同张（三张）</h3>
+<p>三张同点：<span data-markup="[♠8] [♥8] [♣8]"></span>。</p>
+</div>
+<div class="type-block">
+<h3>4. 三带二</h3>
+<p>三张同点 + 一对其他点数的牌：<span data-markup="[♠K] [♥K] [♣K] [♦7] [♠7]"></span>（KKK 带 77）。</p>
+<p class="small muted">比大小时<strong>只看三张</strong>部分：KKK+77 和 KKK+AA 一样大。</p>
+</div>
+<div class="type-block">
+<h3>5. 顺子</h3>
+<p>5 张连续单牌，不分花色：<span data-markup="[♠2] [♥3] [♣4] [♦5] [♠6]"></span>（23456）。</p>
+<p class="small muted">A 可以当 1 用：<span data-markup="[♠A] [♥2] [♣3] [♦4] [♠5]"></span>（A2345 是最小顺子）；最大顺子 10JQKA：<span data-markup="[♠10] [♥J] [♣Q] [♦K] [♠A]"></span>。</p>
+<p class="warn-note small">JQKA2 <strong>不是</strong>顺子（A 不能同时当大当小跨过 2）。</p>
+</div>
+<div class="type-block">
+<h3>6. 三连对（木板）</h3>
+<p>3 对连续的对子：<span data-markup="[♠3] [♥3] [♣4] [♦4] [♠5] [♥5]"></span>（334455）。</p>
+<p class="small muted">最小 AA2233：<span data-markup="[♠A] [♥A] [♣2] [♦2] [♠3] [♥3]"></span>；最大 QQKKAA：<span data-markup="[♠Q] [♥Q] [♣K] [♦K] [♠A] [♥A]"></span>。</p>
+<p class="warn-note small">必须"恰好 3 对"：两连对（如 3344，4 张）和四连对（8 张）都不能出。</p>
+</div>
+<div class="type-block">
+<h3>7. 钢板（二连三）</h3>
+<p>2 个连续的三张：<span data-markup="[♠K] [♥K] [♣K] [♦A] [♠A] [♥A]"></span>（KKKAAA）。</p>
+<p class="small muted">最小 AAA222：<span data-markup="[♠A] [♥A] [♣A] [♦2] [♠2] [♥2]"></span>；必须"恰好 2 个三张"，三连三（9 张）不能出。</p>
+</div>
+<div class="type-block">
+<h3>8. 炸弹</h3>
+<p>4 张及以上同点：<span data-markup="[♠7] [♥7] [♣7] [♦7]"></span>（4 张炸）。</p>
+<p class="small muted">两副牌同点最多 8 张；加上逢人配最多可凑 10 张。炸弹可以压任意普通牌型；炸弹之间<strong>张数越多越大</strong>（4 张 &lt; 5 张 &lt; 6 张……）。</p>
+</div>
+<div class="type-block">
+<h3>9. 同花顺（炸弹族）</h3>
+<p>5 张同花色连续牌：<span data-markup="[♠5] [♠6] [♠7] [♠8] [♠9]"></span>。</p>
+<p class="small muted">A2345 最小：<span data-markup="[♠A] [♠2] [♠3] [♠4] [♠5]"></span>；10JQKA 最大：<span data-markup="[♠10] [♠J] [♠Q] [♠K] [♠A]"></span>。它既是顺子，也是"炸弹族"成员：<strong>比 5 张炸弹大、比 6 张炸弹小</strong>。</p>
+</div>
+<div class="type-block">
+<h3>10. 四大天王（天王炸）</h3>
+<p>4 张王全在手：<span data-markup="[小王] [小王] [大王] [大王]"></span>，是全场最大的牌型：<strong>比任何炸弹都大</strong>（哪怕 10 张炸），什么都能压。</p>
+</div>
+</section>
+<section class="panel">
+<h2>互动：牌型识别 / 找错</h2>
+<p class="muted small">覆盖本课重点：10 种牌型的构成与边界，以及常见反例（JQKA2、两连对、三连三、5 张同点等）。</p>
+<div id="quiz03"></div>
+</section>
+<nav class="lesson-nav">
+<span class="nav-group">
+<a class="btn btn--ghost btn--sm" href="#view-home">返回首页</a>
+<a class="btn btn--ghost btn--sm" href="#view-02">← 上一课：牌的大小</a>
+</span>
+<span class="nav-group"><a class="btn btn--sm" href="#view-04">下一课：级牌与逢人配 →</a></span>
+</nav>
+</div>
+</section>
+<section class="app-view" id="view-04" style="display:none">
+<div class="page">
+<header class="site-header">
+<h1 class="site-title">04 级牌与逢人配<small>掼蛋教学 · 模块四</small></h1>
+<nav class="lesson-nav">
+<span class="nav-group">
+<a class="btn btn--ghost btn--sm" href="#view-home">返回首页</a>
+<a class="btn btn--ghost btn--sm" href="#view-03">← 上一课：牌型大全</a>
+</span>
+<span class="nav-group">
+<span class="muted small" style="align-self:center">第 4 / 9 课</span>
+<a class="btn btn--sm" href="#view-05">下一课：出牌与接风 →</a>
+</span>
+</nav>
+</header>
+<section class="panel">
+<h2>"打几"与级别</h2>
+<p>
+每一局都有一个"打几"：<strong>本局的级牌就是这个点数的牌</strong>（例：打 10 时，10 是级牌）。
+首局打 2；之后每局打"上一局获胜方当前的级别"；一方打到 A 后进入"打 A 阶段"，该阶段级牌固定为 A。
+</p>
+<p class="small muted">两副牌里，每个点数有 8 张（4 种花色 × 2 副），其中红桃那 2 张很特别——就是"逢人配"。</p>
+</section>
+<section class="panel">
+<h2>级牌的大小</h2>
+<p>
+级牌在<strong>单张、对子、三张</strong>等比大小时会"升级"，位置排在大小王之下、A 之上。
+打 10 时：<span class="order-mini">
+<span data-markup="[大王]"></span> &gt;
+<span data-markup="[小王]"></span> &gt;
+<span data-markup="[♠10]"></span> &gt;
+<span data-markup="[♠A]"></span> &gt; … &gt;
+<span data-markup="[♠2]"></span>
+</span>
+</p>
+<div class="note">在顺子、三连对、钢板这类"连续牌型"里，级牌<strong>不升级</strong>，按原始点数参与（打 10 时，♣10 在 8-9-10-J-Q 里就是 10）。</div>
+</section>
+<section class="panel">
+<h2>逢人配：红桃级牌是"万能牌"</h2>
+<p>
+每局有 <strong>2 张红桃级牌</strong>（打 10 时是 2 张红桃 10），叫
+<span class="term" title="逢人配：红桃级牌，可替代除大小王外的任意一张牌">逢人配</span>。
+它可以<strong>替代除大小王以外的任意一张牌</strong>来组建牌型，包括炸弹、同花顺、顺子等。
+</p>
+<div class="type-block">
+<h3>例 1：补顺子（按"被替代的牌点"参与）</h3>
+<p>打 10：<span data-markup="[♥10] [♠2] [♥3] [♣4] [♦6]"></span> —— 红桃 10 当 <strong>5</strong> 用，组成 23456 顺子。</p>
+</div>
+<div class="type-block">
+<h3>例 2：补炸弹</h3>
+<p>打 10：<span data-markup="[♥10] [♠7] [♥7] [♣7] [♦7]"></span> —— 红桃 10 当 7 用，组成 5 张 7 炸弹。</p>
+</div>
+<div class="type-block">
+<h3>例 3：补同花顺</h3>
+<p>打 5：<span data-markup="[♥5] [♠6] [♠7] [♠8] [♠9]"></span> —— 红桃 5 当 ♠5 用，组成同花顺 56789。</p>
+</div>
+<div class="type-block">
+<h3>注意</h3>
+<ul>
+<li>逢人配<strong>不能替代大小王</strong>：<span data-markup="[♥10] [♠A] [♥A] [♣A] [♦A]"></span> 是 5 张 A 炸弹，而不是"四大天王"。</li>
+<li>替代顺子等连续牌型时，按<strong>被替代的点数</strong>参与组成与比较；非红桃级牌在连续牌型中只能按原始点数插带。</li>
+<li>一手牌可以用逢人配解释成多种牌型时，<strong>以出牌人声明的牌型为准</strong>（同一手牌有多种解释时，选择其中一种声明即可）。</li>
+</ul>
+</div>
+</section>
+<section class="panel">
+<h2>互动：配牌演练</h2>
+<p class="muted small">覆盖本课重点：打几与级牌大小、逢人配的用法（补顺子 / 炸弹 / 同花顺）、不能替代大小王、多解声明。</p>
+<div id="quiz04"></div>
+</section>
+<nav class="lesson-nav">
+<span class="nav-group">
+<a class="btn btn--ghost btn--sm" href="#view-home">返回首页</a>
+<a class="btn btn--ghost btn--sm" href="#view-03">← 上一课：牌型大全</a>
+</span>
+<span class="nav-group"><a class="btn btn--sm" href="#view-05">下一课：出牌与接风 →</a></span>
+</nav>
+</div>
+</section>
+<section class="app-view" id="view-05" style="display:none">
+<div class="page">
+<header class="site-header">
+<h1 class="site-title">05 出牌、压牌与接风<small>掼蛋教学 · 模块五</small></h1>
+<nav class="lesson-nav">
+<span class="nav-group">
+<a class="btn btn--ghost btn--sm" href="#view-home">返回首页</a>
+<a class="btn btn--ghost btn--sm" href="#view-04">← 上一课：级牌与逢人配</a>
+</span>
+<span class="nav-group">
+<span class="muted small" style="align-self:center">第 5 / 9 课</span>
+<a class="btn btn--sm" href="#view-06">下一课：进贡与回贡 →</a>
+</span>
+</nav>
+</header>
+<section class="panel">
+<h2>出牌轮转</h2>
+<p>
+确定先出方后，按<strong>逆时针方向</strong>轮转出牌：你 → 下家（右边）→ 对家（正对面）→ 上家（左边）→ 回到你……
+轮到你时，可以出牌，也可以喊"过"（不想出或压不过时）。先出方第一手是<strong>自由出牌</strong>，可出任意合法牌型。
+</p>
+</section>
+<section class="panel">
+<h2>怎么压牌？</h2>
+<p>要想压过场上的一手牌，需要：<strong>牌型相同、张数相同、而且更大</strong>。</p>
+<table class="gd-table">
+<thead><tr><th>牌型</th><th>怎么比</th><th>例子</th></tr></thead>
+<tbody>
+<tr><td>单张 / 对子 / 三同张</td><td>比牌点（级牌升级为仅次于王）</td><td>对 K 压对 8；打 10 时对 10 压对 A</td></tr>
+<tr><td>三带二</td><td><strong>只看三张</strong>部分，与对子无关</td><td>KKK+77 压 QQQ+AA（K &gt; Q）</td></tr>
+<tr><td>顺子 / 三连对 / 钢板 / 同花顺</td><td>比"顶牌"（最大那张）；A 作小按 1 算</td><td>23456 &lt; 34567；A2345 是最小顺子</td></tr>
+</tbody>
+</table>
+<div class="warn-note">牌型不同、张数不同都不能比：<strong>顺子不能压对子</strong>，4 张的牌也不能当顺子出。</div>
+</section>
+<section class="panel">
+<h2>炸弹族顺序</h2>
+<p>炸弹、同花顺、四大天王属于"炸弹族"，可以压<strong>任意普通牌型</strong>；它们之间按下面的强弱顺序比：</p>
+<div class="bomb-chain">
+<span class="bomb-item">4 张炸</span><span class="gt">&lt;</span>
+<span class="bomb-item">5 张炸</span><span class="gt">&lt;</span>
+<span class="bomb-item gold">同花顺</span><span class="gt">&lt;</span>
+<span class="bomb-item">6 张炸</span><span class="gt">&lt;</span>
+<span class="bomb-item">7 张炸</span><span class="gt">&lt;</span>
+<span class="bomb-item">8 张炸</span><span class="gt">&lt;</span>
+<span class="bomb-item">9 张炸</span><span class="gt">&lt;</span>
+<span class="bomb-item">10 张炸</span><span class="gt">&lt;</span>
+<span class="bomb-item red">四大天王</span>
+</div>
+<p class="small muted">同张数的炸弹比牌点（如 4 个 9 压 4 个 7）；同花顺比顶牌；四大天王最大。</p>
+<p class="small muted">动图理解：<span data-markup="[♠7] [♥7] [♣7] [♦7]"></span>（4 炸）压普通牌型；<span data-markup="[♠5] [♠6] [♠7] [♠8] [♠9]"></span>（同花顺）比 5 张炸还大，但比 6 张炸小。</p>
+</section>
+<section class="panel">
+<h2>过牌与"重新起牌"</h2>
+<p>
+压不过就喊"过"。如果<strong>连续 3 家都过</strong>（其他人都不要这手牌），出这手牌的人就<strong>重新起牌</strong>：
+场上清空，他自由出任意合法牌型，开始新一轮。
+</p>
+</section>
+<section class="panel">
+<h2>接风</h2>
+<p>
+<span class="term" title="接风：出完手牌且最后一手无人压过时，由搭档接管出牌权">接风</span>：
+当一名玩家<strong>出完了手里的牌</strong>，而他的最后一手牌其他人都压不过时，
+由他的<strong>搭档</strong>获得出牌权，代替他继续打。
+</p>
+<p class="muted small">点"下一步"看一个接风的例子：</p>
+<div class="stepper" id="jf-stepper">
+<div class="step-track" id="jf-track"></div>
+<div class="step-body" id="jf-body"></div>
+<div class="step-actions">
+<button class="btn btn--sm" id="jf-prev" type="button">上一步</button>
+<button class="btn btn--sm" id="jf-next" type="button">下一步</button>
+</div>
+</div>
+</section>
+<section class="panel">
+<h2>互动：能压 / 不能压</h2>
+<p class="muted small">覆盖本课重点：逆时针轮转、同型同张数才能压、三带二只看三张、炸弹族顺序、过牌重新起牌与接风。</p>
+<div id="quiz05"></div>
+</section>
+<nav class="lesson-nav">
+<span class="nav-group">
+<a class="btn btn--ghost btn--sm" href="#view-home">返回首页</a>
+<a class="btn btn--ghost btn--sm" href="#view-04">← 上一课：级牌与逢人配</a>
+</span>
+<span class="nav-group"><a class="btn btn--sm" href="#view-06">下一课：进贡与回贡 →</a></span>
+</nav>
+</div>
+</section>
+<section class="app-view" id="view-06" style="display:none">
+<div class="page">
+<header class="site-header">
+<h1 class="site-title">06 进贡与回贡<small>掼蛋教学 · 模块六</small></h1>
+<nav class="lesson-nav">
+<span class="nav-group">
+<a class="btn btn--ghost btn--sm" href="#view-home">返回首页</a>
+<a class="btn btn--ghost btn--sm" href="#view-05">← 上一课：出牌与接风</a>
+</span>
+<span class="nav-group">
+<span class="muted small" style="align-self:center">第 6 / 9 课</span>
+<a class="btn btn--sm" href="#view-07">下一课：升级与过 A →</a>
+</span>
+</nav>
+</header>
+<section class="panel">
+<h2>每局开始前的"进贡"是什么？</h2>
+<p>
+除了第一局，每局开始前都要按上一局的名次"进贡"：输方把手里的大牌贡给赢方，
+赢方再回赠一张小牌。这是掼蛋独有的一环，也是"上一局输了下一局能追回来"的平衡设计。
+</p>
+</section>
+<section class="panel">
+<h2>谁给谁进贡：单下与双下</h2>
+<table class="gd-table">
+<thead><tr><th>情形</th><th>判断方法</th><th>谁进贡</th></tr></thead>
+<tbody>
+<tr>
+<td><span class="term" title="单下：只有末游一人进贡">单下</span>（单贡）</td>
+<td>上一局<strong>不是</strong>一队包揽三游+末游</td>
+<td><strong>末游</strong>向<strong>头游</strong>进贡 1 张</td>
+</tr>
+<tr>
+<td><span class="term" title="双下：一队包揽三游和末游，对方是头游+二游">双下</span>（双贡）</td>
+<td>上一局一队包揽<strong>三游+末游</strong>（对方头游+二游）</td>
+<td><strong>三游和末游各</strong>进贡 1 张；头游拿较大的那张、二游拿另一张</td>
+</tr>
+</tbody>
+</table>
+<p class="small muted">注意：即使头游和末游是同队（名次为"头游+末游"），也照常"末游进贡头游"。</p>
+</section>
+<section class="panel">
+<h2>进贡牌：红桃级牌除外的最大牌</h2>
+<p>
+进贡的一张牌必须是<strong>手中"红桃级牌（逢人配）除外的最大一张牌"</strong>。例如打 10 时，
+手里有 <span data-markup="[♥10] [♠10] [♠A] [♠K]"></span>：♥10 不能贡，要贡 ♠10（级牌，比 A 大）。
+</p>
+<p><strong>大小王也算</strong>：有 <span data-markup="[大王]"></span> 就必须贡大王，没有大王而有小王就贡小王——唯一不参与的就是红桃级牌（逢人配）。</p>
+<p>进贡的牌要<strong>亮明（公开）</strong>：贡牌亮给大家看——双下时还要比较两张贡牌的大小，据此决定谁拿大牌、谁先出牌。</p>
+</section>
+<section class="panel">
+<h2>回贡（还贡）：牌点不大于 10</h2>
+<ul>
+<li>收到贡牌的一方要<strong>回赠 1 张牌点不大于 10 的牌</strong>（2~10 都可以，含 J/Q/K/A 不行）。</li>
+<li>牌点 ≤10 的<strong>级牌也可以回</strong>（打 5 时可回 5，打 10 时可回 10）；打 J~A 时级牌牌点大于 10，不能回。</li>
+<li>红桃级牌（逢人配）<strong>同样能回</strong>："红桃级牌除外"只针对<strong>进贡</strong>——进贡是被迫交最大牌，所以要保护逢人配；回贡是自己挑一张小牌，送不送万能牌由回贡方自己权衡。</li>
+<li>如果手里实在没有 ≤10 的牌（罕见），就回出<strong>最小的一张</strong>。</li>
+<li>回贡的牌<strong>也要亮明</strong>：双贡时两家先牌面向下传递、都收到后<strong>同时亮出</strong>（信息对等）。</li>
+</ul>
+<p class="small muted">为什么限制 ≤10？是为了<strong>防止同队之间借进贡/回贡互相"送牌"作弊</strong>——受贡方最多只能回一张小牌（≤10），大牌没法通过回贡递出去。</p>
+</section>
+<section class="panel">
+<h2>抗贡：两张大王免进贡</h2>
+<p>
+<span class="term" title="抗贡：进贡方合计持有两张大王时免进贡">抗贡</span>：
+需要进贡的一方<strong>合计持有两张大王</strong>（双下时两人各一张、或一人拿了两张都算）就<strong>整队免贡</strong>：
+双下时两个人的进贡都不用交（不是只有拿着大王的那位免）；成立抗贡时要<strong>亮出两张大王</strong>给全场确认。
+</p>
+</section>
+<section class="panel">
+<h2>先出牌权</h2>
+<table class="gd-table">
+<thead><tr><th>情形</th><th>谁先出牌</th></tr></thead>
+<tbody>
+<tr><td>首局</td><td>抽牌决定</td></tr>
+<tr><td>单下</td><td><strong>末游</strong>（进贡者）先出</td></tr>
+<tr><td>双下</td><td><strong>贡牌较大者</strong>先出；两张贡牌一样大时，由<strong>头游的下家</strong>先出</td></tr>
+<tr><td>抗贡</td><td><strong>头游</strong>先出</td></tr>
+</tbody>
+</table>
+</section>
+<section class="panel">
+<h2>流程演示：双下（双贡）</h2>
+<p class="muted small">上局名次：队 A 拿到头游+二游，队 B 拿到三游+末游（队 B 双下）。点击"下一步"看流程。</p>
+<div class="stepper" id="tribute-stepper">
+<div class="step-track" id="tr-track"></div>
+<div class="step-body" id="tr-body"></div>
+<div class="step-actions">
+<button class="btn btn--sm" id="tr-prev" type="button">上一步</button>
+<button class="btn btn--sm" id="tr-next" type="button">下一步</button>
+</div>
+</div>
+</section>
+<section class="panel">
+<h2>互动：进贡情景题</h2>
+<p class="muted small">覆盖本课重点：单下 / 双下、进贡牌（含大小王）、回贡限制、贡牌亮明、抗贡与先出牌权。</p>
+<div id="quiz06"></div>
+</section>
+<nav class="lesson-nav">
+<span class="nav-group">
+<a class="btn btn--ghost btn--sm" href="#view-home">返回首页</a>
+<a class="btn btn--ghost btn--sm" href="#view-05">← 上一课：出牌与接风</a>
+</span>
+<span class="nav-group"><a class="btn btn--sm" href="#view-07">下一课：升级与过 A →</a></span>
+</nav>
+</div>
+</section>
+<section class="app-view" id="view-07" style="display:none">
+<div class="page">
+<header class="site-header">
+<h1 class="site-title">07 升级与过 A<small>掼蛋教学 · 模块七</small></h1>
+<nav class="lesson-nav">
+<span class="nav-group">
+<a class="btn btn--ghost btn--sm" href="#view-home">返回首页</a>
+<a class="btn btn--ghost btn--sm" href="#view-06">← 上一课：进贡与回贡</a>
+</span>
+<span class="nav-group">
+<span class="muted small" style="align-self:center">第 7 / 9 课</span>
+<a class="btn btn--sm" href="#view-08">下一课：综合测验 →</a>
+</span>
+</nav>
+</header>
+<section class="panel">
+<h2>名次决定升级</h2>
+<p>每局结束后，只有<strong>头游一方</strong>升级，升几级看头游搭档（队友）的名次：</p>
+<table class="gd-table">
+<thead><tr><th>本局名次</th><th>升级</th><th>说明</th></tr></thead>
+<tbody>
+<tr><td>头游 + 二游（对方双下）</td><td><strong>+3 级</strong></td><td>包揽前两名，升最快</td></tr>
+<tr><td>头游 + 三游</td><td><strong>+2 级</strong></td><td>搭档第三名出完</td></tr>
+<tr><td>头游 + 末游</td><td><strong>+1 级</strong></td><td>搭档最后一名</td></tr>
+</tbody>
+</table>
+<p class="small muted">对方的级别不变（本规则不降级）；下一局打"获胜方升级后的级别"。</p>
+<div class="illustration">
+<span data-markup="[♠K]"></span>
+<span class="arrow">升级 +3 →</span>
+<span data-markup="[♠A]"></span>
+<span class="small muted">（K 最多也只能升到 A，A 封顶不跳过）</span>
+</div>
+</section>
+<section class="panel">
+<h2>级别推进与 A 封顶</h2>
+<p>
+双方从<strong>打 2</strong> 开始。获胜方按 +1/+2/+3 向上加级别，比如：打 2 → 头游+三游 → 打到 4 → 再赢（+3）→ 打到 7……
+</p>
+<div class="note">
+最高级别是 <strong>A</strong>：<strong>A 封顶、不能跳过</strong>。例如打 K（13）时升 3 级，也只升到 A，而不是"跳过 A"。
+</div>
+</section>
+<section class="panel">
+<h2>打 A 阶段</h2>
+<ul>
+<li>一方级别达到 A 后，就进入<strong>打 A 阶段</strong>：该阶段每局的级牌<strong>固定为 A</strong>（覆盖"打获胜方级别"的一般规则）。</li>
+<li>打 A 阶段<strong>不退级、不降级</strong>：打 A 方即使输掉一局，也继续打 A。</li>
+<li>对方（未到 A 的一方）达到 A 后同样进入打 A 阶段；先"过 A"的一方赢。</li>
+</ul>
+<div class="illustration">
+<span class="small muted">打 A 阶段的级牌示例：</span>
+<span data-markup="[♠A] [♥A] [♣A] [♦A]"></span>
+<span class="small muted">（8 张 A 都是级牌，单张比大小仅次于大小王）</span>
+</div>
+</section>
+<section class="panel">
+<h2>过 A 条件</h2>
+<p>
+打 A 方在一局中满足<strong>头游 + 二游</strong>或<strong>头游 + 三游</strong>
+（即达成升 2 级或 3 级的条件）就<strong>成功过 A，赢得整轮（大轮）</strong>。
+</p>
+<table class="gd-table">
+<thead><tr><th>打 A 方本局名次</th><th>结果</th></tr></thead>
+<tbody>
+<tr><td>头游 + 二游</td><td>过 A，赢得整轮</td></tr>
+<tr><td>头游 + 三游</td><td>过 A，赢得整轮</td></tr>
+<tr><td>头游 + 末游</td><td><strong>不过 A</strong>，继续打 A（只够 +1，不算过）</td></tr>
+<tr><td>没拿到头游</td><td>继续打 A（对方升级，打 A 方不退级）</td></tr>
+</tbody>
+</table>
+</section>
+<section class="panel">
+<h2>互动：名次 → 升级计算</h2>
+<p class="muted small">覆盖本课重点：升级三档、A 封顶、打 A 阶段、过 A 条件与对方获胜的情形。</p>
+<div id="quiz07"></div>
+</section>
+<nav class="lesson-nav">
+<span class="nav-group">
+<a class="btn btn--ghost btn--sm" href="#view-home">返回首页</a>
+<a class="btn btn--ghost btn--sm" href="#view-06">← 上一课：进贡与回贡</a>
+</span>
+<span class="nav-group"><a class="btn btn--sm" href="#view-08">下一课：综合测验 →</a></span>
+</nav>
+</div>
+</section>
+<section class="app-view" id="view-08" style="display:none">
+<div class="page">
+<header class="site-header">
+<h1 class="site-title">08 综合测验<small>掼蛋教学 · 模块八</small></h1>
+<nav class="lesson-nav">
+<span class="nav-group">
+<a class="btn btn--ghost btn--sm" href="#view-home">返回首页</a>
+<a class="btn btn--ghost btn--sm" href="#view-07">← 上一课：升级与过 A</a>
+</span>
+<span class="nav-group">
+<span class="muted small" style="align-self:center">第 8 / 9 课</span>
+<a class="btn btn--sm" href="#view-09">下一课：人机对局 →</a>
+</span>
+</nav>
+</header>
+<section class="panel">
+<h2>测一测你学会了多少</h2>
+<p>
+题库覆盖 10 种牌型、逢人配、炸弹族比较、接风、过牌、进贡/回贡/抗贡、升级三档与过 A 等全部考点。
+目标：正确率 <strong>≥ 80%</strong>。
+</p>
+<p>
+<button class="btn" id="start-btn" type="button">开始测验</button>
+<button class="btn btn--ghost" id="reshuffle-btn" type="button">重新测一轮</button>
+</p>
+</section>
+<section class="panel" id="quiz-panel" style="display:none">
+<h2 id="quiz-title">测验进行中</h2>
+<div id="quiz08"></div>
+</section>
+<nav class="lesson-nav">
+<span class="nav-group">
+<a class="btn btn--ghost btn--sm" href="#view-home">返回首页</a>
+<a class="btn btn--ghost btn--sm" href="#view-07">← 上一课：升级与过 A</a>
+</span>
+<span class="nav-group"><a class="btn btn--sm" href="#view-09">下一课：人机对局 →</a></span>
+</nav>
+</div>
+</section>
+<section class="app-view" id="view-09" style="display:none">
+<div class="game-page">
+<header class="game-header">
+<div class="gh-left">
+<a class="btn btn--ghost btn--sm" href="#view-home">返回首页</a>
+<a class="btn btn--ghost btn--sm" href="#view-08">← 上一课</a>
+</div>
+<h1 class="gh-title">09 人机对局</h1>
+<div class="gh-actions">
+<button class="btn btn--sm btn--ghost" id="btn-restart-round" type="button">重开本局</button>
+<button class="btn btn--sm btn--danger" id="btn-reset-match" type="button">重置整轮</button>
+</div>
+</header>
+<div class="game-info-bar">
+<span class="chip" id="info-level">本局级牌：2</span>
+<span class="chip" id="info-teams">我方级别 2 · 对方级别 2</span>
+<span class="chip" id="info-round">第 1 局</span>
+<span class="chip chip--gold" id="info-stage">准备中</span>
+</div>
+<div class="game-table">
+<div class="seat seat-top" id="seat-2"></div>
+<div class="seat seat-left" id="seat-3"></div>
+<div class="seat seat-right" id="seat-1"></div>
+<div class="table-center">
+<div class="center-play" id="center-play"></div>
+<div class="trick-board" id="trick-board" style="display:none">
+<div class="trick-slot tb-top" id="trick-slot-2"></div>
+<div class="trick-slot tb-left" id="trick-slot-3"></div>
+<div class="trick-slot tb-right" id="trick-slot-1"></div>
+<div class="trick-slot tb-bottom" id="trick-slot-0"></div>
+</div>
+<div class="center-label" id="center-label">准备开始</div>
+<div class="center-sub" id="center-sub">点击「开始」——首局先抽牌决定谁先出</div>
+<div class="center-actions" id="center-actions">
+<button class="btn btn--gold" id="btn-start-game" type="button">开始</button>
+</div>
+<div class="rank-track" id="rank-track"></div>
+</div>
+<div class="table-bottom">
+<div class="hand-head">
+<span>你的手牌（<span id="hand-count">0</span> 张）· 点击选牌</span>
+<span><button class="btn btn--ghost btn--sm" id="btn-sort" type="button">整理手牌</button></span>
+</div>
+<div class="hand-tip" id="hand-tip"></div>
+<div class="player-hand" id="player-hand"></div>
+<div class="declared-types" id="declared-types"></div>
+<div class="hint-bar" id="hint-bar"></div>
+<div class="play-actions">
+<button class="btn btn--ghost" id="btn-hint" type="button">提示</button>
+<button class="btn btn--ghost" id="btn-pass" type="button">过牌</button>
+<button class="btn btn--gold" id="btn-play" type="button">出牌</button>
+</div>
+</div>
+</div>
+<div class="log-panel">
+<h3>对局记录</h3>
+<div class="log" id="log"></div>
+</div>
+</div>
+<div class="modal-mask" id="modal-mask" style="display:none">
+<div class="modal" id="modal">
+<h3 id="modal-title"></h3>
+<div id="modal-body"></div>
+<div id="modal-actions" class="modal-actions"></div>
+</div>
+</div>
+</section>
+<script>
+/* shared/render.js */!function(r){"use strict";var n=r.GD=r.GD||{},e={spade:{symbol:"♠",name:"黑桃",color:"black"},heart:{symbol:"♥",name:"红桃",color:"red"},club:{symbol:"♣",name:"梅花",color:"black"},diamond:{symbol:"♦",name:"方块",color:"red"},joker:{symbol:"",name:"王",color:"red"}},a={"♠":"spade","♥":"heart","♣":"club","♦":"diamond"},t={11:"J",12:"Q",13:"K",14:"A"};function c(r){return t[r]?t[r]:String(r)}function d(r){return"joker"===r.suit?17===r.rank?"red":"black":e[r.suit]?e[r.suit].color:"black"}function i(r){if(!r)return"";if("joker"===r.suit)return 17===r.rank?"大王":"小王";var n=e[r.suit];return(n?n.name:"?")+c(r.rank)}function s(r,n){n=n||{};var a=document.createElement("span");if(n.back)return a.className="gd-card gd-card--back "+l(n)+(n.inline?" gd-card--inline":""),a;var t=d(r);if(a.className="gd-card gd-card--"+t+" "+l(n)+(n.inline?" gd-card--inline":""),"joker"===r.suit){a.className+=" gd-card--joker";var s=document.createElement("span");s.className="gd-card-rank",s.textContent=i(r),a.appendChild(s),a.title=n.title||i(r)}else{var u=document.createElement("span");u.className="gd-card-suit",u.textContent=e[r.suit]?e[r.suit].symbol:"?";var o=document.createElement("span");o.className="gd-card-rank",o.textContent=c(r.rank),a.appendChild(u),a.appendChild(o),a.title=n.title||i(r)}return n.selected&&a.classList.add("gd-card--selected"),n.ghost&&a.classList.add("gd-card--ghost"),"function"==typeof n.onClick&&(a.style.cursor="pointer",a.addEventListener("click",function(){n.onClick(r,a)})),a}function l(r){return"lg"===r.size?"gd-card--lg":"md"===r.size?"gd-card--md":"gd-card--sm"}function u(r,n){var e=document.createDocumentFragment();return(r||[]).forEach(function(r){e.appendChild(s(r,n))}),e}function o(r,n){if(n=n||{},"joker"===r.suit)return'<span class="gd-card gd-card--inline gd-card--'+d(r)+' gd-card--joker"><span class="gd-card-rank">'+i(r)+"</span></span>";var a=e[r.suit]||{symbol:"?"};return'<span class="gd-card gd-card--inline gd-card--'+d(r)+'"><span class="gd-card-suit">'+a.symbol+'</span><span class="gd-card-rank">'+c(r.rank)+"</span></span>"}function p(r,n){var e=function(r){return String(r).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}(r);return e.replace(/\[([^\[\]]+)\]/g,function(r,e){var a=m(e);return a?o(a,n):r})}function g(r,n,e){r&&(r.innerHTML=p(n,e))}function m(r){var n=String(r).trim();if("大王"===n)return{suit:"joker",rank:17,deckIndex:0};if("小王"===n)return{suit:"joker",rank:16,deckIndex:0};var e=a[n.charAt(0)];if(!e)return null;var t=function(r){var n=String(r).toUpperCase();if("J"===n)return 11;if("Q"===n)return 12;if("K"===n)return 13;if("A"===n)return 14;var e=parseInt(r,10);return isNaN(e)?null:e}(n.slice(1));return null==t||t<2||t>14?null:{suit:e,rank:t,deckIndex:0}}"function"!=typeof n.cardLabel&&(n.cardLabel=i),n.SUIT_INFO=e,n.rankText=c,n.cardLabel=n.cardLabel||i,n.createCardEl=s,n.renderCards=u,n.renderCardsInto=function(r,n,e){r&&(r.innerHTML="",r.appendChild(u(n,e)))},n.cardToHtml=o,n.cardMarkupToHtml=p,n.renderCardMarkup=g,n.parseCardToken=m,n.parseCards=function(r){var n=[];return String(r).replace(/\[([^\[\]]+)\]/g,function(r,e){var a=m(e);return a&&n.push(a),r}),n},n.autoRenderMarkup=function(r){var n=(r||document).querySelectorAll("[data-markup]");Array.prototype.forEach.call(n,function(r){g(r,r.getAttribute("data-markup")||"")})}}("undefined"!=typeof window?window:globalThis);
+/* script.js */!function(){"use strict";var t=Array.prototype.slice.call(document.querySelectorAll("#terms-table tbody tr"));function e(e){t.forEach(function(t){t.classList.remove("term-hit")}),e&&(e.classList.add("term-hit"),e.scrollIntoView&&e.scrollIntoView({behavior:"smooth",block:"center"}))}var o=document.getElementById("random-term-btn");o&&o.addEventListener("click",function(){e(t[Math.floor(Math.random()*t.length)])}),t.forEach(function(t){t.addEventListener("click",function(){e(t)})})}();
+/* shared/practice.js */!function(n){"use strict";var t=n.GD=n.GD||{};function i(n){return"function"==typeof t.cardMarkupToHtml?t.cardMarkupToHtml(n):String(n)}function e(n,t,i){var e=document.createElement(n);return t&&(e.className=t),void 0!==i&&(e.textContent=i),e}t.practice={quiz:function(n,t,o){o=o||{};var d=0,a=0;function r(){if(d>=t.length)!function(){n.innerHTML="";var i=Math.round(a/t.length*100),p=e("div","question-box center"),l=e("div","question-text");l.innerHTML="练习完成：答对 <strong>"+a+"</strong> / "+t.length+" 题，正确率 <strong>"+i+"%</strong>",p.appendChild(l);var s=e("div","muted small",i>=80?"很棒！继续保持。":"还没到 80%，建议回到上方讲解再看一遍。");p.appendChild(s);var c=e("button","btn btn--sm","再练一遍");c.type="button",c.style.marginTop="10px",c.onclick=function(){d=0,a=0,r()},p.appendChild(c),n.appendChild(p),"function"==typeof o.onFinish&&o.onFinish(a,t.length)}();else{var p=t[d];n.innerHTML="";var l=e("div","small muted","第 "+(d+1)+" / "+t.length+" 题");n.appendChild(l);var s=e("div","question-box"),c=e("div","question-text");c.innerHTML=i(p.text),s.appendChild(c);var u=e("div","options"),v=[],h=e("button","btn btn--sm",d===t.length-1?"查看成绩":"下一题");h.type="button",h.style.display="none",h.style.marginTop="10px",h.onclick=function(){d+=1,r()};var f=e("div","");p.options.forEach(function(n,t){var o=e("button","option");o.type="button",o.innerHTML=i(n),o.addEventListener("click",function(){v.forEach(function(n){n.disabled=!0});var n=t===p.answer;n&&(a+=1),o.classList.add(n?"is-correct":"is-wrong"),n||v[p.answer].classList.add("is-correct"),f.innerHTML="";var d=e("div","feedback "+(n?"ok":"bad"),n?"回答正确！":"回答错误，正确答案已标出。");f.appendChild(d);var r=e("div","explain");r.innerHTML="解析："+i(p.explain),f.appendChild(r),h.style.display="inline-block"}),v.push(o),u.appendChild(o)}),s.appendChild(u),s.appendChild(f),s.appendChild(h),n.appendChild(s)}}r()}}}("undefined"!=typeof window?window:globalThis);
+/* modules/01-basics/script.js */!function(){"use strict";GD.autoRenderMarkup();var t=[{title:"① 发牌",text:'洗匀两副牌后每人发 27 张。本局"打几"（级牌）由上一局结果决定；首局从打 2 开始。'},{title:"② 进贡 / 回贡（首局跳过）",text:'从第二局开始，上一局的输方要向赢方"进贡"一张大牌，赢方"回贡"一张小牌；本局的先出方也在这一环节确定。'},{title:"③ 出牌比大小",text:'从先出方开始，按逆时针方向轮转（你 → 下家 → 对家 → 上家 → 你……）：可以出更大的同类牌或炸弹，也可以喊"过"。连续 3 家过牌后，由最后出牌的人重新起牌（自由出任意合法牌型）。'},{title:"④ 接风",text:'如果一名玩家出完手牌，且他的最后一手牌没人压得过，就由他的搭档"接风"，获得出牌权继续作战。'},{title:"⑤ 名次产生",text:"按出完手牌的先后记录头游、二游、三游、末游。若一方两人包揽头游+二游（对方双下），本局立即结束。"},{title:"⑥ 升级，进入下一局",text:"头游一方按搭档名次升级（+3 / +2 / +1），下一局打新级别。"},{title:"⑦ 过 A，结束整轮",text:'一方打到 A 后进入"打 A 阶段"：再成功"过 A"就赢得整轮（大轮）。'}],e=0,n=document.getElementById("step-track"),i=document.getElementById("step-body");function o(){n.innerHTML="",t.forEach(function(t,i){var o=document.createElement("span");o.className="step-dot"+(i===e?" active":i<e?" done":""),o.textContent=t.title,n.appendChild(o)}),i.innerHTML="<strong>"+t[e].title+"</strong><br>"+t[e].text,document.getElementById("step-prev").disabled=0===e,document.getElementById("step-next").disabled=e===t.length-1}document.getElementById("step-prev").addEventListener("click",function(){e>0&&(e-=1,o())}),document.getElementById("step-next").addEventListener("click",function(){e<t.length-1&&(e+=1,o())}),o(),GD.practice.quiz(document.getElementById("quiz01"),[{text:"掼蛋用几副牌？每人发几张？",options:["2 副（108 张），每人 27 张","1 副（54 张），每人 13 张","2 副（108 张），每人 26 张","3 副（162 张），每人 27 张"],answer:0,explain:"掼蛋用两副牌共 108 张；4 人一桌，每人发 27 张。"},{text:"你和谁是一队（队友）？",options:["坐在对面的玩家（对家）","坐在右边的玩家","坐在左边的玩家","另外三个人都是对手"],answer:0,explain:"对家两人为一队：你和对面的玩家（对家）是一队，左右两家属于另一队。"},{text:"出牌按什么方向和顺序轮转？",options:["逆时针：你 → 下家（右边）→ 对家（正对面）→ 上家（左边）","顺时针：你 → 左边玩家 → 对面玩家 → 右边玩家","每出一手都要重新抽牌决定谁来接","没有固定方向，谁想接就接"],answer:0,explain:"掼蛋按逆时针方向轮转出牌：你 → 下家（右边）→ 对家（正对面）→ 上家（左边）→ 回到你。"},{text:"一局中按出完手牌的先后，名次依次怎么称呼？",options:["头游 → 二游 → 三游 → 末游","上游 → 中游 → 下游 → 末游","冠军 → 亚军 → 季军 → 末位","首游 → 二游 → 三游 → 尾游"],answer:0,explain:"名次依次为头游（第 1 名）、二游、三游、末游（最后一名）。"},{text:"一局开始的流程顺序是？",options:["发牌 → 进贡/回贡（首局跳过）→ 出牌比大小 → 产生名次 → 升级","发牌 → 出牌比大小 → 进贡/回贡 → 产生名次 → 升级","进贡/回贡 → 发牌 → 出牌比大小 → 升级 → 产生名次","发牌 → 产生名次 → 出牌比大小 → 进贡/回贡 → 升级"],answer:0,explain:'一局按"发牌 → 进贡/回贡（首局跳过）→ 出牌比大小 → 产生名次 → 升级"进行，升级后进入下一局。'},{text:"怎样才能赢得整轮（大轮）？",options:['先打到 A 并成功"过 A"的一方赢得整轮',"先拿到一局的头游就赢","先升到 K 就赢","打满固定局数后比分数"],answer:0,explain:'双方从打 2 开始升级；先打到 A 并成功"过 A"的一方赢得整轮（大轮）。'},{text:"第一局由谁先出牌，怎么确定？",options:["抽牌决定","上一局的头游先出","固定从座位 1 开始","四个人依次轮流先出"],answer:0,explain:"第一局的先出方由抽牌决定。"}])}();
+/* shared/rule-engine.js */!function(r){"use strict";var t=r.GD=r.GD||{},e={spade:"黑桃",heart:"红桃",club:"梅花",diamond:"方块",joker:"王"},n={single:"单张",pair:"对子",triple:"三同张",triple_pair:"三带二",straight:"顺子",pair_sequence:"三连对",triple_sequence:"钢板",bomb:"炸弹",straight_flush:"同花顺",four_jokers:"四大天王"},i={bomb:!0,straight_flush:!0,four_jokers:!0},a=["spade","heart","club","diamond"];function s(){for(var r=[],t=0;t<2;t++){for(var e=0;e<a.length;e++)for(var n=2;n<=14;n++)r.push({suit:a[e],rank:n,deckIndex:t});r.push({suit:"joker",rank:16,deckIndex:t}),r.push({suit:"joker",rank:17,deckIndex:t})}return r}function u(r){for(var t=r.slice(),e=t.length-1;e>0;e--){var n=Math.floor(Math.random()*(e+1)),i=t[e];t[e]=t[n],t[n]=i}return t}function o(r){var t=Math.floor(r.length/4);return[r.slice(0,t),r.slice(t,2*t),r.slice(2*t,3*t),r.slice(3*t,4*t)]}function l(r,t){return"joker"===r.suit?r.rank:r.rank===t?15:r.rank}function h(r,t){return"heart"===r.suit&&r.rank===t}function c(r){return r?"joker"===r.suit?17===r.rank?"大王":"小王":(e[r.suit]||"?")+t.rankText(r.rank):""}function f(r,t){return r===t?15:r}function p(r,t,e){var n=t+e-1;return 14===r?1===t?1:14===n?14:null:r>=t&&r<=n?r:null}function d(r,t,e,n,i){for(var a={},s=0;s<r.length;s++){var u=p(r[s].rank,e,n);if(null==u)return!1;a[u]=(a[u]||0)+1}for(var o=0,l=e;l<e+n;l++){var h=a[l]||0;if(h>i)return!1;o+=i-h}return o===t}function k(r,t,e,n){if(!r.length)return null;var i=r[0].rank;if("joker"===r[0].suit)return null;for(var a=1;a<r.length;a++)if("joker"===r[a].suit||r[a].rank!==i)return null;return r.length+t!==e?null:{type:"bomb",compareRank:f(i,n),bombLevel:e}}function v(r,t){var e=[];if(!r||!r.length)return e;var n=r.length;if(n>10)return e;var i=[],s=0;r.forEach(function(r){h(r,t)?s++:i.push(r)});var u=i.some(function(r){return"joker"===r.suit});function o(t,i,a){var s={cards:r.slice(),type:t,length:n,compareRank:i};void 0!==a&&(s.bombLevel=a),e.push(s)}if(1===n)return o("single",l(r[0],t)),e;if(2===n){var c=r[0],p=r[1];return"joker"===c.suit||"joker"===p.suit?"joker"===c.suit&&"joker"===p.suit&&c.rank===p.rank&&o("pair",c.rank):0===s?c.rank===p.rank&&o("pair",f(c.rank,t)):o("pair",1===s?f(i[0].rank,t):15),e}if(3===n){if(!u&&i.length>0){var v=i[0].rank;i.every(function(r){return r.rank===v})&&o("triple",f(v,t))}return e}if(4===n){var g=r.filter(function(r){return"joker"===r.suit}),y=g.filter(function(r){return 16===r.rank}).length,m=g.filter(function(r){return 17===r.rank}).length;4===g.length&&2===y&&2===m&&o("four_jokers",17,1/0);var _=k(i,s,n,t);return _&&o(_.type,_.compareRank,_.bombLevel),e}if(5===n){var b=k(i,s,n,t);if(b&&o(b.type,b.compareRank,b.bombLevel),!u&&i.length>0){var R={};i.forEach(function(r){R[r.rank]=(R[r.rank]||0)+1});for(var I=Object.keys(R).map(Number),x=2;x<=14;x++)for(var T=2;T<=14;T++){if(x!==T)if(!I.some(function(r){return r!==x&&r!==T})){var j=R[x]||0,P=R[T]||0;j>3||P>2||Math.min(j,3)+Math.min(P,2)===i.length&&3-Math.min(j,3)+(2-Math.min(P,2))===s&&o("triple_pair",f(x,t))}}}for(var C=1;C<=10;C++){d(i,s,C,5,1)&&o("straight",C+4);for(var L=0;L<a.length;L++){var E=i.filter(function(r){return r.suit===a[L]});E.length===i.length&&(d(E,s,C,5,1)&&o("straight_flush",C+4,5.5))}}return e}if(6===n){var O=k(i,s,n,t);O&&o(O.type,O.compareRank,O.bombLevel);for(var M=1;M<=12;M++)d(i,s,M,3,2)&&o("pair_sequence",M+2);for(var S=1;S<=13;S++)d(i,s,S,2,3)&&o("triple_sequence",S+1);return e}if(n<=10){var w=k(i,s,n,t);w&&o(w.type,w.compareRank,w.bombLevel)}return e}function g(r){return!!i[r]}function y(r){return"four_jokers"===r.type?1/0:"straight_flush"===r.type?5.5:r.bombLevel}function m(r,t,e){if(!r||!t)return 0;var n=g(r.type),i=g(t.type);if(n&&i){if("four_jokers"===r.type&&"four_jokers"===t.type)return 0;if("four_jokers"===r.type)return 1;if("four_jokers"===t.type)return-1;var a=y(r),s=y(t);return a!==s?a>s?1:-1:r.compareRank!==t.compareRank?r.compareRank>t.compareRank?1:-1:0}return n?1:i?-1:r.type!==t.type||r.length!==t.length?0:r.compareRank!==t.compareRank?r.compareRank>t.compareRank?1:-1:0}function _(r,t,e){if(!r)return!1;if(!t)return!0;var n=g(r.type),i=g(t.type);return n&&i?m(r,t)>0:!!n||!i&&(r.type===t.type&&r.length===t.length&&r.compareRank>t.compareRank)}function b(r,t){return r.cards.filter(function(r){return h(r,t)}).length}function R(r,t){var e=[],n={},i=r.filter(function(r){return h(r,t)}),s=r.filter(function(r){return!h(r,t)});function u(r){r&&r.length&&v(r,t).forEach(function(r){var i=r.type+":"+r.length+":"+r.compareRank+":"+(r.bombLevel||0),a=b(r,t);void 0===n[i]?(n[i]=e.length,e.push(r)):a<b(e[n[i]],t)&&(e[n[i]]=r)})}r.forEach(function(r){u([r])});var o={};s.forEach(function(r){o[r.rank]||(o[r.rank]=[]),o[r.rank].push(r)});for(var l=2;l<=14;l++)for(var c=o[l]||[],f=2;f<=Math.min(10,c.length+i.length);f++){var d=Math.max(0,f-c.length);d>i.length||(0===c.length&&l!==t||u(c.slice(0,Math.min(c.length,f)).concat(i.slice(0,d))))}[16,17].forEach(function(r){var t=o[r]||[];t.length>=2&&u(t.slice(0,2))});for(var k=2;k<=14;k++)for(var g=2;g<=14;g++)if(k!==g){var y=o[k]||[],m=o[g]||[],_=Math.min(y.length,3),R=Math.min(m.length,2),I=3-_+(2-R);I>i.length||u(y.slice(0,_).concat(m.slice(0,R),i.slice(0,I)))}function x(r,t,e,n){for(var a={},u=[],o=0,l=r;l<r+t;l++){for(var h=0,c=0;c<s.length&&h<e;c++){var f=s[c];if(!a[c])if(!n||f.suit===n)p(f.rank,r,t)===l&&(a[c]=!0,u.push(f),h++)}o+=e-h}return o>i.length?null:u.concat(i.slice(0,o))}for(var T=1;T<=10;T++){var j=x(T,5,1,null);j&&u(j),a.forEach(function(r){var t=x(T,5,1,r);t&&u(t)})}for(var P=1;P<=12;P++){var C=x(P,3,2,null);C&&u(C)}for(var L=1;L<=13;L++){var E=x(L,2,3,null);E&&u(E)}var O=r.filter(function(r){return"joker"===r.suit&&17===r.rank}),M=r.filter(function(r){return"joker"===r.suit&&16===r.rank});return O.length>=2&&M.length>=2&&u(O.slice(0,2).concat(M.slice(0,2))),e}function I(r,t,e){if(g(t.type))return!1;var n={};return r.forEach(function(r){"joker"===r.suit||h(r,e)||(n[r.rank]=(n[r.rank]||0)+1)}),t.cards.some(function(r){return!h(r,e)&&"joker"!==r.suit&&(n[r.rank]||0)>=4})}function x(r){r=r||{};this.teamLevels=[2,2],this.roundNumber=1,this.players=[0,1,2,3].map(function(r){return{playerId:r,teamId:r%2,isAi:0!==r,hand:[],rank:null}}),this.lastRoundResult=null,this.matchOver=!1,this.winnerTeam=null,this.roundEnded=!1,this.interactive=!1,this.pendingReturns=[],this.eventLog=[],this.levelCard=2;var t=r.firstTurn;this.turnIndex="number"==typeof t&&isFinite(t)?(t%4+4)%4:Math.floor(4*Math.random()),this.currentPlay=null,this.passCount=0,this.ranks=[],this.tributeStage="none",this.lastPlayerId=null,this._firstTurn=this.turnIndex,this._finished=!1,this._tributeResult=null,this._pendingTasks=[],this.trickPlays=[null,null,null,null],this._log("整轮开始：双方从打 2 出发；首局先出由抽牌决定，座位 "+(this.turnIndex+1)+" 先出。")}function T(r,t,e){var n,i=r.filter(function(r){return"joker"!==r.suit&&r.rank<=10});if(i.length){if(n=i,e){var a=i.filter(function(r){return!j(r,e)});a.length&&(n=a)}}else n=r.slice();return function(r,t){var e=null;return r.forEach(function(r){if(e){var n=h(e,t)?1:0,i=h(r,t)?1:0;(r.rank<e.rank||r.rank===e.rank&&i<n)&&(e=r)}else e=r}),e}(n,t)}function j(r,t){return!!r&&!!t&&r.suit===t.suit&&r.rank===t.rank&&(r.deckIndex||0)===(t.deckIndex||0)}function P(r,t){for(var e=0;e<r.length;e++)if(j(r[e],t))return r.splice(e,1),!0;return!1}function C(r,t,e){if(!r.some(function(r){return j(r,t)}))return"所选牌不在手牌中";if(r.filter(function(r){return"joker"!==r.suit&&r.rank<=10}).length)return"joker"===t.suit||t.rank>10?"回贡牌牌点须不大于 10":null;var n=T(r,e);return t.rank!==n.rank?"手中没有不大于 10 的牌，只能回出最小的牌":null}function L(r){if(!r)return"";var e=n[r.type]||r.type;switch(r.type){case"single":return"单张 "+t.rankText(15===r.compareRank?"级牌":r.compareRank);case"pair":return"对子 "+(15===r.compareRank?"级牌":t.rankText(r.compareRank));case"triple":return"三同张 "+(15===r.compareRank?"级牌":t.rankText(r.compareRank));case"triple_pair":return"三带二（"+(15===r.compareRank?"级牌":t.rankText(r.compareRank))+" 的三张）";case"bomb":return r.bombLevel+" 张炸弹（"+(15===r.compareRank?"级牌":t.rankText(r.compareRank))+"）";case"straight_flush":return"同花顺（顶牌 "+t.rankText(r.compareRank)+"）";case"four_jokers":return"四大天王";default:return e+"（顶牌 "+t.rankText(r.compareRank)+"）"}}"function"!=typeof t.rankText&&(t.rankText=function(r){return{11:"J",12:"Q",13:"K",14:"A"}[r]||String(r)}),x.prototype._log=function(r){this.eventLog.push({seq:this.eventLog.length,msg:r})},x.prototype._teamOf=function(r){return this.players[r].teamId},x.prototype.partnerOf=function(r){return(r+2)%4},x.prototype._activePlayers=function(){return this.players.filter(function(r){return null===r.rank})},x.prototype._nextActive=function(r){for(var t=1;t<=4;t++){var e=(r+t)%4;if(null===this.players[e].rank)return e}return r},x.prototype._levelCardForRound=function(){return 14===this.teamLevels[0]||14===this.teamLevels[1]?14:this.roundNumber<=1||!this.lastRoundResult?2:this.teamLevels[this.lastRoundResult.winnerTeam]},x.prototype.deal=function(){if(this.matchOver)return{ok:!1,error:"整轮已结束，请重置整轮"};var r=o(u(s()));return this.players.forEach(function(t){t.hand=r[t.playerId],t.rank=null}),this.levelCard=this._levelCardForRound(),this.currentPlay=null,this.passCount=0,this.ranks=[],this.roundEnded=!1,this._finished=!1,this.tributeStage="none",this.pendingReturns=[],this._pendingTasks=[],this._tributeResult=null,this.lastPlayerId=null,this.trickPlays=[null,null,null,null],this.turnIndex=1===this.roundNumber?this._firstTurn:0,this._log("第 "+this.roundNumber+" 局发牌完毕：每人 27 张，本局级牌为 "+t.rankText(this.levelCard)+"。"),{ok:!0}},x.prototype.tribute=function(){if(this.matchOver)return{ok:!1,error:"整轮已结束"};var r={ok:!0,resisted:!1,doubleDown:!1,transfers:[],first:null};if(this.roundNumber<=1||!this.lastRoundResult)return this.tributeStage="none",this.turnIndex=this._firstTurn,this._log("首局无进贡（抽牌决定先出），座位 "+(this.turnIndex+1)+" 先出。"),r.first=this.turnIndex,this._tributeResult=r,r;var t=this.lastRoundResult.ranks,e=t[0],n=t[1],i=t[2],a=t[3],s=this._teamOf(e)===this._teamOf(n),u=s?[i,a]:[a];r.doubleDown=s;var o=0,f=this;if(u.forEach(function(r){f.players[r].hand.forEach(function(r){"joker"===r.suit&&17===r.rank&&o++})}),o>=2)return this.tributeStage="resist",this.turnIndex=e,r.resisted=!0,r.first=e,this._log("抗贡：进贡方合计持有两张大王，免进贡；座位 "+(e+1)+"（头游）先出。"),this._tributeResult=r,r;this.tributeStage="tribute_pay";var p=u.map(function(r){var t,e,n,i=(t=f.players[r].hand,e=f.levelCard,n=null,t.forEach(function(r){h(r,e)||(!n||l(r,e)>l(n,e))&&(n=r)}),n||t[0]);return P(f.players[r].hand,i),f._log("座位 "+(r+1)+" 进贡 "+c(i)+"。"),{payerId:r,card:i}}),d=[];if(s){var k=l(p[0].card,this.levelCard),v=l(p[1].card,this.levelCard),g=k>v?p[0]:p[1],y=k>v?p[1]:p[0];this.players[e].hand.push(g.card),this.players[n].hand.push(y.card),r.transfers.push({to:e,from:g.payerId,card:g.card}),r.transfers.push({to:n,from:y.payerId,card:y.card}),r.first=k!==v?g.payerId:(e+1)%4,this._log("双下双贡："+c(g.card)+" 归头游，"+c(y.card)+" 归二游；"+(k!==v?"贡牌较大者先出。":"贡牌相同，头游下家先出。")),d=[{receiverId:e,payerId:g.payerId,receivedCard:g.card},{receiverId:n,payerId:y.payerId,receivedCard:y.card}]}else this.players[e].hand.push(p[0].card),r.transfers.push({to:e,from:p[0].payerId,card:p[0].card}),r.first=a,this._log("单下进贡："+c(p[0].card)+" 归头游；末游先出。"),d=[{receiverId:e,payerId:p[0].payerId,receivedCard:p[0].card}];return this._pendingTasks=d,this.pendingReturns=[],this.tributeStage="tribute_return",d.forEach(function(r){var t=f.players[r.receiverId];!f.interactive||t.isAi?f._autoReturn(r):f.pendingReturns.push(r)}),this.pendingReturns.length?(r.pending=!0,this._tributeResult=r,this._log("等待玩家（座位 "+(this.pendingReturns[0].receiverId+1)+"）选择回贡牌……"),r):(this._finishTribute(r),r)},x.prototype._autoReturn=function(r){var t=this.players[r.receiverId],e=T(t.hand,this.levelCard,r.receivedCard);P(t.hand,e),this.players[r.payerId].hand.push(e),this._log("座位 "+(r.receiverId+1)+" 回贡 "+c(e)+" 给座位 "+(r.payerId+1)+"。")},x.prototype.returnTribute=function(r){if("tribute_return"!==this.tributeStage||!this.pendingReturns.length)return{ok:!1,error:"当前无需回贡"};var t=this.pendingReturns[0],e=this.players[t.receiverId],n=C(e.hand,r,this.levelCard);return n?{ok:!1,error:n}:(P(e.hand,r),this.players[t.payerId].hand.push(r),this._log("座位 "+(t.receiverId+1)+" 回贡 "+c(r)+" 给座位 "+(t.payerId+1)+"。"),this.pendingReturns.shift(),this.pendingReturns.length||this._finishTribute(this._tributeResult||{ok:!0,first:t.receiverId}),{ok:!0,card:r})},x.prototype._finishTribute=function(r){this.tributeStage="none",this.turnIndex=r.first,this._log("进贡环节结束，座位 "+(this.turnIndex+1)+" 先出。"),this._tributeResult=r},x.prototype.play=function(r,t,e){if(this.matchOver)return{ok:!1,error:"整轮已结束"};if(this.roundEnded)return{ok:!1,error:"本局已结束"};if("tribute_return"===this.tributeStage)return{ok:!1,error:"请先完成回贡"};if(this.turnIndex!==r)return{ok:!1,error:"还没轮到该玩家出牌"};if(!t||!t.length)return{ok:!1,error:"请选择要出的牌"};for(var n=this.players[r],i=n.hand.slice(),a=0;a<t.length;a++){for(var s=-1,u=0;u<i.length;u++)if(j(i[u],t[a])){s=u;break}if(s<0)return{ok:!1,error:"所选牌不在手牌中"};i.splice(s,1)}var o=v(t,this.levelCard);if(!o.length)return{ok:!1,error:"不是合法牌型"};var l=null;if(e&&"object"==typeof e){l=null;for(var h=0;h<o.length;h++){var c=o[h];if(c.type===e.type&&c.length===e.length&&c.compareRank===e.compareRank&&(c.bombLevel||0)===(e.bombLevel||0)){l=c;break}}if(!l)return{ok:!1,error:"声明牌型与该手牌不符"}}else if("string"==typeof e){var f=o.filter(function(r){return r.type===e});if(!f.length)return{ok:!1,error:"该手牌不能组成声明的牌型"};f.sort(function(r,t){var e=y(r)||0,n=y(t)||0;return e!==n?n-e:t.compareRank-r.compareRank}),l=f[0]}else l=o.slice().sort(function(r,t){var e=y(r)||0,n=y(t)||0;return e!==n?n-e:t.compareRank-r.compareRank})[0];if(!_(l,this.currentPlay,this.levelCard))return{ok:!1,error:"不能压过场上的牌（牌型/张数不同或点数不够大）"};var p=!this.currentPlay;t.forEach(function(r){P(n.hand,r)}),this.currentPlay=l,this.passCount=0,this.lastPlayerId=r,p&&(this.trickPlays=[null,null,null,null]),this.trickPlays[r]={pass:!1,cards:t.slice(),label:L(l)},this._log("座位 "+(r+1)+" 出牌："+L(l)+"。");var d=!1;return 0===n.hand.length&&(d=!0,this._onPlayerFinished(r)),this.roundEnded||(this.turnIndex=this._nextActive(r)),{ok:!0,play:l,finished:d}},x.prototype._onPlayerFinished=function(r){var t=this.players[r];if(t.rank=this.ranks.length+1,this.ranks.push(r),this._log("座位 "+(r+1)+" 出完手牌，获得第 "+t.rank+" 名。"),2===this.ranks.length&&this._teamOf(this.ranks[0])===this._teamOf(this.ranks[1])){var e=this._activePlayers().slice().sort(function(r,t){return r.hand.length!==t.hand.length?r.hand.length-t.hand.length:r.playerId-t.playerId}),n=this;return e.forEach(function(r){r.rank=n.ranks.length+1,n.ranks.push(r.playerId)}),this._log("双下：本局结束（"+this.ranks.map(function(r){return r+1+"号"}).join("、")+"）。"),this._completeRound(),!0}if(3===this.ranks.length){var i=this._activePlayers()[0];return i.rank=4,this.ranks.push(i.playerId),this._completeRound(),!0}return!1},x.prototype._completeRound=function(){this.roundEnded=!0,this.finishRound()},x.prototype.finishRound=function(){if(this._finished)return{ok:!1,error:"本局已结算"};if(this.roundEnded=!0,2===this.ranks.length&&this._teamOf(this.ranks[0])===this._teamOf(this.ranks[1])){var r=this;this._activePlayers().slice().sort(function(r,t){return r.hand.length!==t.hand.length?r.hand.length-t.hand.length:r.playerId-t.playerId}).forEach(function(t){t.rank=r.ranks.length+1,r.ranks.push(t.playerId)})}if(this.ranks.length<4)return{ok:!1,error:"本局尚未结束，名次不完整"};var e=this._teamOf(this.ranks[0]),n=this._teamOf(this.ranks[1])===e?3:this._teamOf(this.ranks[2])===e?2:1,i=this.teamLevels[e],a=!1;return 14===i?n>=2?(a=!0,this.matchOver=!0,this.winnerTeam=e,this._log("队 "+(e+1)+" 过 A，赢得整轮！")):this._log("打 A 未过（头游+末游），继续打 A。"):(this.teamLevels[e]=Math.min(14,i+n),this._log("队 "+(e+1)+" 升 "+n+" 级："+t.rankText(i)+" → "+t.rankText(this.teamLevels[e])+(14===this.teamLevels[e]?"（进入打 A 阶段）":"")+"。")),this._finished=!0,this.lastRoundResult={ranks:this.ranks.slice(),winnerTeam:e,step:n,levelBefore:i,levelAfter:this.teamLevels[e],passedA:a},this.matchOver||(this.roundNumber+=1),{ok:!0,result:this.lastRoundResult}},x.prototype.pass=function(r){if(this.matchOver)return{ok:!1,error:"整轮已结束"};if(this.roundEnded)return{ok:!1,error:"本局已结束"};if("tribute_return"===this.tributeStage)return{ok:!1,error:"请先完成回贡"};if(this.turnIndex!==r)return{ok:!1,error:"还没轮到该玩家"};if(!this.currentPlay)return{ok:!1,error:"自由出牌时不能过牌"};this.passCount+=1,this.trickPlays[r]={pass:!0},this._log("座位 "+(r+1)+" 过牌。");var t=this._activePlayers(),e=this.players[this.lastPlayerId],n=e&&null===e.rank?t.length-1:t.length,i=!1;if(this.passCount>=n){var a=this.lastPlayerId;null!==this.players[a].rank&&(a=this.partnerOf(a),this._log("接风：座位 "+(this.players[this.lastPlayerId].playerId+1)+" 已出完且无人压过，由搭档（座位 "+(a+1)+"）重新起牌。")),this.currentPlay=null,this.passCount=0,this.turnIndex=a,i=!0}else this.turnIndex=this._nextActive(r);return{ok:!0,newLead:i,turnIndex:this.turnIndex}},x.prototype.suggest=function(r){var t=this.players[r].hand;if(!t.length)return null;var e=R(t,this.levelCard),n=this.currentPlay,i=this.levelCard;function a(r){return b(r,i)}function s(r,e){var n=g(r.type)?1:0,s=g(e.type)?1:0;if(n!==s)return n-s;var u=I(t,r,i)?1:0,o=I(t,e,i)?1:0;if(u!==o)return u-o;var l=a(r),h=a(e);if(l!==h)return l-h;var c=y(r)||0,f=y(e)||0;return c!==f?c-f:r.compareRank!==e.compareRank?r.compareRank-e.compareRank:e.length-r.length}var u=e;if(n&&(u=e.filter(function(r){return _(r,n)})),!u.length)return null;var o=u.filter(function(r){return r.length===t.length});return o.length?(o.sort(s),o[0]):(u.sort(s),u[0])},x.prototype.state=function(){var r=this.currentPlay;return{levelCard:this.levelCard,turnIndex:this.turnIndex,currentPlay:r?{cards:r.cards.map(function(r){return{suit:r.suit,rank:r.rank,deckIndex:r.deckIndex}}),type:r.type,length:r.length,compareRank:r.compareRank,bombLevel:r.bombLevel}:null,passCount:this.passCount,ranks:this.ranks.slice(),tributeStage:this.tributeStage,teamLevels:this.teamLevels.slice(),roundNumber:this.roundNumber,matchOver:this.matchOver,winnerTeam:this.winnerTeam,handCounts:this.players.map(function(r){return r.hand.length}),playerRanks:this.players.map(function(r){return r.rank}),pendingReturns:this.pendingReturns.map(function(r){return{receiverId:r.receiverId,payerId:r.payerId}}),lastPlayerId:this.lastPlayerId,trickPlays:this.trickPlays.map(function(r){return r?r.pass?{pass:!0}:{pass:!1,label:r.label,cards:r.cards.map(function(r){return{suit:r.suit,rank:r.rank,deckIndex:r.deckIndex}})}:null})}},t.SUIT_NAMES=e,t.TYPE_NAMES=n,t.createDeck=s,t.shuffle=u,t.deal=o,t.rankValue=l,t.isLevelCard=function(r,t){return"joker"!==r.suit&&r.rank===t},t.isWildCard=h,t.cardLabel=c,t.detectTypes=v,t.compare=m,t.canBeat=_,t.isBombType=g,t.enumeratePlays=R,t.checkReturnCard=C,t.playLabel=L,t.Game=x,"undefined"!=typeof module&&module.exports&&(module.exports=t)}("undefined"!=typeof window?window:globalThis);
+/* modules/02-card-power/script.js */!function(){"use strict";GD.autoRenderMarkup();var e=GD.parseCards("[♣3] [♦8] [♠J] [♥A] [♠10] [大王] [♦2]");function n(e,n,t){var a=GD.parseCards(e)[0],r=GD.parseCards(n)[0];return GD.rankValue(a,t)>=GD.rankValue(r,t)?0:1}document.getElementById("sort-btn").addEventListener("click",function(){var n=e.slice().sort(function(e,n){return GD.rankValue(e,10)-GD.rankValue(n,10)}),t=document.getElementById("sorted-row");t.innerHTML="",t.className="cards-row",n.forEach(function(e){t.appendChild(GD.createCardEl(e,{size:"md"}))});var a=document.getElementById("sort-explain");a.style.display="block";var r=n[n.length-1],s=e.filter(function(e){return"joker"!==e.suit&&10===e.rank})[0];a.innerHTML="打 10 时：大王最大；两副牌的各花色 10（如 ♠10）是<strong>级牌</strong>，比 A 大；其余按点数 2→3→…→J→Q→K→A 排列。",r&&s&&15!==GD.rankValue(s,10)&&(a.innerHTML+="（注意：级牌提升逻辑异常，请检查规则引擎）")});var t=[{text:"单张牌点从大到小，下面哪个顺序正确（打 10）？",options:["[大王] > [小王] > [♠10]（级牌）> [♠A] > [♠K] > … > [♠2]","[♠A] > [大王] > [小王] > [♠10] > … > [♠2]","[♠10] > [大王] > [小王] > [♠A] > … > [♠2]","[大王] > [♠A] > [小王] > [♠10] > … > [♠2]"],answer:0,explain:"顺序是：大王 > 小王 > 级牌（打 10 时是 10）> A > K > Q > J > 9 > … > 3 > 2。"},{text:'打 8 时，下面哪些牌是"级牌"？',options:["所有花色的 8（两副牌共 8 张）","只有红桃 8（2 张）","只有黑桃 8","A 和 8"],answer:0,explain:'"打几"就是级牌：打 8 时，4 种花色 × 2 副共 8 张 8 都是级牌。'},{text:'打 10 时，下面哪张牌是"逢人配"（万能牌）？',options:["[♥10]（红桃级牌）","[♠10]（黑桃级牌）","[大王]","[♥A]"],answer:0,explain:"逢人配是 2 张红桃级牌（打 10 时就是红桃 10）；它可以替代除大小王以外的任意一张牌。"},{text:"逢人配可以替代下面哪种牌？",options:["除大小王以外的任意一张牌","大王或小王","只有红桃牌","只能是 2~10 的数字牌"],answer:0,explain:"逢人配是万能牌：除大小王外都能替代（可以补顺子、补炸弹、补同花顺），但大小王只能靠真牌出。"},{text:"打 10 时，下面两张牌谁大？",options:["[♠10]（级牌）","[♦A]"],answer:n("[♠10]","[♦A]",10),explain:"打 10 时，10 是级牌，单张比大小时提升到仅次于大小王，♠10（级牌）大于 ♦A。"},{text:"打 10 时，下面两张牌谁大？",options:["[大王]","[♥10]（红桃级牌）"],answer:n("[大王]","[♥10]",10),explain:"大王是全场最大的单张（17），红桃 10 虽是级牌（15），仍小于大王。"},{text:"首局打 2 时，下面两张牌谁大？",options:["[♠2]（级牌）","[♦A]"],answer:n("[♠2]","[♦A]",2),explain:"首局打 2，2 就是级牌，提升到仅次于大小王，比 A 大。"},{text:"打 10 时，下面两张牌谁大？",options:["[小王]","[♠10]（级牌）"],answer:n("[小王]","[♠10]",10),explain:"小王（16）大于级牌（15），级牌只排在两张王之下。"},{text:"打 10 时，下面两张牌谁大？",options:["[♠2]","[♣3]"],answer:n("[♠2]","[♣3]",10),explain:"不是级牌时按原始点数比：3 大于 2。"},{text:"关于大小王，下面说法正确的是？",options:["大王最大、小王次之；可以出单张或对子，但不能参与顺子、同花顺等组合","小王比大王大","大小王可以参与同花顺","两张王不分大小"],answer:0,explain:"大王最大、小王次之（两副牌各 2 张）；王只能出单张或对子，不能参与顺子、同花顺。"},{text:"关于花色（♠ ♥ ♣ ♦），下面说法正确的是？",options:["花色本身不分大小；它的意义在于组成同花顺（5 张同花色连续牌）","黑桃 > 红桃 > 梅花 > 方块","只看红黑两色，红色比黑色大","花色决定谁先出牌"],answer:0,explain:"黑桃 A 和红桃 A 一样大；花色用于组成同花顺，比普通顺子更大。"}];GD.practice.quiz(document.getElementById("quiz02"),t)}();
+/* modules/03-card-types/script.js */!function(){"use strict";GD.autoRenderMarkup();var t=GD.TYPE_NAMES;var e=[t.single,t.pair,t.triple,t.triple_pair,t.straight,t.pair_sequence,t.triple_sequence,t.bomb,t.straight_flush,t.four_jokers,"不合法（哪种都不是）"];function n(t){for(var e=t.slice(),n=e.length-1;n>0;n--){var r=Math.floor(Math.random()*(n+1)),i=e[n];e[n]=e[r],e[r]=i}return e}function r(r,i){var a=function(e){var n=GD.parseCards(e),r=GD.detectTypes(n,10);return r.length?r.filter(function(t){return"straight_flush"===t.type}).length?t.straight_flush:t[r[0].type]:"不合法（哪种都不是）"}(r),s=n(e.filter(function(t){return t!==a})).slice(0,3),o=n([a].concat(s));return{text:"这手牌是什么牌型？"+r,options:o,answer:o.indexOf(a),explain:i}}var i=[r("[♠8] [♥8] [♣8]","三张同点，是三同张（三张）。"),r("[♠K] [♥K] [♣K] [♦7] [♠7]","三张 K 带一对 7，是三带二；比大小时只看三张 K 的部分。"),{text:"下面哪一手不是合法顺子？",options:["[♠J] [♥Q] [♣K] [♦A] [♠2]","[♠A] [♥2] [♣3] [♦4] [♠5]","[♠2] [♥3] [♣4] [♦5] [♠6]","[♠10] [♥J] [♣Q] [♦K] [♠A]"],answer:0,explain:"顺子 A2345 最小、10JQKA 最大；JQKA2 中 A 不能跨过 2，不是顺子。"},r("[♠3] [♥3] [♣4] [♦4] [♠5] [♥5]","3 对连续的对子 334455，是三连对（木板）。"),{text:"两连对 [♠3] [♥3] [♣4] [♦4] 可以直接出吗？",options:["不可以：三连对必须恰好 3 对连续对子","可以，叫两连对","可以，按对子比大小","不可以：必须是 5 张"],answer:0,explain:"三连对（木板）必须恰好 3 对；两连对、四连对都不是合法牌型。"},r("[♠K] [♥K] [♣K] [♦A] [♠A] [♥A]","2 个连续三张 KKKAAA，是钢板（二连三），也是最大的钢板。"),{text:'9 张的"三连三"（三个连续三张）可以出吗？',options:["不可以：钢板必须恰好 2 个连续三张","可以，叫长钢板","可以，按炸弹算","不可以：必须同花色"],answer:0,explain:"钢板（二连三）必须恰好 2 个连续三张；三连三不是合法牌型。"},{text:"不含逢人配时，普通炸弹最多能有几张？",options:["8 张（配逢人配最多 10 张）","4 张","6 张","12 张"],answer:0,explain:"两副牌同点数共 8 张；加上逢人配最多可凑 10 张。"},r("[♠5] [♠6] [♠7] [♠8] [♠9]","5 张同花色连续牌，是同花顺；它同时也是顺子，对局中按更强的同花顺算。"),r("[小王] [小王] [大王] [大王]","4 张王（两小王、两大王）是四大天王，全场最大牌型。"),{text:"什么情况下两手牌才能比大小？",options:["牌型相同、张数相同（炸弹族是例外）","点数之和更大就能压","张数一样就能比","任何时候都能比，只看点数"],answer:0,explain:'普通牌型要"同型同张数"才能比大小；炸弹族（炸弹 / 同花顺 / 四大天王）例外，可以压任意普通牌型。'}];GD.practice.quiz(document.getElementById("quiz03"),i)}();
+/* modules/04-wild-card/script.js */!function(){"use strict";function n(n,t,r){return function(n,t){return GD.detectTypes(GD.parseCards(n),t)}(n,t).some(r)}function t(n,t,r,e,u){e&&(e()||console.warn("[04-wild-card] 题目数据与规则引擎不一致，请检查"));for(var o=[n].concat(t),i=o.length-1;i>0;i--){var c=Math.floor(Math.random()*(i+1)),f=o[i];o[i]=o[c],o[c]=f}return{text:r,options:o,answer:o.indexOf(n),explain:u}}GD.autoRenderMarkup();var r=[t("首局打 2；之后打上一局获胜方的级别",["每局随机抽一个点数","永远打 2","由上一局头游指定"],'每局的"打几"（级牌）是怎么确定的？',function(){return!0},'首局打 2；之后每局打"上一局获胜方当前的级别"；一方打到 A 后进入"打 A 阶段"，级牌固定为 A。'),t("提升到仅次于大小王（比 A 大）",["就按原始点数 10 比","比 A 小","只在对子里才算提升"],"打 10 时，10 在单张、对子、三张里比大小时算多大？",function(){return!0},'级牌在单张、对子、三张等"同点数比大小"里提升到仅次于大小王；但在顺子、三连对、钢板里按原始点数（下一题就会考到）。'),t("顺子（当 5，组成 23456）",["三带二","钢板（二连三）","不合法，凑不成牌型"],"打 10： [♥10] [♠2] [♥3] [♣4] [♦6] —— 这张红桃 10（逢人配）可以把它补成什么？",function(){return n("[♥10] [♠2] [♥3] [♣4] [♦6]",10,function(n){return"straight"===n.type})},'逢人配可以替代任意牌并"按被替代的牌点"参与：红桃 10 当 5 用，与 2、3、4、6 组成 23456 顺子。'),t("按原始点数 10 参与",["提升为级牌，比 K 大","不能参与顺子","只能当 A 用"],"打 10 时，非红桃级牌（如 ♣10）在顺子 8-9-10-J-Q 里按什么算？",function(){return!0},"非红桃级牌在顺子、三连对、钢板等连续牌型中只能按原始点数插带：♣10 就是 10，顺子顶牌为 Q。"),t("5 张炸弹（当 7 用）",["三带二","顺子","不合法，凑不成牌型"],"打 10： [♥10] [♠7] [♥7] [♣7] [♦7] —— 这张红桃 10（逢人配）可以把它补成什么？",function(){return n("[♥10] [♠7] [♥7] [♣7] [♦7]",10,function(n){return"bomb"===n.type&&5===n.bombLevel})},"逢人配可以补炸弹：红桃 10 当 7，组成 5 张 7 炸弹。"),t("同花顺（当 ♠5，组成 56789）",["普通顺子（23456）","钢板（二连三）","不合法，凑不成牌型"],"打 5： [♥5] [♠6] [♠7] [♠8] [♠9] —— 这张红桃 5（逢人配）可以把它补成什么？",function(){return n("[♥5] [♠6] [♠7] [♠8] [♠9]",5,function(n){return"straight_flush"===n.type})},"红桃 5 可以当 ♠5，与 ♠6~♠9 组成同花顺 56789（逢人配可替代任意花色）。"),t("5 张 A 炸弹（不能替代大小王）",["四大天王","三带二","不合法，凑不成牌型"],"打 10： [♥10] [♠A] [♥A] [♣A] [♦A] —— 这手牌是？",function(){return n("[♥10] [♠A] [♥A] [♣A] [♦A]",10,function(n){return"bomb"===n.type&&5===n.bombLevel})&&!n("[♥10] [♠A] [♥A] [♣A] [♦A]",10,function(n){return"four_jokers"===n.type})},"逢人配不能替代大小王：红桃 10 当 A，组成 5 张 A 炸弹（不是四大天王）。"),t("以出牌人声明的牌型为准",["自动按最大的解释出","不能出，必须换牌","随机挑一种"],"用逢人配时，同一手牌能解释成多种牌型，出牌时按什么算？",function(){return!0},"多解牌型以出牌人声明的牌型为准：同一手牌有多种解释时，选择其中一种声明即可。")];GD.practice.quiz(document.getElementById("quiz04"),r)}();
+/* modules/05-play-rules/script.js */!function(){"use strict";GD.autoRenderMarkup();var t=[{title:"① 出完最后一手",text:"你出完手里的最后一张牌 [♠2]。此时你先成为本局头游的候选，但牌局还没结束。"},{title:"② 其他三家依次过牌",text:'下家、对家、上家都无法（或不愿）压过 [♠2]，连续三家都喊"过"。'},{title:"③ 搭档接风",text:'由于这手牌无人压过，出牌权由你的搭档（对家）接管——这就是"接风"。'},{title:"④ 搭档自由出牌",text:"接风后场上清空，搭档可以自由出任意合法牌型，继续为本队争取名次。"}],e=0,n=document.getElementById("jf-track"),r=document.getElementById("jf-body");function i(){n.innerHTML="",t.forEach(function(t,r){var i=document.createElement("span");i.className="step-dot"+(r===e?" active":r<e?" done":""),i.textContent=t.title,n.appendChild(i)}),r.innerHTML="<strong>"+t[e].title+"</strong><br>"+GD.cardMarkupToHtml(t[e].text),document.getElementById("jf-prev").disabled=0===e,document.getElementById("jf-next").disabled=e===t.length-1}document.getElementById("jf-prev").addEventListener("click",function(){e>0&&(e--,i())}),document.getElementById("jf-next").addEventListener("click",function(){e<t.length-1&&(e++,i())}),i();function a(t){var e=GD.parseCards(t),n=GD.detectTypes(e,10);if(!n.length)throw new Error("题目牌型非法："+t);var r=n.filter(function(t){return"straight_flush"===t.type});return r.length?r[0]:n[0]}function o(t,e,n,r){var i=a(e),o=n?a(n):null;return{text:t,options:["能压过","不能压过"],answer:GD.canBeat(i,o,10)?0:1,explain:r+"（出牌："+e+(n?"；场上："+n:"；自由出牌")+"）"}}var l=[{text:"按出牌方向，你出一手牌之后，接下来轮到谁？",options:["坐在你右手边的下家","坐在你左手边的上家","坐在正对面的对家","没有固定顺序，随便接"],answer:0,explain:"掼蛋按逆时针方向轮转：你 → 下家（右边）→ 对家（正对面）→ 上家（左边）→ 回到你。"},o("场上是对 8，你出对 10。能压吗？","[♠10] [♥10]","[♠8] [♥8]","同型（对子）同张数，且打 10 时对 10 是级牌（15），大于对 8，可以压。"),o("场上 KKK+77，你出 QQQ+AA。能压吗？","[♠Q] [♥Q] [♣Q] [♦A] [♠A]","[♠K] [♥K] [♣K] [♦7] [♠7]","三带二只比三张部分：Q 小于 K，压不过（对子的大小与 A 无关）。"),o("场上是顺子 23456，你出顺子 A2345。能压吗？","[♠A] [♥2] [♣3] [♦4] [♠5]","[♠2] [♥3] [♣4] [♦5] [♠6]","A2345 里 A 作低（顶牌算 5），是最小顺子，压不过 23456（顶牌 6）。"),o("场上是对 K，你出单张 A。能压吗？","[♠A]","[♠K] [♥K]","牌型不同（单张 vs 对子）、张数不同，不能比——单张不能压对子。"),o("场上是顺子 23456，你出 4 张 6 炸弹。能压吗？","[♠6] [♥6] [♣6] [♦6]","[♠2] [♥3] [♣4] [♦5] [♠6]","炸弹可以压任意普通牌型，4 张炸弹也不例外。"),o("场上是 5 张 7 炸弹，你出同花顺 ♠5~♠9。能压吗？","[♠5] [♠6] [♠7] [♠8] [♠9]","[♠7] [♥7] [♣7] [♦7] [♠7]","炸弹族顺序：4 张炸 < 5 张炸 < 同花顺，同花顺比 5 张炸弹大。"),o("场上是同花顺 ♦5~♦9，你出 6 张 7 炸弹。能压吗？","[♠7] [♥7] [♣7] [♦7] [♠7] [♥7]","[♦5] [♦6] [♦7] [♦8] [♦9]","炸弹族顺序：同花顺 < 6 张炸，6 张炸弹更大。"),{text:'你出一手牌后，其他三家都喊"过"，接下来怎么办？',options:["你重新起牌，自由出任意合法牌型","下家自由出牌","本局立即结束","必须换一种牌型再出"],answer:0,explain:"连续 3 家过牌后，由最后出牌者重新起牌：场上清空，可自由出任意合法牌型。"},{text:"你的搭档出完了最后几张牌，其他人都压不过他这手牌。接下来谁出牌？",options:["由你（搭档）接风出牌","由下家自由出牌","搭档继续出（牌已出完）","本局立即结束"],answer:0,explain:"接风：一名玩家出完手牌且最后一手无人压过时，由他的搭档获得出牌权继续作战。"}];GD.practice.quiz(document.getElementById("quiz05"),l)}();
+/* modules/06-tribute/script.js */!function(){"use strict";GD.autoRenderMarkup();var t=[{title:"① 看名次",text:"上局名次：队 A = 头游 + 二游；队 B = 三游 + 末游。队 B 双下。"},{title:"② 两人进贡",text:'队 B 的三游、末游各把"红桃级牌除外的最大一张牌"贡出。'},{title:"③ 头游、二游分配贡牌",text:"两张贡牌中较大的一张归头游，另一张归二游。"},{title:"④ 各自回贡",text:"头游、二游分别回赠 1 张牌点不大于 10 的牌给对应的进贡者（没有 ≤10 的牌则回最小牌）。"},{title:"⑤ 确定先出牌权",text:'由"贡牌较大"的那位进贡者先出牌；若两张贡牌一样大，由头游的下家先出。'}],e=0,n=document.getElementById("tr-track"),i=document.getElementById("tr-body");function o(){n.innerHTML="",t.forEach(function(t,i){var o=document.createElement("span");o.className="step-dot"+(i===e?" active":i<e?" done":""),o.textContent=t.title,n.appendChild(o)}),i.innerHTML="<strong>"+t[e].title+"</strong><br>"+t[e].text,document.getElementById("tr-prev").disabled=0===e,document.getElementById("tr-next").disabled=e===t.length-1}document.getElementById("tr-prev").addEventListener("click",function(){e>0&&(e--,o())}),document.getElementById("tr-next").addEventListener("click",function(){e<t.length-1&&(e++,o())}),o(),GD.practice.quiz(document.getElementById("quiz06"),[{text:"单下（单贡）时，谁向谁进贡？",options:["末游向头游进贡 1 张","头游向末游进贡 1 张","二游向三游进贡 1 张","单下不用进贡"],answer:0,explain:'单下：末游把"红桃级牌除外的最大一张牌"进贡给头游；头游再回贡一张 ≤10 的牌。'},{text:'进贡时，下面哪张牌是规则明确"不能贡"的？',options:["「红桃级牌」如打 10 时的 ♥10（逢人配）","[大王]","[♠A]","「非红桃级牌」如打 10 时的 ♠10"],answer:0,explain:'进贡要交"红桃级牌除外的最大牌"：逢人配不能进贡；其余最大的牌（哪怕是大王或非红桃级牌）都要贡。'},{text:'进贡的"最大一张牌"里，大小王算不算？',options:["算：有王就要贡王（大王 > 小王）","不算：王不用贡","只算大王，不算小王","由进贡者自己决定贡不贡王"],answer:0,explain:'进贡只排除红桃级牌（逢人配）：大小王都算"最大牌"，有王必须贡王。'},{text:"打 10 时你收到贡牌、需要回贡，下面哪张可以回？",options:["[♠10]（牌点 10）","[♦J]","[大王]","[♥A]"],answer:0,explain:"回贡牌点须不大于 10（含 10），且牌点 ≤10 的级牌也可以回：打 10 时 ♠10 可以回；J、Q、K、A、王都不行。"},{text:"如果手里没有任何牌点 ≤10 的牌，回贡时怎么办？",options:["回出最小的一张牌","可以不回贡","回一张大王","对手重新抽一张"],answer:0,explain:"规则：尽量回 ≤10 的牌；手里没有 ≤10 的牌（罕见）时，回出最小的一张。"},{text:"进贡牌和回贡牌需要亮明（公开）吗？",options:["都要亮明：进贡牌亮出给大家看；回贡牌也亮明（双贡时两家同时亮出）","只有进贡牌需要亮明","都不用，收进手里就行","由进贡的一方决定是否公开"],answer:0,explain:"进贡的牌要亮明（双下时还要比较两张贡牌大小、决定先出牌权）；回贡的牌也要亮明，双贡时两家同时亮出、信息对等。"},{text:"需要进贡的一方合计持有两张大王，会发生什么？",options:["抗贡：免进贡，由头游先出牌","正常进贡，但只贡一张大王","重新发牌","由二游先出牌"],answer:0,explain:"抗贡条件是进贡方合计两张大王（双下时两人各一张或一人两张）；成立时要亮出大王给全场确认，抗贡整队生效，由头游先出牌。"},{text:"双下时，进贡方只有一个人手里拿着两张大王，抗贡怎么算？",options:["整队抗贡：双下两个人都不用进贡","只有拿到大王的那个人免进贡","抗贡不成立，两张大王不顶用","由头游指定免谁的贡"],answer:0,explain:'抗贡看的是进贡方"合计"两张大王——不管两张在谁手里，都整队免贡；成立时亮出大王，由头游先出牌。'},{text:"双下（双贡）时，两张贡牌怎么分？",options:["头游拿较大的那张，二游拿另一张","都归头游","由进贡者指定给谁","按座位顺序分"],answer:0,explain:"双下：三游、末游各进贡 1 张；较大的归头游、另一张归二游，两人再各自回贡 ≤10 的牌。"},{text:"上一局你方双下（对方拿到头游+二游）。本局谁先出牌？",options:["贡牌较大的那位进贡者","头游","二游","重新抽牌决定"],answer:0,explain:"双下由贡牌较大的进贡者先出；两张贡牌一样大时，由头游的下家先出。"},{text:"两张贡牌一样大时，由谁先出牌？",options:["头游的下家","末游","二游","重新抽牌"],answer:0,explain:"双下由贡牌较大者先出；两张贡牌一样大时，由头游的下家先出。"},{text:"单下时，本局由谁先出牌？",options:["末游（进贡者）","头游","二游","三游"],answer:0,explain:"单下（单贡）由进贡的末游先出牌；抗贡等情形才由头游先出。"}])}();
+/* modules/07-level-up/script.js */!function(){"use strict";function e(e){return GD.rankText(e)}function n(n,A,t,r,a){var o=function(e,n){var A=new GD.Game;A.teamLevels=[e[0],e[1]],A.ranks=n.slice();var t=A.finishRound();return{ok:t.ok,levels:A.teamLevels,matchOver:A.matchOver,winnerTeam:A.winnerTeam,result:t.result}}(A,t);return o.ok&&(o.result.passedA&&r.indexOf("过 A")<0&&console.warn("[07-level-up] 题目答案与引擎不一致（过 A）:",n),!o.result.passedA&&r.indexOf("过 A")>=0&&r.indexOf("不过")<0&&console.warn("[07-level-up] 题目答案与引擎不一致（未过 A）:",n)),{text:n,options:null,answer:0,explain:a+"（规则引擎计算："+e(o.levels[0])+" / "+e(o.levels[1])+(o.matchOver?"，整轮结束":"，继续")+"）"}}function A(e,A,t,r,a,o){for(var s=[r].concat(a),l=s.length-1;l>0;l--){var i=Math.floor(Math.random()*(l+1)),u=s[l];s[l]=s[i],s[i]=u}var c=n(e,A,t,r,o);return c.options=s,c.answer=s.indexOf(r),c}GD.autoRenderMarkup();var t=[{text:"一局结束后，哪一方能升级？",options:["只有头游一方能升级，对方级别不变","双方都按各自名次升级","输的一方降级","双方升同样的级数"],answer:0,explain:"每局只有头游方升级，升几级看头游搭档的名次；对方级别不变（本规则不降级）。"},A("当前打 5，本局你们队拿到头游+二游（对方双下）。下一局打几？",[5,3],[0,2,1,3],"打 8（+3 级）",["打 7（+2 级）","打 6（+1 级）","打 A"],"头游+二游升 3 级：5 → 8，下一局打 8。"),A("当前打 2，本局你们队拿到头游+末游。下一局打几？",[2,2],[0,1,3,2],"打 3（+1 级）",["打 4（+2 级）","打 5（+3 级）","打 A"],"头游+末游只升 1 级：2 → 3。"),A("当前打 K（13），本局你们队拿到头游+三游。下一局打几？",[13,5],[0,1,2,3],"打 A（+2 级，A 封顶不跳过）",["打 2（回绕）","直接过 A 获胜","打 13（不变）"],'K 升 2 级是"15"，但 A 封顶：只升到 A，不能跳过 A；进入打 A 阶段后还要成功过 A 才算赢。'),A("打 A 阶段中，每局的级牌是什么？",[14,9],[1,3,0,2],"固定为 A",["获胜方的级别","上一局的级别","随机指定"],'打 A 阶段级牌固定为 A，覆盖"打获胜方级别"的一般规则；对方即使赢牌也不结束打 A 阶段。'),A("打 A 方本局拿到头游+三游。结果如何？",[14,6],[0,1,2,3],"过 A，赢得整轮",["继续打 A","降 1 级","重新从打 2 开始"],"打 A 方头游+三游达成升 2 级条件，成功过 A，赢得整轮（大轮）。"),A("打 A 方本局拿到头游+末游。结果如何？",[14,6],[0,1,3,2],"不过 A，继续打 A",["过 A，赢得整轮","降 1 级","对方直接获胜"],"只有头游+二游或头游+三游才算过 A；头游+末游只满足 +1 级条件，不过 A、不退级，继续打 A。"),{text:"打 A 阶段中，级别还没到 A 的一方赢了（如头游+二游），会怎样？",options:["对方正常升级（升到 A 后也进入打 A 阶段），打 A 阶段继续","对方直接赢得整轮","打 A 方降 3 级","整轮重新开始"],answer:0,explain:'打 A 阶段中胜方照常升级；双方都达到 A 时，谁先"过 A"谁赢；打 A 方不退级、不降级。'}];GD.practice.quiz(document.getElementById("quiz07"),t)}();
+/* shared/quiz-data.js */!function(e){"use strict";var o=e.GD=e.GD||{};o.quizQuestions=[{id:"Q001",module:3,type:"card-type",question:"下面这手牌是什么牌型？[♠8] [♥8] [♣8]",options:["对子","三同张（三张）","三带二","炸弹"],answer:1,explanation:"三张同点的牌叫三同张（三张）。",cardTypes:["triple"],topics:["card-type"]},{id:"Q002",module:3,type:"card-type",question:"下面这手牌是什么牌型？[♠K] [♥K] [♣K] [♦7] [♠7]",options:["三同张","炸弹","三带二","顺子"],answer:2,explanation:"三张 K 带一对 7，是三带二；比大小时只看三张 K 的部分。",cardTypes:["triple_pair"],topics:["card-type"]},{id:"Q003",module:3,type:"card-type",question:"下面这手牌是什么牌型？[♠2] [♥3] [♣4] [♦5] [♠6]",options:["顺子","三连对","钢板","不是合法牌型"],answer:0,explanation:"5 张连续单牌（23456）是顺子，不分花色。",cardTypes:["straight"],topics:["card-type"]},{id:"Q004",module:3,type:"card-type",question:"下面这手牌是什么牌型？[♠A] [♥A] [♣2] [♦2] [♠3] [♥3]",options:["三连对（木板）","钢板","三个对子不算牌型","顺子"],answer:0,explanation:"3 对连续的对子 AA2233 是三连对（木板），也是最小的三连对。",cardTypes:["pair_sequence"],topics:["card-type"]},{id:"Q005",module:3,type:"card-type",question:"下面这手牌是什么牌型？[♠A] [♥A] [♣A] [♦2] [♠2] [♥2]",options:["三连对","钢板（二连三）","炸弹","不是合法牌型"],answer:1,explanation:"两个连续的三张 AAA222 是钢板（二连三），也是最小的钢板。",cardTypes:["triple_sequence"],topics:["card-type"]},{id:"Q006",module:3,type:"card-type",question:"下面这手牌是什么牌型？[♠7] [♥7] [♣7] [♦7]",options:["三带二","炸弹","钢板","顺子"],answer:1,explanation:"4 张同点是炸弹（4 张炸），可以压任意普通牌型。",cardTypes:["bomb"],topics:["card-type"]},{id:"Q007",module:3,type:"card-type",question:"下面这手牌是什么牌型？[♠5] [♠6] [♠7] [♠8] [♠9]",options:["顺子","同花顺","不是合法牌型","三连对"],answer:1,explanation:"5 张同花色连续牌是同花顺（它同时也是顺子，但对局中按更强的同花顺算）。",cardTypes:["straight_flush","straight"],topics:["card-type"]},{id:"Q008",module:3,type:"card-type",question:"下面这手牌是什么牌型？[小王] [小王] [大王] [大王]",options:["炸弹","对子","四大天王","不是合法牌型"],answer:2,explanation:"4 张王凑齐（两小王、两大王）是四大天王，全场最大牌型。",cardTypes:["four_jokers"],topics:["card-type"]},{id:"Q009",module:3,type:"card-type",question:"打 10 时，[♠10] 这一张牌是什么牌型？",options:["单张（且是级牌）","对子","不能单独出","炸弹"],answer:0,explanation:"任意一张牌都是单张。打 10 时 ♠10 是级牌，单张比大小仅次于大小王。",cardTypes:["single"],topics:["card-type"]},{id:"Q010",module:3,type:"card-type",question:"下面这手牌是什么牌型？[♠7] [♥7] [♣7] [♦7] [♠7]（5 张同点）",options:["三带二","5 张炸弹","不是合法牌型","钢板"],answer:1,explanation:"5 张同点按炸弹处理（不是三带二）：三带二的对子必须与三张点数不同。",cardTypes:["bomb","triple_pair"],topics:["card-type"]},{id:"Q011",module:3,type:"card-type",question:"[♠J] [♥Q] [♣K] [♦A] [♠2] 是顺子吗？",options:["是顺子（JQKA2）","不是顺子，这手牌不合法","是钢板","是同花顺"],answer:1,explanation:"顺子 A 不能同时当大又跨过 2：JQKA2 不是顺子；A 只能 A2345（作低）或 10JQKA（作高）。",cardTypes:["straight"],topics:["card-type"]},{id:"Q012",module:3,type:"card-type",question:"下面这手牌是什么牌型？[♠9] [♥9] [♣9] [♦10] [♠10]（打 10）",options:["三带二（999 带 1010）","5 张炸弹","钢板","不是合法牌型"],answer:0,explanation:"三张 9 带一对 10 是三带二；打 10 时非红桃 10 按原始点数参与，不升级。",cardTypes:["triple_pair"],topics:["card-type"]},{id:"Q013",module:2,type:"compare",question:"打 10 时，[♠10]（级牌）和 [♦A] 哪张单张大？",options:["[♦A] 大","[♠10] 大（级牌提升）","一样大","要看花色"],answer:1,explanation:"级牌在单张比大小时提升到仅次于大小王：打 10 时 ♠10 大于 ♦A。",cardTypes:["single"],topics:["card-power"]},{id:"Q014",module:5,type:"compare",question:"场上是顺子 [♠2] [♥3] [♣4] [♦5] [♠6]（23456），你出 4 张 9 炸弹能压吗？",options:["能压（炸弹压任意普通牌型）","不能压（牌型不同）","不能压（张数不同）","要同为顺子才能比"],answer:0,explanation:"炸弹、同花顺、四大天王可以压任意普通牌型，4 张炸弹也不例外。",cardTypes:["bomb","straight"],topics:["bomb-order"]},{id:"Q015",module:5,type:"compare",question:"5 张炸弹和同花顺谁大？",options:["5 张炸弹大","同花顺大","一样大，比牌点","看谁先出"],answer:1,explanation:"炸弹族顺序：4 张炸 < 5 张炸 < 同花顺 < 6 张炸 < …，同花顺夹在 5 张炸和 6 张炸之间。",cardTypes:["bomb","straight_flush"],topics:["bomb-order"]},{id:"Q016",module:5,type:"compare",question:"同花顺和 6 张炸弹谁大？",options:["同花顺大","6 张炸弹大","一样大","同花顺不能被压"],answer:1,explanation:"炸弹族顺序里同花顺 < 6 张炸：6 张炸弹可以压同花顺。",cardTypes:["bomb","straight_flush"],topics:["bomb-order"]},{id:"Q017",module:5,type:"compare",question:"四大天王和 10 张炸弹谁大？",options:["10 张炸弹大","四大天王最大","一样大","看谁先出"],answer:1,explanation:"四大天王是全场最大牌型，任何炸弹都比不过；10 张炸是普通炸弹的最大张数（8 张同点 + 2 张逢人配）。",cardTypes:["four_jokers","bomb"],topics:["bomb-order"]},{id:"Q018",module:5,type:"compare",question:"顺子 A2345 和 23456 谁大？",options:["A2345 大","23456 大","一样大","A2345 不是顺子"],answer:1,explanation:"A 作低时按 1 计：A2345 的顶牌算 5，是最小顺子；23456 顶牌 6，更大。",cardTypes:["straight"],topics:["compare"]},{id:"Q019",module:5,type:"compare",question:"场上是 5 张炸弹，你出同花顺 [♠5] [♠6] [♠7] [♠8] [♠9] 能压吗？",options:["能压（同花顺 > 5 张炸）","不能压（张数不同）","不能压（都是炸弹族不能比）","看花色"],answer:0,explanation:"同为炸弹族时按档次比：4 张炸 < 5 张炸 < 同花顺，所以同花顺能压 5 张炸弹。",cardTypes:["straight_flush","bomb"],topics:["bomb-order"]},{id:"Q020",module:5,type:"compare",question:"三带二 KKK+77 和 QQQ+AA 谁大？",options:["KKK+77 大（只比三张）","QQQ+AA 大（对子 A 更大）","一样大","不能比"],answer:0,explanation:"三带二只比较三张部分：K 大于 Q，与对子无关。",cardTypes:["triple_pair"],topics:["compare"]},{id:"Q021",module:3,type:"rule",question:"对子、单张比大小时要看花色吗？",options:["要看：黑桃＞红桃＞梅花＞方块","不看：花色不影响大小","只看红黑两色","同点数直接不算"],answer:1,explanation:"花色本身不分大小（黑桃 A 与红桃 A 一样大）；花色只与同花顺有关。",cardTypes:["single","pair"],topics:["card-power"]},{id:"Q022",module:2,type:"rule",question:"单张牌点从大到小，下面哪个顺序正确（打 10）？",options:["[大王] > [小王] > [♠10]（级牌）> [♠A] > [♠K] > … > [♠2]","[♠A] > [大王] > [小王] > [♠10] > … > [♠2]","[♠10] > [大王] > [小王] > [♠A] > … > [♠2]","[大王] > [♠A] > [小王] > [♠10] > … > [♠2]"],answer:0,explanation:"顺序是：大王 > 小王 > 级牌（本例 10）> A > K > Q > J > 9 … > 3 > 2。",cardTypes:["single"],topics:["card-power"]},{id:"Q023",module:3,type:"rule",question:"两连对 [♠3] [♥3] [♣4] [♦4] 可以直接出吗？",options:["可以，叫两连对","不可以：三连对必须恰好 3 对","可以，按对子比","不可以：必须是 5 张"],answer:1,explanation:"三连对（木板）必须恰好 3 对连续对子；两连对不是合法牌型，四连对也不行。",cardTypes:["pair_sequence"],topics:["card-type"]},{id:"Q024",module:3,type:"rule",question:'9 张的"三连三"（如 AAA KKK QQQ 三个连续三张）可以出吗？',options:["可以，是钢板","不可以：钢板必须恰好 2 个连续三张","可以，当炸弹","不可以：不是同花"],answer:1,explanation:"钢板（二连三）必须恰好 2 个连续三张；三连三不是合法牌型。",cardTypes:["triple_sequence"],topics:["card-type"]},{id:"Q025",module:2,type:"rule",question:"一对大王 [大王] [大王] 算什么？",options:["对子（对大王）","两张单张","炸弹","不是合法牌型"],answer:0,explanation:"两张同点的王可以组成对子：对大王是最大的对子。",cardTypes:["pair"],topics:["card-type"]},{id:"Q026",module:5,type:"rule",question:'关于"过牌"和"重新起牌"，下面说法正确的是？',options:["连续 3 家过牌后，由最后出牌者重新起牌（自由出牌）","任何人过牌后都重新起牌","只要有人过牌就不能再出","过牌必须报出具体牌型"],answer:0,explanation:'过牌就是"不出"；连续 3 家都过时，场上清空，由最后出牌者自由出任意合法牌型。',cardTypes:["single"],topics:["pass"]},{id:"Q027",module:1,type:"rule",question:"掼蛋每局开始时的出牌方（先出牌的人）怎么确定？",options:["永远庄家先出","首局抽牌决定；之后按进贡/抗贡规则确定","上一局末游一定先出","按座位固定顺序轮换"],answer:1,explanation:"首局由抽牌决定；之后：单下由末游先出、双下由贡牌较大者先出（相同则头游下家）、抗贡由头游先出。",cardTypes:["single"],topics:["tribute"]},{id:"Q028",module:4,type:"scenario",question:"打 10 时，[♥10] [♠2] [♥3] [♣4] [♦6]：红桃 10（逢人配）可以把它补成什么？",options:["顺子 23456（红桃 10 当 5）","三带二","钢板","不合法，凑不成牌型"],answer:0,explanation:"逢人配当 5 用（按被替代的牌点参与），与 2、3、4、6 组成 23456 顺子。",cardTypes:["straight"],topics:["wildcard"]},{id:"Q029",module:4,type:"scenario",question:"打 10 时，[♥10] [♠7] [♥7] [♣7] [♦7] 这手牌是什么？",options:["三带二","5 张 7 炸弹（红桃 10 当 7）","不合法","四大天王"],answer:1,explanation:"逢人配可以补炸弹：红桃 10 当 7，组成 5 张 7 炸弹。",cardTypes:["bomb"],topics:["wildcard"]},{id:"Q030",module:4,type:"rule",question:"逢人配（红桃级牌）可以替代下面哪种牌？",options:["可以替代大王","可以替代大小王以外的任意牌","可以替代任意牌（含大小王）","只能替代普通数字牌，不能替代 A"],answer:1,explanation:"逢人配可替代除大小王外的任意一张牌（含 A、级牌），包括组炸弹、同花顺、顺子。",cardTypes:["single"],topics:["wildcard"]},{id:"Q031",module:4,type:"rule",question:"打 10 时，非红桃的级牌（如 ♣10）在顺子 8-9-10-J-Q 里按什么算？",options:["按原始点数 10 插带","提升为级牌（比 K 大）","不能用于顺子","只能当 A 用"],answer:0,explanation:"非红桃级牌在顺子、三连对、钢板等连续牌型中只能按原始点数插带，不升级。",cardTypes:["straight"],topics:["wildcard"]},{id:"Q032",module:4,type:"scenario",question:"打 5 时，[♥5] [♠6] [♠7] [♠8] [♠9] 能组成什么？",options:["同花顺 56789（红桃 5 当 ♠5）","普通顺子 23456","钢板","不合法"],answer:0,explanation:"逢人配可替代任意花色：红桃 5 当 ♠5，与 ♠6~♠9 组成同花顺 56789。",cardTypes:["straight_flush"],topics:["wildcard"]},{id:"Q033",module:4,type:"rule",question:"一手牌可以用逢人配解释成多种牌型时，以谁为准？",options:["以出牌人声明的牌型为准","自动取最大的解释","裁判/系统随机挑一种","不能出这种牌"],answer:0,explanation:"多解牌型以出牌人声明的牌型为准（对局中会弹出可选解释）；口径统一适用于教学、测验与对局。",cardTypes:["straight","bomb"],topics:["wildcard"]},{id:"Q034",module:5,type:"scenario",question:"你出完了手里最后几张牌，其他三人都压不过你最后一手。接下来谁出牌？",options:["由你的搭档接风，获得出牌权","直接跳过你，由下家自由出牌","本局立即结束","重新洗牌"],answer:0,explanation:"接风：出完手牌且最后一手无人压过时，由搭档获得出牌权继续帮本队作战。",cardTypes:["single"],topics:["jiefeng"]},{id:"Q035",module:5,type:"scenario",question:'你出一手牌后，下家、对家、上家都喊了"过"。接下来怎么办？',options:["你重新起牌，自由出任意合法牌型","轮到下家自由出牌","必须换一种牌型再出","本局结束"],answer:0,explanation:"连续 3 家过牌后，由最后出牌者重新起牌（场上清空，自由出牌）。",cardTypes:["single"],topics:["pass"]},{id:"Q036",module:6,type:"scenario",question:"单下（单贡）时，谁给谁进贡？",options:["末游向头游进贡 1 张","头游向末游进贡 1 张","二游向三游进贡 1 张","不用进贡"],answer:0,explanation:'单下：末游把"红桃级牌除外的最大一张牌"进贡给头游；头游回贡一张 ≤10 的牌。',cardTypes:["single"],topics:["tribute"]},{id:"Q037",module:6,type:"scenario",question:"回贡（还贡）的牌必须满足什么条件？",options:["牌点不大于 10（≤10 的级牌也可以回）","必须小于进贡的牌","必须是大王","任意牌都可以"],answer:0,explanation:"回贡牌点须 ≤10（含 10）；牌点 ≤10 的级牌也可回；没有 ≤10 的牌时回最小的一张。",cardTypes:["single"],topics:["tribute"]},{id:"Q038",module:6,type:"scenario",question:'需要进贡的一方在什么情况下可以"抗贡"？',options:["合计持有两张大王","有一张大王","有两张小王","凑齐四大天王"],answer:0,explanation:"进贡方合计两张大王即可抗贡（双下时两人各一张或一人两张）；抗贡后由头游先出牌。",cardTypes:["single"],topics:["tribute"]},{id:"Q039",module:6,type:"scenario",question:"双下（双贡）时，如果两张贡牌一样大，由谁先出牌？",options:["头游的下家","末游","随机指定","二游"],answer:0,explanation:"双下由贡牌较大者先出；两张贡牌一样大时，由头游的下家先出。",cardTypes:["single"],topics:["tribute"]},{id:"Q040",module:6,type:"scenario",question:"单下（单贡）时谁先出牌？",options:["末游（进贡者）先出","头游先出","二游先出","三游先出"],answer:0,explanation:'单下由末游先出牌；这是"输了先手"的规则体现。抗贡时才由头游先出。',cardTypes:["single"],topics:["tribute"]},{id:"Q041",module:7,type:"scenario",question:"本局你们队拿到头游+二游（对方双下）。升几级？",options:["升 3 级","升 2 级","升 1 级","不升级"],answer:0,explanation:"头游+二游同队，升 3 级（打到 A 封顶）。",cardTypes:["single"],topics:["upgrade"]},{id:"Q042",module:7,type:"scenario",question:"本局你们队拿到头游+三游。升几级？",options:["升 2 级","升 3 级","升 1 级","不升级"],answer:0,explanation:"头游+三游升 2 级。",cardTypes:["single"],topics:["upgrade"]},{id:"Q043",module:7,type:"scenario",question:"本局你们队拿到头游+末游。升几级？",options:["升 1 级","升 2 级","升 3 级","不升级"],answer:0,explanation:"头游+末游只升 1 级。",cardTypes:["single"],topics:["upgrade"]},{id:"Q044",module:7,type:"scenario",question:"打 A 方本局拿到头游+三游，结果如何？",options:["成功过 A，赢得整轮（大轮）","继续打 A","降 1 级","从打 2 重新开始"],answer:0,explanation:"打 A 方达成头游+二游或头游+三游（升 2/3 级条件）即过 A，赢得整轮。",cardTypes:["single"],topics:["pass-a"]},{id:"Q045",module:7,type:"scenario",question:"打 A 方本局只拿到头游+末游，结果如何？",options:["不过 A，继续打 A","算过 A 获胜","降 1 级","整轮直接结束（判负）"],answer:0,explanation:"头游+末游只满足 +1 级条件，不算过 A；打 A 阶段不退级、不降级，继续打。",cardTypes:["single"],topics:["pass-a"]},{id:"Q046",module:7,type:"rule",question:"打 A 阶段中，每局的级牌是什么？",options:["固定为 A","获胜方的级别","随机指定","上一局末游的级别"],answer:0,explanation:'打 A 阶段级牌固定为 A，覆盖"级牌 = 上局获胜方级别"的一般规则。',cardTypes:["single"],topics:["pass-a"]},{id:"Q047",module:7,type:"rule",question:"打 K（13）时一局升 3 级，级别变成什么？",options:["A（封顶，不能跳过）","跳过 A 直接获胜","3（回到 2 之后）","停留 K"],answer:0,explanation:"A 封顶且不能跳过：K 升 3 级也只到 A；之后进入打 A 阶段，需再过 A 才获胜。",cardTypes:["single"],topics:["upgrade"]},{id:"Q048",module:7,type:"rule",question:"级别从什么开始？整轮以什么判定胜负？",options:["从打 2 开始，先过 A 的一方赢得整轮","从打 A 开始，先升级的获胜","从打 5 开始，先到 K 获胜","由系统随机"],answer:0,explanation:"双方从打 2 出发，逐级升级；先成功过 A 的一方赢得整轮（大轮）。",cardTypes:["single"],topics:["upgrade","pass-a"]},{id:"Q049",module:3,type:"card-type",question:"下面这手牌是什么牌型？[♠Q] [♥Q] [♣Q]",options:["对子","三同张（三张）","三带二","不是合法牌型"],answer:1,explanation:"三张同点（QQQ）是三同张（三张）。",cardTypes:["triple"],topics:["card-type"]}],"undefined"!=typeof module&&module.exports&&(module.exports=o)}("undefined"!=typeof window?window:globalThis);
+/* modules/08-quiz/script.js */!function(){"use strict";var t=GD.quizQuestions||[],e=document.getElementById("quiz-panel"),n=document.getElementById("quiz08"),o=document.getElementById("quiz-title");function i(t){return{text:t.question,options:t.options,answer:t.answer,explain:t.explanation}}function r(){e.style.display="";var r=function(t){for(var e=t.slice(),n=e.length-1;n>0;n--){var o=Math.floor(Math.random()*(n+1)),i=e[n];e[n]=e[o],e[o]=i}return e}(t).map(i).slice(0,10);o.textContent="测验进行中：共 "+r.length+" 题",GD.practice.quiz(n,r,{onFinish:function(t,e){o.textContent="测验结束：正确率 "+Math.round(t/e*100)+"%"+(t>=.8*e?"（达标！）":"（未到 80%，建议复习后再来）")}}),e.scrollIntoView&&e.scrollIntoView({behavior:"smooth",block:"start"})}document.getElementById("start-btn").addEventListener("click",r),document.getElementById("reshuffle-btn").addEventListener("click",function(){n.innerHTML="",r()})}();
+/* modules/09-practice-game/script.js */!function(){"use strict";var e=["你","下家","对家","上家"],t=["头游","二游","三游","末游"],n=null,a=[],r=[],l=0,d=0,i=0,o=null,c=1,s=[],u=[],m=-1,p={infoLevel:document.getElementById("info-level"),infoTeams:document.getElementById("info-teams"),infoRound:document.getElementById("info-round"),infoStage:document.getElementById("info-stage"),seat:{1:document.getElementById("seat-1"),2:document.getElementById("seat-2"),3:document.getElementById("seat-3")},centerPlay:document.getElementById("center-play"),centerLabel:document.getElementById("center-label"),centerSub:document.getElementById("center-sub"),centerActions:document.getElementById("center-actions"),btnStart:document.getElementById("btn-start-game"),btnRestartRound:document.getElementById("btn-restart-round"),trickBoard:document.getElementById("trick-board"),trickSlot:{0:document.getElementById("trick-slot-0"),1:document.getElementById("trick-slot-1"),2:document.getElementById("trick-slot-2"),3:document.getElementById("trick-slot-3")},rankTrack:document.getElementById("rank-track"),playerHand:document.getElementById("player-hand"),handCount:document.getElementById("hand-count"),handTip:document.getElementById("hand-tip"),hintBar:document.getElementById("hint-bar"),declaredTypes:document.getElementById("declared-types"),btnPlay:document.getElementById("btn-play"),btnPass:document.getElementById("btn-pass"),btnHint:document.getElementById("btn-hint"),btnSort:document.getElementById("btn-sort"),log:document.getElementById("log"),modalMask:document.getElementById("modal-mask"),modalTitle:document.getElementById("modal-title"),modalBody:document.getElementById("modal-body"),modalActions:document.getElementById("modal-actions")};function y(e,t){return!!e&&!!t&&e.suit===t.suit&&e.rank===t.rank&&(e.deckIndex||0)===(t.deckIndex||0)}function f(e){return{spade:0,heart:1,club:2,diamond:3,joker:4}[e.suit]||0}function v(e){return e.slice().sort(function(e,t){var a=GD.rankValue(e,n.levelCard),r=GD.rankValue(t,n.levelCard);return a!==r?r-a:f(e)-f(t)})}function b(t){return String(t).replace(/座位 (\d+)/g,function(t,n){var a=parseInt(n,10)-1;return e[a]||"座位"+n})}function h(e,t){var n=document.createElement("div");n.className="line"+(t?" "+t:""),n.textContent=e,p.log.appendChild(n),p.log.scrollTop=p.log.scrollHeight}function g(){if(n)for(;d<n.eventLog.length;){h(b(n.eventLog[d++].msg))}}function E(){return n?n.state():null}function C(){var e=E();return!!e&&!n.matchOver&&!e.roundEnded&&0===e.turnIndex&&"tribute_return"!==e.tributeStage}function k(){if(n){var a,r=E();p.infoLevel.textContent="本局级牌："+GD.rankText(r.levelCard)+(14===r.levelCard?"（打 A 阶段）":""),p.infoTeams.textContent="我方级别 "+GD.rankText(r.teamLevels[0])+" · 对方级别 "+GD.rankText(r.teamLevels[1]),p.infoRound.textContent="第 "+c+" 局",a=n.matchOver?"整轮结束":r.roundEnded?"本局结束":"tribute_return"===r.tributeStage?"回贡环节":0===r.turnIndex?"轮到你出牌":"等待"+e[r.turnIndex]+"出牌",p.infoStage.textContent=a,[1,2,3].forEach(T),p.centerPlay.innerHTML="",function(e){p.trickBoard.style.display="",p.centerPlay.style.display="none",[0,1,2,3].forEach(function(t){var n=p.trickSlot[t];n.innerHTML="";var a=e.trickPlays?e.trickPlays[t]:null;if(n.classList.toggle("tb-max",!!e.currentPlay&&e.lastPlayerId===t&&!!a&&!a.pass),a){if(a.pass){var r=document.createElement("span");return r.className="trick-pass",r.textContent="过",void n.appendChild(r)}a.label&&(n.title=a.label),n.appendChild(GD.renderCards(a.cards,{size:"sm"}))}})}(r),p.handTip.textContent=r.currentPlay?'其他人需要"同型同张数更大"或炸弹族才能压过':"",r.currentPlay?(p.centerLabel.textContent="",p.centerSub.textContent=""):(p.centerLabel.textContent=r.roundEnded?"本局结束":"自由出牌："+e[r.turnIndex]+"可出任意合法牌型"+(1!==c||0!==r.ranks.length||2!==r.levelCard||n.lastRoundResult?"":"（首局先出由抽牌决定）"),p.centerSub.textContent=""),p.rankTrack.innerHTML="",r.ranks.forEach(function(n,a){var r=document.createElement("span");r.className="chip",r.textContent=t[a]+"："+e[n],p.rankTrack.appendChild(r)}),G(),M(),A()}}function T(a){var r=p.seat[a],l=n.players[a];r.innerHTML="";var d=document.createElement("div");d.className="seat-name",d.textContent=e[a]+(2===a?"（你队友）":"（对手）"),r.appendChild(d);var i=document.createElement("div");i.className="seat-team",i.textContent="手牌 "+l.hand.length+" 张",r.appendChild(i);var o=document.createElement("div");o.className="seat-backrow";for(var c=Math.min(l.hand.length,10),s=0;s<c;s++)o.appendChild(GD.createCardEl(null,{back:!0,size:"sm"}));if(r.appendChild(o),null!==l.rank){var u=document.createElement("div");u.className="seat-rank",u.textContent=t[l.rank-1]+"（已出完）",r.appendChild(u)}var m=E();r.classList.toggle("seat-active",!m.roundEnded&&!n.matchOver&&m.turnIndex===a)}function L(){c=1,s=[],u=[],m=-1,p.centerPlay.innerHTML="",p.centerPlay.style.display="",p.trickBoard.style.display="none",p.centerLabel.textContent="准备开始",p.centerSub.textContent="点击「开始」——首局先抽牌决定谁先出",p.centerActions.style.display="flex",p.btnStart.style.display="",p.btnStart.disabled=!1,p.rankTrack.innerHTML="",p.playerHand.innerHTML="",p.handCount.textContent="0",p.handTip.textContent="",p.hintBar.innerHTML="",p.declaredTypes.innerHTML="",p.btnPlay.disabled=p.btnPass.disabled=p.btnHint.disabled=!0,p.btnRestartRound.disabled=!0,p.infoLevel.textContent="本局级牌：2",p.infoTeams.textContent="我方级别 2 · 对方级别 2",p.infoRound.textContent="第 1 局",p.infoStage.textContent="准备中",[1,2,3].forEach(x)}function x(t){var n=p.seat[t];n.innerHTML="",n.classList.remove("seat-active");var a=document.createElement("div");a.className="seat-name",a.textContent=e[t]+(2===t?"（你队友）":"（对手）"),n.appendChild(a);var r=document.createElement("div");r.className="seat-team",r.textContent="手牌 0 张",n.appendChild(r)}function B(){var e=GD.shuffle(GD.createDeck());s=e.slice(0,4),u=[!1,!1,!1,!1],m=-1,I()}function I(){p.centerPlay.innerHTML="",s.forEach(function(t,n){var a=document.createElement("div");a.className="draw-item"+(n===m?" leader":"");var r=document.createElement("div");r.className="draw-who",r.textContent=e[n],a.appendChild(r),a.appendChild(u[n]?GD.createCardEl(t,{size:"md"}):GD.createCardEl(null,{back:!0,size:"md"})),p.centerPlay.appendChild(a)})}function H(t,a){s.forEach(function(e,n){setTimeout(function(){t===i&&(u[n]=!0,I())},a+380*n)}),setTimeout(function(){t===i&&function(t){var a=-1/0,r=[];if(s.forEach(function(e,t){var n=GD.rankValue(e,2);n>a?(a=n,r=[t]):n===a&&r.push(t)}),r.length>1)return p.centerSub.textContent="最大点数并列，重新抽牌…",void setTimeout(function(){t===i&&(p.centerSub.textContent="每人各抽一张，点数最大者先出",B(),H(t,500))},1100);m=r[0],I(),p.centerLabel.textContent=e[m]+"先出！",p.centerSub.textContent="（"+GD.cardLabel(s[m])+" 最大）",setTimeout(function(){var a;t===i&&(a=m,(n=new GD.Game({firstTurn:a})).interactive=!0,d=0,p.log.innerHTML="",h("抽牌结果："+s.map(function(t,n){return e[n]+" "+GD.cardLabel(t)}).join("、")+"；"+e[a]+"的牌最大，先出。","sys"),g(),p.btnRestartRound.disabled=!1,p.centerActions.style.display="none",z())},1600)}(t)},a+380*(s.length-1)+500)}function G(){p.playerHand.innerHTML="";var e=v(n.players[0].hand);p.handCount.textContent=e.length;var t=C();e.forEach(function(e){var n=GD.createCardEl(e,{size:"md",selected:D(e),onClick:function(){!function(e){if(!C())return;D(e)?a=a.filter(function(t){return!y(t,e)}):a.push(e);G(),M(),A()}(e)}});t||(n.style.cursor="default"),p.playerHand.appendChild(n)})}function D(e){return a.some(function(t){return y(t,e)})}function M(){var e=E();if(p.hintBar.innerHTML="",p.declaredTypes.innerHTML="",r=[],l=0,a.length){var t=GD.detectTypes(a,e.levelCard);if(t.length){var n=e.currentPlay;t.sort(function(t,a){var r=GD.canBeat(t,n,e.levelCard)?1:0,l=GD.canBeat(a,n,e.levelCard)?1:0;if(r!==l)return l-r;var d=t.bombLevel||0,i=a.bombLevel||0;return d!==i?i-d:a.compareRank-t.compareRank}),r=t,l=0,S(),R()}else p.hintBar.innerHTML='<span class="bad">已选 '+a.length+" 张：不是合法牌型</span>（换几张试试，或看模块 03 的牌型表）"}}function P(){return r[l]||null}function S(){var e=E(),t=P();if(t){var n,r,l="已选 <strong>"+a.length+" 张</strong>："+GD.playLabel(t);e.currentPlay?GD.canBeat(t,e.currentPlay,e.levelCard)?l+=' —— <span class="ok">可以压过场上（'+GD.playLabel(e.currentPlay)+"）</span>":l+=' —— <span class="bad">不能出：'+(n=t,r=e.currentPlay,e.levelCard,(r?GD.isBombType(r.type)&&!GD.isBombType(n.type)?"场上是"+GD.TYPE_NAMES[r.type]+"（炸弹族），普通牌型压不过":n.type!==r.type?"牌型不同：需要"+GD.TYPE_NAMES[r.type]+"（或炸弹族）才能压":n.length!==r.length?"张数不同":"点数不够大（"+n.compareRank+" ≤ "+r.compareRank+"）":"")+"</span>"):l+=' —— <span class="ok">自由出牌，可以出</span>',p.hintBar.innerHTML=l}}function R(){if(p.declaredTypes.innerHTML="",!(r.length<=1)){var e=document.createElement("span");e.className="small muted",e.textContent="这手牌有多种解释，声明出哪种：",p.declaredTypes.appendChild(e),r.forEach(function(e,t){var n=document.createElement("button");n.type="button",n.className="dt-btn"+(t===l?" active":""),n.textContent=GD.playLabel(e),n.addEventListener("click",function(){l=t,R(),S(),A()}),p.declaredTypes.appendChild(n)})}}function A(){if(n){var e=E(),t=C(),r=P();p.btnPlay.disabled=!(t&&a.length&&(!e.currentPlay||r&&GD.canBeat(r,e.currentPlay,e.levelCard))),p.btnPass.disabled=!t||!e.currentPlay,p.btnHint.disabled=!t}else p.btnPlay.disabled=p.btnPass.disabled=p.btnHint.disabled=!0}function N(){if(n){var e=E();if(!n.matchOver&&!e.roundEnded&&"tribute_return"!==e.tributeStage)if(0!==e.turnIndex){var t=i;clearTimeout(o),o=setTimeout(function(){t===i&&function(){var e=E();if(0===e.turnIndex||e.roundEnded||n.matchOver)return;var t=e.turnIndex,a=function(e){var t=n.players[e].hand,a=n.currentPlay,r=n.levelCard;if(t.length<=10){var l=GD.detectTypes(t,r).filter(function(e){return GD.canBeat(e,a,r)});if(l.length)return{action:"play",play:l[0]}}if(a){var d=n.lastPlayerId;if(null!==d&&d!==e&&n.players[d].teamId===n.players[e].teamId)return{action:"pass"}}var i=n.suggest(e);if(!i)return{action:"pass"};if(a&&GD.isBombType(i.type)&&i.cards.length<t.length){var o=99;if(n.players.forEach(function(t){t.teamId!==n.players[e].teamId&&null===t.rank&&(o=Math.min(o,t.hand.length))}),o>3)return{action:"pass"}}return{action:"play",play:i}}(t),r="play"===a.action?n.play(t,a.play.cards,a.play):n.pass(t);if(!r.ok){var l=n.suggest(t);if(l&&GD.canBeat(l,n.currentPlay,n.levelCard))r=n.play(t,l.cards,l);else if(n.currentPlay)r=n.pass(t);else{var d=n.players[t].hand[0];r=n.play(t,[d])}if(!r.ok)return void h("（出牌异常："+r.error+"）","sys")}if(g(),k(),n.roundEnded)return void _();N()}()},850)}else k()}}function w(e,t,n){p.modalTitle.textContent=e,p.modalBody.innerHTML="","string"==typeof t?p.modalBody.innerHTML=t:p.modalBody.appendChild(t),p.modalActions.innerHTML="";var a=[];return(n||[]).forEach(function(e){var t=document.createElement("button");t.type="button",t.className="btn "+(e.cls||""),t.textContent=e.text,t.disabled=!!e.disabled,t.addEventListener("click",e.onClick),p.modalActions.appendChild(t),a.push(t)}),p.modalMask.style.display="flex",a}function O(){p.modalMask.style.display="none",p.modalBody.innerHTML="",p.modalActions.innerHTML=""}function _(){var a=n.lastRoundResult,r=document.createElement("div");if(n.matchOver){var l=n.winnerTeam;return r.innerHTML="<p><strong>"+(0===l?"我方（你 + 对家）":"对方（下家 + 上家）")+'</strong> 成功过 A，赢得整轮（大轮）！</p><p class="muted small">想再来一轮可以点「重置整轮」，双方级别回到 2。</p>',void w("整轮结束",r,[{text:"重置整轮",cls:"btn--gold",onClick:function(){j()}},{text:"返回首页",cls:"btn--ghost",onClick:function(){location.hash="#view-home"}}])}var d,i='<ul class="rank-list">';a.ranks.forEach(function(n,a){i+="<li><strong>"+t[a]+"</strong>："+e[n]+(0===n||2===n?"（我方）":"（对方）")+"</li>"}),i+="</ul>",d=14===a.levelBefore?"<p>打 A 方本局未达成过 A 条件（头游+末游不算过 A），继续打 A、不退级。</p>":"<p>"+(0===a.winnerTeam?"我方":"对方")+" 升 <strong>"+a.step+"</strong> 级："+GD.rankText(a.levelBefore)+" → "+GD.rankText(a.levelAfter)+(14===a.levelAfter?"（进入打 A 阶段）":"")+"。</p>",r.innerHTML="<p>第 "+c+" 局名次：</p>"+i+d+'<p class="muted small">下一局将'+(14===n.teamLevels[0]||14===n.teamLevels[1]?"继续打 A（级牌固定 A）":"打 "+GD.rankText(n.teamLevels[a.winnerTeam]))+"，并按名次进贡/回贡。</p>",w("第 "+c+" 局结束",r,[{text:"开始下一局",cls:"btn--gold",onClick:function(){O(),z()}}])}function z(){if(!n)return(n=new GD.Game).interactive=!0,d=0,p.log.innerHTML="",p.btnRestartRound.disabled=!1,p.centerActions.style.display="none",g(),void z();i+=1,clearTimeout(o),a=[],r=[],p.hintBar.innerHTML="";var t=n.deal();if(t.ok){c=n.roundNumber;var l=n.tribute();g(),k(),l.pending?function(){var t=E().pendingReturns[0],a=n.players[t.receiverId],r=t.payerId,l=v(a.hand),d=l.filter(function(e){return"joker"!==e.suit&&e.rank<=10}),i=l.filter(function(e){return null===GD.checkReturnCard(a.hand,e,n.levelCard)}),o=null,c=document.createElement("div"),s=document.createElement("p");s.innerHTML="你（"+e[t.receiverId]+"）收到了"+e[r]+"的进贡。请点击选择一张牌<strong>回贡</strong>给"+e[r]+"。"+(d.length?'<br><span class="muted small">规则：回贡牌牌点须不大于 10（含 ≤10 的级牌）。</span>':'<br><span class="muted small">你手中没有牌点 ≤10 的牌，只能回出最小的牌（'+(i.length?GD.cardLabel(i[0]):"")+"）。</span>"),c.appendChild(s);var u=document.createElement("div");u.className="return-cards",l.forEach(function(e){var t=i.some(function(t){return y(t,e)}),n=GD.createCardEl(e,{size:"md"});n.classList.add(t?"selectable":"not-selectable"),t?n.addEventListener("click",function(){o=e,Array.prototype.forEach.call(u.children,function(e){e.classList.remove("picked")}),n.classList.add("picked"),p.disabled=!1,m.textContent=""}):n.title=d.length?"牌点大于 10，不能回贡":"手中没有 ≤10 的牌时，只能回出最小的牌",u.appendChild(n)}),c.appendChild(u);var m=document.createElement("div");m.className="err",c.appendChild(m);var p=w("回贡",c,[{text:"确认回贡",cls:"btn--gold",disabled:!0,onClick:function(){var e=n.returnTribute(o);e.ok?(O(),g(),k(),N()):m.textContent=e.error}}])[0]}():N()}else h(t.error,"sys")}function j(e){O(),i+=1,clearTimeout(o),n=null,d=0,p.log.innerHTML="",e||h("—— 重置整轮：双方级别回到 2 ——","sys"),L()}p.btnPlay.addEventListener("click",function(){if(C()&&a.length){var e=P(),t=e?n.play(0,a,e):n.play(0,a);t.ok?(a=[],r=[],g(),k(),n.roundEnded?_():N()):p.hintBar.innerHTML='<span class="bad">'+t.error+"</span>"}}),p.btnPass.addEventListener("click",function(){if(C()){var e=n.pass(0);e.ok?(a=[],g(),k(),N()):p.hintBar.innerHTML='<span class="bad">'+e.error+"</span>"}}),p.btnHint.addEventListener("click",function(){if(C()){var e=E(),t=n.suggest(0);t?(a=t.cards.slice(),G(),M(),A(),p.hintBar.innerHTML="<strong>建议出："+GD.playLabel(t)+"</strong>（已帮你选中）"):p.hintBar.innerHTML=e.currentPlay?'<span class="bad">没有能压过的牌，建议「过牌」</span>':'<span class="bad">没有可出的牌</span>'}}),p.btnSort.addEventListener("click",function(){G(),h("（你整理了手牌）","sys")}),p.btnRestartRound.addEventListener("click",function(){n&&(n.matchOver?h("整轮已结束，请使用「重置整轮」。","sys"):(O(),h("—— 重开本局（保留双方级别，重新发牌）——","sys"),z()))}),document.getElementById("btn-reset-match").addEventListener("click",j),p.btnStart.addEventListener("click",function(){i+=1,clearTimeout(o);var e=i;p.btnStart.disabled=!0,p.centerActions.style.display="none",p.centerPlay.style.display="",p.trickBoard.style.display="none",p.infoStage.textContent="抽牌环节",p.centerLabel.textContent="抽牌决定谁先出",p.centerSub.textContent="每人各抽一张，点数最大者先出",B(),H(e,600)}),window.__gd09={state:E,game:function(){return n},startRound:z},L()}();
+</script>
+<script>
+!function(){function e(){var e=(location.hash||"").replace(/^#/,""),n=e?document.getElementById(e):null;if(!n||n.classList.contains("app-view")){n||(e="view-home",n=document.getElementById(e));var o=document.querySelectorAll(".app-view");Array.prototype.forEach.call(o,function(e){e.style.display=e===n?"":"none"}),window.scrollTo(0,0)}}window.addEventListener("hashchange",e),e()}();
+</script>
+</body>
+</html>
