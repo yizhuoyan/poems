@@ -188,13 +188,6 @@
                 background: linear-gradient(90deg, var(--red), #ff9a6b);
             }
 
-            .tagline {
-                margin: 16px 0 0;
-                color: var(--muted);
-                font-size: 15px;
-                line-height: 1.6;
-            }
-
             .panel {
                 padding: 20px;
                 border: 1px solid var(--border);
@@ -274,6 +267,60 @@
                 color: var(--muted);
                 font-size: 13px;
                 font-weight: 500;
+            }
+
+            .setting-label {
+                display: block;
+                margin-bottom: 12px;
+                color: var(--muted);
+                font-size: 13px;
+            }
+
+            .setting-divider {
+                height: 1px;
+                margin: 20px 0;
+                background: var(--border);
+            }
+
+            .segmented {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+                padding: 4px;
+                border: 1px solid var(--border);
+                border-radius: 14px;
+                background: rgba(255, 255, 255, 0.03);
+            }
+
+            .segment {
+                min-height: 42px;
+                border: 0;
+                border-radius: 10px;
+                background: transparent;
+                color: var(--muted);
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+                transition:
+                    background 0.16s ease,
+                    color 0.16s ease,
+                    box-shadow 0.16s ease;
+            }
+
+            .segment:hover:not(.is-active) {
+                background: rgba(255, 255, 255, 0.05);
+                color: var(--text);
+            }
+
+            .segment.is-active {
+                background: rgba(255, 77, 109, 0.16);
+                box-shadow: inset 0 0 0 1px rgba(255, 77, 109, 0.28);
+                color: #ffb3be;
+            }
+
+            .segment:focus-visible {
+                outline: 2px solid #ffd166;
+                outline-offset: 2px;
             }
 
             .hint {
@@ -585,35 +632,6 @@
                 font-size: 13px;
             }
 
-            .reveal-kicker {
-                color: var(--muted);
-                font-size: 12px;
-                letter-spacing: 0.2em;
-                text-transform: uppercase;
-            }
-
-            .reveal-title {
-                font-size: clamp(38px, 12vw, 56px);
-                font-weight: 800;
-                letter-spacing: -0.03em;
-                line-height: 1.08;
-            }
-
-            .reveal-role {
-                max-width: 300px;
-                color: #c9d2e6;
-                font-size: 16px;
-                line-height: 1.6;
-            }
-
-            .privacy-note {
-                margin: 12px 0 0;
-                color: var(--muted-2);
-                font-size: 12px;
-                line-height: 1.6;
-                text-align: center;
-            }
-
             /* ---------- 讨论页 ---------- */
 
             .timer-block {
@@ -721,14 +739,6 @@
                     color: transparent;
                     -webkit-background-clip: text;
                 }
-            }
-
-            .end-note {
-                max-width: 300px;
-                margin: 18px auto 0;
-                color: var(--muted);
-                font-size: 14px;
-                line-height: 1.65;
             }
 
             .end-actions {
@@ -902,6 +912,7 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                overflow-y: auto;
                 padding: 20px;
                 background: rgba(3, 6, 12, 0.76);
                 backdrop-filter: blur(6px);
@@ -956,6 +967,9 @@
                 max-width: 400px;
                 flex-direction: column;
                 align-items: center;
+                max-height: calc(100vh - 40px);
+                max-height: calc(100dvh - 40px);
+                overflow-y: auto;
                 padding: 30px 24px 24px;
                 border: 1px solid var(--border-strong);
                 border-radius: 28px;
@@ -971,29 +985,49 @@
             }
 
             .identity-dialog .eyebrow {
-                margin-bottom: 18px;
+                margin-bottom: 20px;
             }
 
-            .identity-dialog .reveal-kicker,
-            .identity-dialog .reveal-title,
-            .identity-dialog .reveal-role {
-                display: block;
+            .identity-pair {
+                display: grid;
+                width: 100%;
+                max-width: 320px;
+                margin: 0 auto;
+                text-align: left;
             }
 
-            .identity-dialog .reveal-title {
-                margin-top: 8px;
+            .identity-item {
+                display: grid;
+                gap: 4px;
             }
 
-            .identity-dialog .reveal-role {
-                margin-top: 10px;
+            .identity-item + .identity-item {
+                margin-top: 16px;
+                padding-top: 16px;
+                border-top: 1px solid var(--border);
             }
 
-            .identity-dialog.is-spy .reveal-kicker {
-                color: #ff9bad;
+            .identity-label {
+                color: var(--muted);
+                font-size: 12px;
+                letter-spacing: 0.16em;
             }
 
-            .identity-dialog.is-spy .reveal-title {
-                color: #ff8fa2;
+            .identity-value {
+                color: var(--text);
+                font-size: clamp(30px, 9vw, 40px);
+                font-weight: 760;
+                letter-spacing: -0.02em;
+                line-height: 1.15;
+                overflow-wrap: anywhere;
+            }
+
+            .identity-hint {
+                max-width: 320px;
+                margin: 16px 0 0;
+                color: var(--muted);
+                font-size: 13px;
+                line-height: 1.6;
             }
 
             .identity-dialog-actions {
@@ -1088,47 +1122,78 @@
                     <a class="back-link" href="./index.html" aria-label="返回入口">←</a>
                     <p class="brand-mark">SPYFALL</p>
                     <h1>间谍在哪</h1>
-                    <p class="tagline">一台手机，轮流查看身份。谁在假装知道地点？</p>
                 </header>
 
-                <section class="panel" aria-labelledby="playerCountLabel">
-                    <label class="field-label" id="playerCountLabel" for="playerCountOut">
-                        玩家人数
-                    </label>
-                    <div class="stepper">
-                        <button
-                            class="step-btn"
-                            id="minusBtn"
-                            type="button"
-                            aria-label="减少玩家人数"
-                        >
-                            −
-                        </button>
-                        <output
-                            class="count-value"
-                            id="playerCountOut"
-                            aria-live="polite"
-                            >6<small>人</small></output
-                        >
-                        <button
-                            class="step-btn"
-                            id="plusBtn"
-                            type="button"
-                            aria-label="增加玩家人数"
-                        >
-                            +
-                        </button>
+                <section class="panel" aria-labelledby="settingsTitle">
+                    <h2 class="field-label" id="settingsTitle">设置</h2>
+
+                    <div class="setting-block">
+                        <span class="setting-label">玩家人数</span>
+                        <div class="stepper">
+                            <button
+                                class="step-btn"
+                                id="minusBtn"
+                                type="button"
+                                aria-label="减少玩家人数"
+                            >
+                                −
+                            </button>
+                            <output
+                                class="count-value"
+                                id="playerCountOut"
+                                aria-live="polite"
+                                >6<small>人</small></output
+                            >
+                            <button
+                                class="step-btn"
+                                id="plusBtn"
+                                type="button"
+                                aria-label="增加玩家人数"
+                            >
+                                +
+                            </button>
+                        </div>
+                        <p class="hint">3–10 人 · 其中 1 人是间谍</p>
                     </div>
-                    <p class="hint">3–10 人 · 其中 1 人是间谍</p>
+
+                    <div class="setting-divider" aria-hidden="true"></div>
+
+                    <div class="setting-block">
+                        <span class="setting-label" id="rolesLabel">身份设定</span>
+                        <div
+                            class="segmented"
+                            role="group"
+                            aria-labelledby="rolesLabel"
+                        >
+                            <button
+                                class="segment is-active"
+                                id="rolesOnBtn"
+                                type="button"
+                                aria-pressed="true"
+                            >
+                                使用身份
+                            </button>
+                            <button
+                                class="segment"
+                                id="rolesOffBtn"
+                                type="button"
+                                aria-pressed="false"
+                            >
+                                只给地点
+                            </button>
+                        </div>
+                        <p class="hint" id="rolesHint">
+                            平民会拿到地点内的一个身份。
+                        </p>
+                    </div>
                 </section>
 
                 <section class="panel rules" aria-labelledby="rulesTitle">
                     <h2 id="rulesTitle">怎么玩</h2>
                     <ol class="rules-list">
-                        <li>每人依次<strong>点击卡片</strong>查看身份，确认后自动进入下一位。</li>
-                        <li>大多数人拿到<strong>同一个地点</strong>和不同身份；1 人是间谍，不知道地点。</li>
+                        <li>每人依次<strong>点击卡片</strong>查看内容，确认后自动进入下一位。</li>
+                        <li>大多数人拿到<strong>同一个地点</strong>；1 人是间谍，不知道地点。</li>
                         <li>轮流提问回答，不能直接说出地点。回答要像知道，但别太具体。</li>
-                        <li>结束后口头揭晓间谍和地点。App 不投票、不判定胜负、不计分。</li>
                     </ol>
                 </section>
 
@@ -1159,7 +1224,6 @@
                         id="identityCard"
                         type="button"
                         aria-label="点击查看身份"
-                        aria-describedby="privacyNote"
                         aria-haspopup="dialog"
                     >
                         <span class="card-lock" id="cardLock">
@@ -1168,10 +1232,6 @@
                             <span class="lock-sub">确认后进入下一位</span>
                         </span>
                     </button>
-
-                    <p class="privacy-note" id="privacyNote">
-                        身份会显示在弹窗中，请确认周围没人偷看；确认后自动进入下一位
-                    </p>
                 </div>
             </section>
 
@@ -1210,7 +1270,7 @@
                     <p>
                         回答得像知道地点，但别说得太具体。太具体会泄露给间谍，太模糊又会被怀疑。
                     </p>
-                    <p>随时可以点「查看地点」，所有人包括间谍都能看。</p>
+                    <p>随时可以点「查看地点」。</p>
                 </section>
             </section>
 
@@ -1221,9 +1281,6 @@
                         <p class="eyebrow">本局结束</p>
                         <h2>讨论用时</h2>
                         <div class="end-time" id="endTime">00:00</div>
-                        <p class="end-note">
-                            胜负、间谍和地点由大家口头揭晓。休息一下，再开一局。
-                        </p>
                         <div class="end-actions">
                             <button class="btn primary" id="nextRoundBtn" type="button">
                                 再来一局
@@ -1257,7 +1314,7 @@
                         ×
                     </button>
                 </header>
-                <p class="sheet-hint">所有人都能看，包括间谍。用来伪装或猜地点。</p>
+                <p class="sheet-hint">所有人都能看，包括间谍。</p>
                 <input
                     class="location-search"
                     id="locationSearch"
@@ -1285,7 +1342,7 @@
                 aria-labelledby="confirmTitle"
             >
                 <h2 id="confirmTitle">结束本局？</h2>
-                <p>计时会停止，并进入本局结束页。胜负仍由大家口头判定。</p>
+                <p>计时会停止，并进入本局结束页。</p>
                 <div class="modal-actions">
                     <button class="btn secondary" id="cancelEndBtn" type="button">
                         继续讨论
@@ -1305,12 +1362,20 @@
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="identityDialogTitle"
-                aria-describedby="identityKicker identityTitle identityRole"
+                aria-describedby="identityLocationLabel identityLocation identityRoleLabel identityRoleValue identityHint"
             >
                 <p class="eyebrow" id="identityDialogTitle"></p>
-                <span class="reveal-kicker" id="identityKicker"></span>
-                <span class="reveal-title" id="identityTitle"></span>
-                <span class="reveal-role" id="identityRole"></span>
+                <div class="identity-pair">
+                    <div class="identity-item">
+                        <span class="identity-label" id="identityLocationLabel">地点</span>
+                        <span class="identity-value" id="identityLocation"></span>
+                    </div>
+                    <div class="identity-item">
+                        <span class="identity-label" id="identityRoleLabel">身份</span>
+                        <span class="identity-value" id="identityRoleValue"></span>
+                    </div>
+                </div>
+                <p class="identity-hint" id="identityHint"></p>
                 <div class="identity-dialog-actions">
                     <button
                         class="btn primary"
@@ -1788,6 +1853,7 @@
                 ];
 
                 var STORAGE_KEY = "spyfall_player_count_v1";
+                var ROLES_STORAGE_KEY = "spyfall_use_roles_v1";
                 var MIN_PLAYERS = 3;
                 var MAX_PLAYERS = 10;
 
@@ -1800,6 +1866,9 @@
                     minusBtn: document.getElementById("minusBtn"),
                     plusBtn: document.getElementById("plusBtn"),
                     playerCountOut: document.getElementById("playerCountOut"),
+                    rolesOnBtn: document.getElementById("rolesOnBtn"),
+                    rolesOffBtn: document.getElementById("rolesOffBtn"),
+                    rolesHint: document.getElementById("rolesHint"),
                     startBtn: document.getElementById("startBtn"),
                     dealRoundLabel: document.getElementById("dealRoundLabel"),
                     dealProgress: document.getElementById("dealProgress"),
@@ -1809,9 +1878,9 @@
                     identityBackdrop: document.getElementById("identityBackdrop"),
                     identityDialog: document.getElementById("identityDialog"),
                     identityDialogTitle: document.getElementById("identityDialogTitle"),
-                    identityKicker: document.getElementById("identityKicker"),
-                    identityTitle: document.getElementById("identityTitle"),
-                    identityRole: document.getElementById("identityRole"),
+                    identityLocation: document.getElementById("identityLocation"),
+                    identityRoleValue: document.getElementById("identityRoleValue"),
+                    identityHint: document.getElementById("identityHint"),
                     identityConfirmBtn: document.getElementById("identityConfirmBtn"),
                     identityDialogNote: document.getElementById("identityDialogNote"),
                     discussRoundLabel: document.getElementById("discussRoundLabel"),
@@ -1836,6 +1905,7 @@
 
                 var state = {
                     playerCount: loadPlayerCount(),
+                    useRoles: loadUseRoles(),
                     round: 1,
                     dealIndex: 0,
                     assignments: [],
@@ -1859,6 +1929,7 @@
 
                 function init() {
                     setPlayerCount(state.playerCount);
+                    setUseRoles(state.useRoles, false);
                     renderLocationGrid();
                     bindEvents();
                     showSetup();
@@ -1871,6 +1942,14 @@
 
                     els.plusBtn.addEventListener("click", function () {
                         setPlayerCount(state.playerCount + 1);
+                    });
+
+                    els.rolesOnBtn.addEventListener("click", function () {
+                        setUseRoles(true);
+                    });
+
+                    els.rolesOffBtn.addEventListener("click", function () {
+                        setUseRoles(false);
                     });
 
                     els.startBtn.addEventListener("click", function () {
@@ -1970,6 +2049,49 @@
                     }
                 }
 
+                function loadUseRoles() {
+                    try {
+                        var saved = localStorage.getItem(ROLES_STORAGE_KEY);
+                        if (saved === "0") {
+                            return false;
+                        }
+                        if (saved === "1") {
+                            return true;
+                        }
+                    } catch (error) {
+                        // localStorage 不可用时默认使用身份
+                    }
+                    return true;
+                }
+
+                function saveUseRoles(value) {
+                    try {
+                        localStorage.setItem(ROLES_STORAGE_KEY, value ? "1" : "0");
+                    } catch (error) {
+                        // 忽略存储失败
+                    }
+                }
+
+                function setUseRoles(value, persist) {
+                    state.useRoles = Boolean(value);
+                    els.rolesOnBtn.classList.toggle("is-active", state.useRoles);
+                    els.rolesOffBtn.classList.toggle("is-active", !state.useRoles);
+                    els.rolesOnBtn.setAttribute(
+                        "aria-pressed",
+                        String(state.useRoles)
+                    );
+                    els.rolesOffBtn.setAttribute(
+                        "aria-pressed",
+                        String(!state.useRoles)
+                    );
+                    els.rolesHint.textContent = state.useRoles
+                        ? "平民会拿到地点内的一个身份。"
+                        : "平民只拿到地点，不分配地点内的身份。";
+                    if (persist !== false) {
+                        saveUseRoles(state.useRoles);
+                    }
+                }
+
                 function showSetup() {
                     closeIdentityModal(false);
                     stopTimer();
@@ -1997,16 +2119,26 @@
                     var spyIndex = pickDifferentIndex(state.playerCount, state.lastSpyIndex);
                     state.lastSpyIndex = spyIndex;
 
-                    var roles = shuffle(state.location.roles.slice()).slice(0, state.playerCount - 1);
+                    var roles = state.useRoles
+                        ? shuffle(state.location.roles.slice()).slice(
+                              0,
+                              state.playerCount - 1
+                          )
+                        : [];
                     var roleIndex = 0;
                     state.assignments = [];
 
                     for (var i = 0; i < state.playerCount; i += 1) {
                         if (i === spyIndex) {
                             state.assignments.push({ spy: true, role: "" });
-                        } else {
-                            state.assignments.push({ spy: false, role: roles[roleIndex] });
+                        } else if (state.useRoles) {
+                            state.assignments.push({
+                                spy: false,
+                                role: roles[roleIndex]
+                            });
                             roleIndex += 1;
+                        } else {
+                            state.assignments.push({ spy: false, role: "" });
                         }
                     }
 
@@ -2040,18 +2172,25 @@
 
                     var isLast = state.dealIndex === state.playerCount - 1;
                     els.identityDialogTitle.textContent =
-                        "玩家 " + (state.dealIndex + 1) + " 的身份";
+                        "玩家 " + (state.dealIndex + 1) + " 的信息";
                     els.identityDialog.classList.toggle("is-spy", assignment.spy);
+                    els.identityLocation.textContent = assignment.spy
+                        ? "未知"
+                        : state.location.name;
 
                     if (assignment.spy) {
-                        els.identityKicker.textContent = "你的身份";
-                        els.identityTitle.textContent = "间谍";
-                        els.identityRole.textContent =
+                        els.identityRoleValue.textContent = "间谍";
+                        els.identityHint.hidden = false;
+                        els.identityHint.textContent =
                             "你知道自己是间谍，但不知道地点。观察大家，别暴露。";
                     } else {
-                        els.identityKicker.textContent = "你的地点";
-                        els.identityTitle.textContent = state.location.name;
-                        els.identityRole.textContent = "你的身份：" + assignment.role;
+                        els.identityRoleValue.textContent = state.useRoles
+                            ? assignment.role
+                            : "平民";
+                        els.identityHint.hidden = state.useRoles;
+                        els.identityHint.textContent = state.useRoles
+                            ? ""
+                            : "根据地点回答问题，别直接说出地点。";
                     }
 
                     els.identityConfirmBtn.textContent = isLast
@@ -2082,9 +2221,10 @@
                 function clearIdentityDialog() {
                     els.identityDialog.classList.remove("is-spy");
                     els.identityDialogTitle.textContent = "";
-                    els.identityKicker.textContent = "";
-                    els.identityTitle.textContent = "";
-                    els.identityRole.textContent = "";
+                    els.identityLocation.textContent = "";
+                    els.identityRoleValue.textContent = "";
+                    els.identityHint.textContent = "";
+                    els.identityHint.hidden = true;
                     els.identityConfirmBtn.textContent = "我记住了，下一位";
                     els.identityDialogNote.textContent = "";
                 }
