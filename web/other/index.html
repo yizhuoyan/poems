@@ -91,9 +91,11 @@
             .links a {
                 position: relative;
                 display: flex;
-                flex-direction: column;
-                gap: 10px;
-                padding: 22px 22px 20px;
+                align-items: center;
+                justify-content: center;
+                min-height: 92px;
+                padding: 24px 22px;
+                text-align: center;
                 border: 1px solid var(--border);
                 border-radius: var(--radius);
                 background: var(--card);
@@ -117,15 +119,6 @@
                 opacity: 0.9;
             }
 
-            .links a::after {
-                content: "→";
-                align-self: flex-end;
-                color: var(--muted);
-                font-size: 15px;
-                font-weight: 400;
-                transition: transform 0.22s ease, color 0.22s ease;
-            }
-
             .links li:nth-child(6n + 1) a { --dot: #5b7cfa; }
             .links li:nth-child(6n + 2) a { --dot: #40c9b0; }
             .links li:nth-child(6n + 3) a { --dot: #ff8a65; }
@@ -139,12 +132,6 @@
                 box-shadow: var(--shadow-hover);
                 border-color: color-mix(in srgb, var(--dot, var(--accent)) 45%, transparent);
                 outline: none;
-            }
-
-            .links a:hover::after,
-            .links a:focus-visible::after {
-                transform: translateX(4px);
-                color: var(--dot, var(--accent));
             }
 
             .links a:focus-visible {
@@ -191,8 +178,7 @@
             }
 
             @media (prefers-reduced-motion: reduce) {
-                .links a,
-                .links a::after {
+                .links a {
                     transition: none;
                 }
 
