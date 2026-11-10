@@ -6,6 +6,11 @@
 		  <meta name="applicable-device" content="pc,mobile" />
 		<title>WHO IS MOLE</title>
 		<style>
+			#gameTableEL{
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: center;
+			}
 			.player{
 				display: block;
 				border: 1px solid black;
@@ -19,8 +24,10 @@
 				margin-left: 10px;
 				margin-top: 20px;
 				padding-top: 30px;
-				
 				cursor: pointer;
+				-webkit-user-select: none;
+				user-select: none;
+				touch-action: manipulation;
 			}
 			/*等待中的玩家：不可点击*/
 			.player.waiting{
@@ -50,9 +57,231 @@
 				font-size: 13px;
 				color: #666;
 			}
-			.topic-divider{
-				margin: 0 6px;
+			.round-timer{
+				margin-left: 18px;
+			}
+			/*全屏游戏模式*/
+			.game-fullscreen-bar{
+				display: none;
+				position: fixed;
+				top: 0;
+				left: 0;
+				right: 0;
+				height: 56px;
+				padding: 0 12px;
+				box-sizing: border-box;
+				align-items: center;
+				justify-content: space-between;
+				gap: 8px;
+				background-color: #fff;
+				border-bottom: 1px solid #eee;
+				z-index: 21;
+			}
+			.game-fullscreen-round{
+				font-weight: bold;
+			}
+			.game-fullscreen-timer{
+				color: #555;
+				font-variant-numeric: tabular-nums;
+			}
+			.game-fullscreen-bar button{
+				min-height: 34px;
+				padding: 6px 12px;
+				cursor: pointer;
+			}
+			body.game-fullscreen{
+				overflow: hidden;
+			}
+			body.game-fullscreen header{
+				display: none;
+			}
+			body.game-fullscreen .game-fullscreen-bar{
+				display: flex;
+			}
+			body.game-fullscreen #gameTableEL{
+				position: fixed;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				margin: 0;
+				padding: 72px 12px 16px;
+				box-sizing: border-box;
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(110px, 180px));
+				gap: 12px;
+				align-content: start;
+				align-content: safe center;
+				justify-content: center;
+				overflow-y: auto;
+				background-color: #fff;
+				z-index: 20;
+			}
+			body.game-fullscreen .player{
+				float: none;
+				width: auto;
+				height: auto;
+				min-height: 80px;
+				margin: 0;
+				padding: 18px 8px;
+				box-sizing: border-box;
+				font-size: 18px;
+				line-height: 1.6;
+			}
+			#roundHistoryEL{
+				position: fixed;
+				top: 50px;
+				bottom: 50px;
+				left: 1em;
+				right: 1em;
+				max-width: 720px;
+				margin: auto;
+				padding: 0 1em 1em;
+				border: 1px solid #000;
+				border-radius: 8px;
+				background-color: #fff;
+				text-align: center;
+				z-index: 2;
+				display: none;
+				overflow: hidden;
+			}
+			#roundHistoryEL h2{
+				margin: 12px 0;
+			}
+			.round-history{
+				max-height: calc(100vh - 220px);
+				overflow: auto;
+				text-align: left;
+				scrollbar-width: thin;
+			}
+			.round-history::-webkit-scrollbar{
+				width: 8px;
+				height: 8px;
+			}
+			.round-history::-webkit-scrollbar-thumb{
+				background-color: #ccc;
+				border-radius: 4px;
+			}
+			.round-history::-webkit-scrollbar-thumb:hover{
+				background-color: #aaa;
+			}
+			.round-history-table-wrap{
+				min-width: 100%;
+			}
+			.round-history-table{
+				width: 100%;
+				border-collapse: collapse;
+				font-size: 13px;
+			}
+			.round-history-table th,
+			.round-history-table td{
+				padding: 7px 8px;
+				border-bottom: 1px solid #eee;
+				white-space: nowrap;
+				text-align: center;
+			}
+			.round-history-table th{
+				position: sticky;
+				top: 0;
+				z-index: 1;
+				background-color: #f5f5f5;
+				font-weight: bold;
+			}
+			.round-history-table tbody tr:hover{
+				background-color: #fafafa;
+			}
+			.round-history-table td.round-history-empty{
+				padding: 24px 8px;
+			}
+			.round-history-empty{
+				padding: 24px 0;
 				color: #999;
+				text-align: center;
+			}
+			.round-history-running{
+				padding: 8px 12px;
+				margin-bottom: 10px;
+				color: #999;
+				font-size: 13px;
+				text-align: center;
+			}
+			/*简易提示框*/
+			.tips-mask{
+				position: fixed;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				background-color: rgba(0,0,0,.45);
+				display: none;
+				align-items: center;
+				justify-content: center;
+				z-index: 30;
+			}
+			.tips-mask.show{
+				display: flex;
+			}
+			.tips-box{
+				min-width: 240px;
+				max-width: 80vw;
+				padding: 22px 20px 18px;
+				border-radius: 10px;
+				background-color: #fff;
+				text-align: center;
+				box-shadow: 0 8px 24px rgba(0,0,0,.2);
+			}
+			.tips-message{
+				margin-bottom: 16px;
+				font-size: 16px;
+				font-weight: bold;
+				line-height: 1.5;
+				word-break: break-all;
+			}
+			.tips-message strong{
+				margin-left: 2px;
+				font-size: 24px;
+				color: #c0392b;
+				letter-spacing: 2px;
+			}
+			.tips-ok-btn{
+				min-width: 80px;
+				padding: 6px 16px;
+				cursor: pointer;
+			}
+			/*新增题目弹窗*/
+			#addTopicEL{
+				position: fixed;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%,-50%);
+				width: 320px;
+				max-width: 90vw;
+				padding: 20px;
+				border: 1px solid #000;
+				border-radius: 10px;
+				background-color: #fff;
+				text-align: center;
+				box-shadow: 0 8px 24px rgba(0,0,0,.25);
+				z-index: 5;
+				display: none;
+			}
+			#addTopicEL h2{
+				margin: 0 0 8px;
+				font-size: 18px;
+			}
+			#addTopicEL .add-topic-hint{
+				margin: 0 0 12px;
+				font-size: 13px;
+				color: #999;
+			}
+			#addTopicEL .add-topic-error{
+				min-height: 18px;
+				margin: 4px 0 8px;
+				color: #c0392b;
+				font-size: 13px;
+			}
+			#addTopicEL input{
+				width: 8em;
 			}
 			
 			
@@ -68,563 +297,1460 @@
 				background-color: #fff;
 				z-index: 1;
 				display: none;
+				overflow-y: auto;
+				padding: 0 1em 1em;
+			}
+			.topic-stats{
+				text-align: left;
+				max-width: 640px;
+				max-height: calc(100vh - 210px);
+				overflow-y: auto;
+				margin: 0 auto;
+			}
+			#topicManageEL h2{
+				margin: 12px 0;
+			}
+			.topic-stats table{
+				width: 100%;
+				border-collapse: collapse;
+				margin-bottom: 12px;
+			}
+			.topic-stats td{
+				padding: 4px 8px;
+				border-bottom: 1px solid #eee;
+			}
+			.topic-stats td:last-child{
+				text-align: right;
+				color: #666;
+			}
+			.topic-stats-tip{
+				font-size: 13px;
+				color: #999;
+			}
+			/* ================= 视觉主题 ================= */
+			*{
+				box-sizing: border-box;
+			}
+			html,body{
+				margin: 0;
+			}
+			body{
+				min-height: 100vh;
+				font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+				color: #1f2937;
+				background:
+					radial-gradient(900px 500px at 8% -10%, #ffe8cc 0%, rgba(255,232,204,0) 60%),
+					radial-gradient(800px 500px at 100% 0%, #d8f5e3 0%, rgba(216,245,227,0) 55%),
+					#f8f7f4;
+			}
+			header{
+				max-width: 980px;
+				margin: 0 auto;
+				padding: 22px 18px 0;
+			}
+			header h1{
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 12px;
+				flex-wrap: wrap;
+				margin: 0;
+				font-size: 32px;
+				font-weight: 800;
+				letter-spacing: -.5px;
+				color: #111827;
+			}
+			.logo em{
+				font-style: normal;
+				color: #e8590c;
+			}
+			.header-actions{
+				display: flex;
+				gap: 8px;
+				flex-wrap: wrap;
+			}
+			.header-actions button{
+				padding: 7px 13px;
+				font-size: 13px;
+				border: 1px solid #e5e7eb;
+				border-radius: 999px;
+				background: rgba(255,255,255,.85);
+				color: #475569;
+				box-shadow: 0 2px 6px rgba(15,23,42,.04);
+			}
+			.header-actions button:hover{
+				border-color: #f08c00;
+				color: #c2410c;
+				background: #fff;
+			}
+			.subtitle{
+				margin: 6px 0 0;
+				font-size: 14px;
+				color: #6b7280;
+			}
+			.setup-panel{
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 14px 18px;
+				margin-top: 16px;
+				padding: 20px;
+				background: rgba(255,255,255,.86);
+				border: 1px solid rgba(15,23,42,.06);
+				border-radius: 20px;
+				box-shadow: 0 16px 40px rgba(15,23,42,.07);
+				-webkit-backdrop-filter: blur(10px);
+				backdrop-filter: blur(10px);
+			}
+			.setup-panel .field{
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				min-width: 0;
+				margin: 0;
+			}
+			.setup-panel label{
+				font-size: 14px;
+				font-weight: 600;
+				color: #475569;
+				white-space: nowrap;
+			}
+			.setup-panel .status-row{
+				grid-column: 1 / -1;
+				display: flex;
+				align-items: center;
+				gap: 28px;
+				flex-wrap: wrap;
+				margin: 0;
+			}
+			.status-row > span{
+				display: inline-flex;
+				align-items: center;
+				gap: 8px;
+			}
+			.status-row strong{
+				font-size: 16px;
+				color: #111827;
+			}
+			.status-row .round-timer{
+				margin-left: 0;
+			}
+			.setup-panel .topics-field{
+				grid-column: 1 / -1;
+				flex-wrap: wrap;
+				gap: 12px 18px;
+			}
+			.topic-field{
+				display: inline-flex;
+				align-items: center;
+				gap: 8px;
+				white-space: nowrap;
+			}
+			.topic-sub-label{
+				font-size: 14px;
+				font-weight: 600;
+				color: #475569;
+			}
+			.start-row{
+				grid-column: 1 / -1;
+				margin: 0;
+			}
+			.start-btn{
+				width: 100%;
+				padding: 13px 18px;
+				font-size: 17px;
+				font-weight: 700;
+				letter-spacing: .5px;
+				color: #fff;
+				background: linear-gradient(135deg, #f59f00, #e8590c);
+				border: 0;
+				border-radius: 14px;
+				box-shadow: 0 10px 24px rgba(232,89,12,.28);
+			}
+			.start-btn:hover{
+				color: #fff;
+				transform: translateY(-1px);
+				box-shadow: 0 14px 28px rgba(232,89,12,.32);
+			}
+			input[type="number"],
+			input[type="text"]{
+				min-width: 0;
+				padding: 9px 11px;
+				font-family: inherit;
+				font-size: 15px;
+				color: #111827;
+				background: #fff;
+				border: 1px solid #dbe2ea;
+				border-radius: 10px;
+				transition: border-color .15s, box-shadow .15s;
+			}
+			input[type="number"]:focus,
+			input[type="text"]:focus{
+				outline: none;
+				border-color: #f08c00;
+				box-shadow: 0 0 0 3px rgba(240,140,0,.15);
+			}
+			#playerCountInput,
+			#moleCountInput{
+				width: 5.5em;
+			}
+			.topic-field input{
+				width: 150px;
+			}
+			button{
+				padding: 8px 14px;
+				font-family: inherit;
+				font-size: 14px;
+				color: #334155;
+				background: #fff;
+				border: 1px solid #dbe2ea;
+				border-radius: 10px;
+				cursor: pointer;
+				transition: border-color .15s, color .15s, background .15s, transform .1s, box-shadow .15s;
+			}
+			button:hover{
+				border-color: #f08c00;
+				color: #c2410c;
+			}
+			button:active{
+				transform: scale(.98);
+			}
+			.primary-btn,
+			.tips-ok-btn{
+				color: #fff;
+				background: linear-gradient(135deg, #f59f00, #e8590c);
+				border: 0;
+				font-weight: 700;
+				box-shadow: 0 8px 18px rgba(232,89,12,.25);
+			}
+			.primary-btn:hover,
+			.tips-ok-btn:hover{
+				color: #fff;
+				background: linear-gradient(135deg, #f59f00, #e8590c);
+			}
+			main#gameTableEL{
+				max-width: 980px;
+				margin: 0 auto;
+				padding: 18px 18px 28px;
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: center;
+				gap: 14px;
+			}
+			.player{
+				display: block;
+				width: 116px;
+				height: auto;
+				min-height: 92px;
+				margin: 0;
+				padding: 18px 8px;
+				text-align: center;
+				font-size: 15px;
+				font-weight: 700;
+				line-height: 1.55;
+				color: #1f2937;
+				background: #fff;
+				border: 1px solid #e5e7eb;
+				border-radius: 18px;
+				box-shadow: 0 6px 16px rgba(15,23,42,.07);
+				cursor: pointer;
+				-webkit-user-select: none;
+				user-select: none;
+				touch-action: manipulation;
+				transition: transform .15s, box-shadow .15s, background .2s, color .2s, border-color .2s;
+			}
+			.player:hover{
+				transform: translateY(-2px);
+				box-shadow: 0 10px 24px rgba(15,23,42,.12);
+			}
+			.player.waiting{
+				background: #f1f5f9;
+				color: #94a3b8;
+				border-color: #e2e8f0;
+				border-style: dashed;
+				box-shadow: none;
+			}
+			.player.active{
+				background: linear-gradient(135deg, #fff4e6, #ffe8cc);
+				color: #9a3412;
+				border-color: #f08c00;
+				box-shadow: 0 0 0 3px rgba(240,140,0,.18), 0 10px 24px rgba(240,140,0,.16);
+				transform: translateY(-2px);
+			}
+			.player.viewed{
+				background: #475569;
+				color: #e2e8f0;
+				border-color: #475569;
+				box-shadow: none;
+			}
+			.player.mole{
+				background: linear-gradient(135deg, #ff6b6b, #e03131);
+				color: #fff;
+				border-color: transparent;
+				box-shadow: 0 10px 24px rgba(224,49,49,.3);
+			}
+			.player.good{
+				background: #fff;
+			}
+			/* 全屏游戏模式 */
+			body.game-fullscreen{
+				background: #0f172a;
+			}
+			body.game-fullscreen .game-fullscreen-bar{
+				height: 58px;
+				padding: 0 16px;
+				background: rgba(15,23,42,.92);
+				border-bottom: 1px solid rgba(255,255,255,.08);
+				color: #f8fafc;
+				-webkit-backdrop-filter: blur(12px);
+				backdrop-filter: blur(12px);
+			}
+			.game-fullscreen-round{
+				font-weight: 700;
+			}
+			.game-fullscreen-timer{
+				color: #94a3b8;
+				font-variant-numeric: tabular-nums;
+			}
+			.game-fullscreen-bar button{
+				padding: 8px 16px;
+				color: #111827;
+				background: linear-gradient(135deg, #fbbf24, #f97316);
+				border: 0;
+				border-radius: 999px;
+				font-weight: 700;
+				box-shadow: 0 6px 16px rgba(249,115,22,.3);
+			}
+			body.game-fullscreen #gameTableEL{
+				max-width: none;
+				background:
+					radial-gradient(900px 520px at 50% -10%, rgba(245,158,11,.18), rgba(245,158,11,0) 60%),
+					#0f172a;
+				padding-top: 76px;
+			}
+			body.game-fullscreen .player{
+				width: auto;
+				height: auto;
+				min-height: 80px;
+				margin: 0;
+				padding: 18px 8px;
+				font-size: 18px;
+				color: #e2e8f0;
+				background: #1e293b;
+				border: 1px solid #334155;
+				box-shadow: none;
+			}
+			body.game-fullscreen .player.waiting{
+				background: #111c2e;
+				color: #64748b;
+				border-color: #243044;
+				border-style: dashed;
+			}
+			body.game-fullscreen .player.active{
+				background: linear-gradient(135deg, #fbbf24, #f97316);
+				color: #111827;
+				border-color: transparent;
+				box-shadow: 0 0 0 3px rgba(251,191,36,.35), 0 16px 34px rgba(249,115,22,.25);
+				transform: translateY(-2px);
+			}
+			body.game-fullscreen .player.viewed{
+				background: #334155;
+				color: #94a3b8;
+				border-color: #334155;
+			}
+			/* 弹窗 */
+			#topicManageEL,
+			#roundHistoryEL,
+			#addTopicEL,
+			.tips-box{
+				border: 0;
+				border-radius: 20px;
+				background: #fff;
+				box-shadow: 0 28px 70px rgba(15,23,42,.25);
+			}
+			#topicManageEL,
+			#roundHistoryEL{
+				padding: 0 22px 18px;
+			}
+			#roundHistoryEL{
+				max-width: 860px;
+			}
+			#topicManageEL h2,
+			#roundHistoryEL h2,
+			#addTopicEL h2{
+				margin: 16px 0 12px;
+				font-size: 20px;
+				color: #111827;
+			}
+			#addTopicEL{
+				padding: 24px;
+				width: 360px;
+			}
+			#addTopicEL .add-topic-hint{
+				color: #94a3b8;
+			}
+			#addTopicEL .add-topic-error{
+				color: #e03131;
+			}
+			#addTopicEL input{
+				width: 100%;
+				max-width: 180px;
+			}
+			.tips-box{
+				padding: 24px;
+			}
+			.tips-message{
+				font-size: 15px;
+				font-weight: 500;
+				color: #475569;
+			}
+			.tips-message strong{
+				font-size: 28px;
+				color: #e8590c;
+			}
+			.tips-ok-btn{
+				min-width: 100px;
+				padding: 9px 20px;
+				border-radius: 10px;
+			}
+			/* 统计与记录表格 */
+			.topic-stats{
+				font-size: 14px;
+			}
+			.topic-stats p{
+				margin: 10px 0;
+			}
+			.topic-stats table{
+				margin-bottom: 14px;
+			}
+			.topic-stats td{
+				padding: 7px 8px;
+				border-bottom: 1px solid #f1f5f9;
+			}
+			.topic-stats td:last-child{
+				color: #64748b;
+			}
+			.topic-stats-tip{
+				color: #94a3b8;
+			}
+			.round-history-table{
+				font-size: 13px;
+			}
+			.round-history-table th{
+				background: #f8fafc;
+				color: #475569;
+				font-weight: 600;
+			}
+			.round-history-table td{
+				border-bottom: 1px solid #f1f5f9;
+			}
+			.round-history-table tbody tr:hover{
+				background: #fff7ed;
+			}
+			.round-history-running{
+				color: #94a3b8;
+			}
+			@media (max-width: 560px){
+				header{
+					padding: 16px 14px 0;
+				}
+				header h1{
+					font-size: 26px;
+				}
+				.header-actions{
+					width: 100%;
+				}
+				.setup-panel{
+					grid-template-columns: 1fr;
+					gap: 12px;
+					padding: 16px;
+					border-radius: 16px;
+				}
+				.setup-panel .field,
+				.setup-panel .status-row,
+				.setup-panel .topics-field,
+				.start-row{
+					grid-column: auto;
+				}
+				.topic-field input{
+					width: 120px;
+				}
+				#playerCountInput,
+				#moleCountInput{
+					width: 5em;
+				}
+				main#gameTableEL{
+					padding: 14px 12px 24px;
+					gap: 10px;
+				}
+				.player{
+					width: 100px;
+					height: auto;
+					min-height: 84px;
+					padding: 14px 6px;
+					font-size: 14px;
+					border-radius: 16px;
+				}
+				body.game-fullscreen .player{
+					width: auto;
+					height: auto;
+					font-size: 16px;
+				}
 			}
 		</style>
 	</head>
 	<body>
 		<header>
-			<h1>who is Mole? <button onclick="topicManageBtnClick(this)">题目管理</button></h1>
-			<div>
-				<p>
-				<label>游戏人数：</label><input id="playerCountInput"  style="width: 4em;"  type="number" value="4" min="3" max="10" step="1" />
-				</p>
-				<p>
-				<label>卧底数量：</label><input id="moleCountInput" type="number" style="width: 4em;" value="1" min="1" max="3" step="1" />
-				</p>
-				<p>
-				<label>本轮题目：</label>
-				<span class="topic-field">
-					<label class="topic-sub-label" for="personTopicInput">好人题目</label>
-					<input id="personTopicInput" style="width: 8em;" type="text" maxlength="8" />
-					<button id="randomTopicBtn1" onclick="handleRandomTopicBtnClick(this)">随机选取</button>
+			<h1>
+				<span class="logo">who is <em>Mole</em>?</span>
+				<span class="header-actions">
+					<button onclick="topicManageBtnClick(this)">题库统计</button>
+					<button onclick="openAddTopic()">新增题目</button>
+					<button onclick="openRoundHistory()">游戏记录</button>
 				</span>
-				<span class="topic-divider">/</span>
+			</h1>
+			<p class="subtitle">聚会推理游戏 · 找出隐藏的卧底</p>
+			<div class="setup-panel">
+				<p class="field">
+				<label for="playerCountInput">游戏人数</label><input id="playerCountInput" type="number" value="4" min="3" max="10" step="1" />
+				</p>
+				<p class="field">
+				<label for="moleCountInput">卧底数量</label><input id="moleCountInput" type="number" value="1" min="1" max="3" step="1" />
+				</p>
+				<p class="status-row">
+				<span><label>当前轮次</label><strong id="roundInfoEL">第 1 轮</strong></span>
+				<span class="round-timer"><label>本轮用时</label><strong id="roundTimerEL">00:00</strong></span>
+				</p>
+				<p class="field topics-field">
+				<label>本轮题目</label>
 				<span class="topic-field">
-					<label class="topic-sub-label" for="moleTopicInput">卧底题目</label>
-					<input id="moleTopicInput" type="text" style="width: 8em;" maxlength="8" />
-					<button id="randomTopicBtn2" onclick="handleRandomTopicBtnClick(this)">随机选取</button>
+					<label class="topic-sub-label" for="personTopicInput">好人</label>
+					<input id="personTopicInput" type="text" maxlength="8" />
+				</span>
+				<span class="topic-field">
+					<label class="topic-sub-label" for="moleTopicInput">卧底</label>
+					<input id="moleTopicInput" type="text" maxlength="8" />
 				</span>
 				</p>
-				<p>
-				<button onclick="handleGameBtnClick(this)">开始游戏</button>
+				<p class="start-row">
+				<button id="gameBtn" class="start-btn" onclick="handleGameBtnClick(this)">开始第1轮游戏</button>
 				</p>
 			</div>
 			
 		</header>
 		<main id="gameTableEL"></main>
-		<aside id="topicManageEL">
-			<p>可复制外部题目，程序会自动识别题目。一行一组。</p>
-			<textarea id="gameTopicEL" style="width: 80%;height: 300px;" >
-				金庸 古龙
-				铁观音 碧螺春
-				葡萄 提子
-				蝴蝶 蜜蜂
-				麻雀 乌鸦
-				鸭舌帽 遮阳帽
-				美人心计 倾世皇妃
-				壁纸 贴画
-				动物 植物
-				杭州 苏州
-				橙子 橘子
-				神雕侠侣 天龙八部
-				麦克风 扩音器
-				节节高升 票房大卖
-				口香糖 木糖醇
-				降龙十八掌 九阴白骨爪
-				水盆 水桶
-				童话 神话
-				情人节 光棍节
-				薰衣草 满天星
-				天天向上 非诚勿扰
-				泡泡糖 棒棒糖
-				语无伦次 词不达意
-				白菜 生菜
-				被子 床单
-				晨光 真彩
-				甄嬛传 红楼梦
-				新年 跨年
-				酸菜鱼 水煮鱼
-				太阳伞 雨伞
-				奖牌 金牌
-				郭德纲 周立波
-				蜘蛛侠 蝙蝠侠
-				土豆粉 酸辣粉
-				那英 韩红
-				风扇 空调
-				唇膏 口红
-				果粒橙 鲜橙多
-				结婚 订婚
-				生活费 零花钱
-				刘诗诗 刘亦菲
-				包子 饺子
-				何炅 维嘉
-				小品 话剧
-				丑小鸭 灰姑娘
-				老佛爷 老天爷
-				手机 座机
-				首尔 东京
-				枕头 抱枕
-				小沈阳 宋小宝
-				辣椒 芥末
-				王菲 那英
-				鼠目寸光 井底之蛙
-				烤肉 涮肉
-				饭桶 饭碗
-				十面埋伏 四面楚歌
-				男朋友 前男友
-				婚纱 喜服
-				谢娜 李湘
-				牛奶 豆浆
-				脚踏车 自行车
-				洗发露 护发素
-				洗衣粉 皂角粉
-				油条 麻花
-				张韶涵 王心凌
-				剩女 御姐
-				面包 蛋糕
-				过山车 碰碰车
-				龙凤呈祥 鸳鸯戏水
-				公交 地铁
-				警察 捕快
-				两小无猜 青梅竹马
-				红烧牛肉面 香辣牛肉面
-				吉他 琵琶
-				勇往直前 全力以赴
-				沐浴露 沐浴盐
-				鱼香肉丝 四喜丸子
-				图书馆 图书店
-				包青天 狄仁杰
-				菠萝蜜 榴莲
-				搭讪 勾搭
-				丝袜 秋裤
-				海豚 海狮
-				端午节 中秋节
-				作文 论文
-				福尔摩斯 工藤新一
-				胡子 眉毛
-				孟飞 乐嘉
-				同学 同桌
-				饼干 薯片
-				汉堡包 肉夹馍
-				谢娜张杰 邓超孙俪
-				甄子丹 李连杰
-				状元 冠军
-				自行车 电动车
-				包子 水饺
-				赵敏 黄蓉
-				贵妃醉酒 黛玉葬花
-				孟非 乐嘉
-				妈妈 娘
-				太监 人妖
-				楼梯 电梯
-				盒子 箱子
-				摩托车 电动车
-				作家 编剧
-				成吉思汗 努尔哈赤
-				魔术师 魔法师
-				纸巾 手帕
-				班主任 辅导员
-				董永 许仙
-				高跟鞋 增高鞋
-				眉毛 胡须
-				卷发 直发
-				绿茶 苦茶
-				宫锁心玉 宫锁珠帘
-				流星花园 花样男子
-				大白兔 金丝猴
-				纸巾 湿巾
-				若曦 晴川
-				福尔摩斯 工藤新
-				福尔摩斯 柯南
-				鹅毛 鸡毛
-				脸盆 水桶
-				玫瑰 月季
-				双胞胎 龙凤胎
-				近视眼镜 隐形眼镜
-				胖子 肥肉
-				何炅 李维嘉
-				反弹琵琶 乱弹棉花
-				小笼包 灌汤包
-				梁山伯与祝英台 罗密欧与朱丽叶
-				麻婆豆腐 皮蛋豆腐
-				保安 保镖
-				牛肉干 猪肉脯
-				蝴蝶 飞蛾
-				傻子相机 佳能
-				玻璃 镜子
-				北魏 南朝
-				打印机 扫描机
-				气泡 水泡
-				汤圆 丸子
-				步步惊心 宫锁心玉
-				森马 以纯
-				熏衣草 满天星
-				奶茶 果茶
-				汉堡 肉夹馍
-				火锅 串串香
-				可乐 雪碧
-				披萨 馅饼
-				寿司 紫菜包饭
-				麻辣烫 冒菜
-				炸鸡 烤鸡
-				冰淇淋 冰棒
-				包子 馒头
-				油条 麻团
-				蛋挞 老婆饼
-				薯片 薯条
-				月饼 饼干
-				螺蛳粉 桂林米粉
-				汤圆 元宵
-				牛排 猪排
-				果冻 布丁
-				辣条 豆干
-				煎饼果子 手抓饼
-				酸奶 纯牛奶
-				烤鸭 烧鸭
-				粽子 八宝饭
-				泡面 挂面
-				芒果 菠萝
-				巧克力 可可豆
-				麻辣烫 关东煮
-				包子 烧麦
-				手机 平板
-				毛巾 浴巾
-				牙膏 牙刷
-				洗发水 护发素
-				拖鞋 皮鞋
-				雨伞 遮阳伞
-				笔记本 练习册
-				钢笔 铅笔
-				台灯 吊灯
-				枕头 靠垫
-				保温杯 玻璃杯
-				梳子 卷发棒
-				洗衣粉 洗洁精
-				闹钟 手表
-				书包 手提包
-				镜子 相框
-				拖鞋 运动鞋
-				电池 充电宝
-				筷子 勺子
-				衣架 衣撑
-				肥皂 香皂
-				面霜 乳液
-				口红 唇釉
-				眼镜 墨镜
-				帽子 围巾
-				手套 袜子
-				牛仔裤 运动裤
-				运动鞋 帆布鞋
-				苹果 安卓
-				微信 QQ
-				抖音 快手
-				微博 小红书
-				淘宝 京东
-				美团 饿了么
-				王者荣耀 英雄联盟
-				和平精英 绝地求生
-				西游记 封神榜
-				红楼梦 三国演义
-				甄嬛传 如懿传
-				延禧攻略 还珠格格
-				超人 钢铁侠
-				哈利波特 指环王
-				复仇者联盟 正义联盟
-				猫和老鼠 熊出没
-				喜羊羊 灰太狼
-				海绵宝宝 派大星
-				小猪佩奇 汪汪队
-				数学 语文
-				英语 物理
-				历史 地理
-				政治 生物
-				音乐 美术
-				体育 劳技
-				大学 高中
-				老师 学生
-				图书馆 阅览室
-				黑板 白板
-				粉笔 马克笔
-				课本 辅导书
-				考试 测验
-				作业 试卷
-				篮球 足球
-				排球 羽毛球
-				乒乓球 网球
-				跑步 游泳
-				跳远 跳高
-				举重 体操
-				拳击 摔跤
-				围棋 象棋
-				扑克 麻将
-				跳绳 踢毽子
-				汽车 火车
-				飞机 高铁
-				轮船 潜艇
-				公交车 地铁
-				出租车 网约车
-				自行车 摩托车
-				步行 跑步
-				春天 夏天
-				秋天 冬天
-				晴天 阴天
-				雨天 雪天
-				风 雨
-				雷 电
-				山 水
-				花 草
-				树 木
-				鸟 鱼
-				猫 狗
-				鸡 鸭
-				牛 羊
-				猪 马
-				兔 鼠
-				龙 蛇
-				虎 狮
-				狼 豹
-				苹果 香蕉
-				草莓 蓝莓
-				西瓜 哈密瓜
-				荔枝 龙眼
-				樱桃 杨梅
-				梨 桃
-				杏 李
-				枣 栗
-				梅 橘
-				松 柏
-				竹 菊
-				牡丹 玫瑰
-				月季 蔷薇
-				桂花 茉莉
-				水仙 百合
-				太阳 月亮
-				星星 云朵
-				白天 黑夜
-				早晨 傍晚
-				春天 秋天
-				夏天 冬天
-				城市 乡村
-				公园 花园
-				学校 医院
-				超市 商场
-				车站 机场
-				酒店 宾馆
-				厨房 餐厅
-				卧室 客厅
-				卫生间 浴室
-				书房 阳台
-				沙发 椅子
-				桌子 柜子
-				被子 褥子
-				枕头 枕套
-				窗帘 门帘
-				窗户 门
-				墙壁 地板
-				天花板 屋顶
-				汽车 卡车
-				火车 高铁
-				飞机 直升机
-				轮船 游艇
-				自行车 三轮车
-				公交车 出租车
-				地铁 轻轨
-				火箭 卫星
-				宇宙飞船 航天飞机
-				篮球 排球
-				足球 网球
-				乒乓球 羽毛球
-				跑步 跳远
-				跳高 举重
-				游泳 跳水
-				体操 拳击
-				摔跤 柔道
-				跆拳道 空手道
-				跳棋 军棋
-				书法 绘画
-				音乐 舞蹈
-				唱歌 跳舞
-				弹琴 吹笛
-				读书 写字
-				看报 杂志
-				电影 电视剧
-				动画 漫画
-				小说 散文
-				诗歌 戏剧
-				拿铁 卡布奇诺
-				馄饨 饺子
-				蛋挞 葡挞
-				面包 吐司
-				饼干 曲奇
-				果冻 凉粉
-				果脯 蜜饯
-				麻花 馓子
-				锅巴 薯片
-				粽子 青团
-				汤圆 艾糍
-				月饼 米糕
-				蛋糕 慕斯
-				布丁 双皮奶
-				酸奶 老酸奶
-				牛奶 羊奶
-				果汁 果泥
-				汽水 气泡水
-				咖啡 可可
-				茶包 茶叶
-				绿茶 红茶
-				乌龙茶 普洱茶
-				奶茶 奶绿
-				烧仙草 龟苓膏
-				冰淇淋 雪媚娘
-				炸鸡 炸薯条
-				烤肠 火腿肠
-				牛排 羊排
-				烤肉 烤串
-				烤鱼 蒸鱼
-				炒菜 炖菜
-				凉拌菜 沙拉
-				寿司 手卷
-				刺身 生鱼片
-				汉堡 三明治
-				薯条 薯格
-				披萨 薄饼
-				意面 米粉
-				咖喱饭 盖浇饭
-				炒饭 炒面
-				粥 米糊
-				豆浆 豆汁
-				油条 油饼
-				包子 汤包
-				馒头 花卷
-				烧麦 蒸饺
-				春卷 麻球
-				馄饨 云吞
-				面条 米线
-				米粉 河粉
-				粉丝 粉条
-				腐竹 豆泡
-				豆腐 豆干
-				千张 豆皮
-				蔬菜 野菜
-				白菜 青菜
-				萝卜 胡萝卜
-				土豆 红薯
-				番茄 圣女果
-				黄瓜 丝瓜
-				茄子 青椒
-				苹果 雪梨
-				香蕉 芭蕉
-				柚子 柠檬
-				草莓 树莓
-				蓝莓 蔓越莓
-				芒果 木瓜
-				菠萝 凤梨
-				荔枝 桂圆
-				樱桃 车厘子
-				榴莲 山竹
-				椰子 椰青
-				山竹 莲雾
-				火龙果 猕猴桃
-				草莓 杨梅
-				橙子 柚子
-				手机壳 手机膜
-				耳机 音箱
-				充电器 充电线
-				充电宝 充电器
-				鼠标 键盘
-				显示器 电视机
-				打印机 复印机
-				扫描仪 传真机
-				路由器 交换机
-				摄像头 监控器
-				投影仪 幻灯机
-				耳机 耳麦
-				手表 手环
-				眼镜 隐形眼镜
-				帽子 发带
-				围巾 丝巾
-				手套 袖套
-				袜子 袜套
-				鞋子 靴子
-				裤子 裙子
-				上衣 外套
-				毛衣 线衣
-				衬衫 衬衣
-				牛仔裤 休闲裤
-				运动服 校服
-				睡衣 家居服
-				泳衣 沙滩裤
-				羽绒服 棉服
-				皮衣 皮草
-				风衣 大衣
-				夹克 马甲
-				帽子 头盔
-				口罩 面罩
-				围巾 围脖
-				手套 护手霜
-				袜子 鞋垫
-				鞋子 鞋油
-				包包 钱包
-				行李箱 背包
-				雨伞 雨披
-				太阳镜 老花镜
-				手表 怀表
-				项链 手链
-				耳环 耳钉
-				戒指 手镯
-				发夹 头绳
-				梳子 篦子
-				镜子 放大镜
-				牙膏 牙粉
-				牙刷 牙线
-				毛巾 面巾纸
-				浴巾 浴球
-				洗发水 洗发露
-				护发素 发膜
-				沐浴露 香皂
-				洗面奶 洁面乳
-				面霜 精华液
-				乳液 啫喱
-				爽肤水 柔肤水
-				面膜 眼膜
-				唇釉 唇彩
-				眼影 腮红
-				眉笔 眉粉
-				眼线笔 眼线液
-				睫毛膏 睫毛夹
-				卸妆水 卸妆油
-				香水 香薰
-				护手霜 润唇膏
-				身体乳 润肤露
-				洗衣液 洗衣皂
-				洗洁精 洗碗布
-				消毒液 酒精
-				拖把 扫帚
-				抹布 百洁布
-				垃圾桶 垃圾袋
-				马桶刷 洁厕灵
-				洗发水 沐浴露
-				牙膏 漱口水
-				台灯 落地灯
-				加湿器 除湿机
-				电暖器 电热毯
-				显示器 曲面屏
-				移动硬盘 固态硬盘
-			</textarea>
-			<p style="text-align: center;">
+		<div id="gameFullscreenBarEL" class="game-fullscreen-bar">
+			<span id="gameFullscreenRoundEL" class="game-fullscreen-round">第 1 轮</span>
+			<span id="gameFullscreenTimerEL" class="game-fullscreen-timer">00:00</span>
+			<button onclick="handleGameBtnClick(this)">查看谁是卧底</button>
+		</div>
+				<aside id="topicManageEL">
+			<h2>题库统计</h2>
+			<div id="topicStatsEL" class="topic-stats"></div>
+			<p style="text-align:center;">
 				<button onclick="closeTopicManageWindowBtnClick(this)">关闭</button>
 			</p>
 		</aside>
+		<div id="tipsMaskEL" class="tips-mask">
+			<div class="tips-box">
+				<div id="tipsMessageEL" class="tips-message"></div>
+				<button id="tipsOkBtn" class="tips-ok-btn">确定</button>
+			</div>
+		</div>
+		<aside id="addTopicEL">
+			<h2>新增题目</h2>
+			<p class="add-topic-hint">类别：自定义　难度：普通</p>
+			<p><label for="addGoodInput">好人词：</label><input id="addGoodInput" type="text" maxlength="8" onkeydown="if(event.key==='Enter'){submitAddTopic()}" /></p>
+			<p><label for="addMoleInput">卧底词：</label><input id="addMoleInput" type="text" maxlength="8" onkeydown="if(event.key==='Enter'){submitAddTopic()}" /></p>
+			<p id="addTopicErrorEL" class="add-topic-error"></p>
+			<p>
+				<button class="primary-btn" onclick="submitAddTopic()">添加</button>
+				<button onclick="closeAddTopic()">取消</button>
+			</p>
+		</aside>
+		<aside id="roundHistoryEL">
+			<h2>游戏记录</h2>
+			<div id="roundHistoryListEL" class="round-history"></div>
+			<p style="text-align:center;">
+				<button onclick="closeRoundHistory()">关闭</button>
+			</p>
+		</aside>
+		<script>
+			//题库：[类别, 难度(1简单/2普通/3困难), 好人词, 卧底词]
+			var TOPIC_LIBRARY = [
+				["文化历史", 3, "金庸", "古龙"],
+				["生活百科", 1, "蝴蝶", "蜜蜂"],
+				["生活百科", 1, "麻雀", "乌鸦"],
+				["生活百科", 2, "鸭舌帽", "遮阳帽"],
+				["生活百科", 1, "杭州", "苏州"],
+				["生活饮食", 1, "橙子", "橘子"],
+				["影视动漫", 2, "神雕侠侣", "天龙八部"],
+				["生活百科", 2, "麦克风", "扩音器"],
+				["文化历史", 3, "降龙十八掌", "九阴白骨爪"],
+				["生活百科", 1, "水盆", "水桶"],
+				["文化历史", 3, "童话", "神话"],
+				["生活百科", 2, "情人节", "光棍节"],
+				["生活饮食", 1, "泡泡糖", "棒棒糖"],
+				["文化历史", 3, "语无伦次", "词不达意"],
+				["生活饮食", 1, "白菜", "生菜"],
+				["生活百科", 1, "被子", "床单"],
+				["影视动漫", 2, "甄嬛传", "红楼梦"],
+				["生活饮食", 1, "酸菜鱼", "水煮鱼"],
+				["生活百科", 2, "太阳伞", "雨伞"],
+				["生活百科", 1, "奖牌", "金牌"],
+				["影视动漫", 2, "蜘蛛侠", "蝙蝠侠"],
+				["生活饮食", 1, "土豆粉", "酸辣粉"],
+				["生活百科", 1, "风扇", "空调"],
+				["生活百科", 1, "唇膏", "口红"],
+				["生活百科", 1, "结婚", "订婚"],
+				["生活百科", 2, "生活费", "零花钱"],
+				["生活百科", 2, "刘诗诗", "刘亦菲"],
+				["生活饮食", 1, "包子", "饺子"],
+				["生活百科", 1, "小品", "话剧"],
+				["影视动漫", 1, "丑小鸭", "灰姑娘"],
+				["文化历史", 3, "老佛爷", "老天爷"],
+				["生活百科", 1, "手机", "座机"],
+				["生活百科", 1, "首尔", "东京"],
+				["生活百科", 1, "枕头", "抱枕"],
+				["生活饮食", 1, "辣椒", "芥末"],
+				["文化历史", 3, "鼠目寸光", "井底之蛙"],
+				["生活饮食", 1, "烤肉", "涮肉"],
+				["生活百科", 2, "饭桶", "饭碗"],
+				["文化历史", 3, "十面埋伏", "四面楚歌"],
+				["生活百科", 2, "男朋友", "前男友"],
+				["生活百科", 1, "婚纱", "喜服"],
+				["生活饮食", 1, "牛奶", "豆浆"],
+				["生活百科", 2, "洗衣粉", "皂角粉"],
+				["生活饮食", 1, "油条", "麻花"],
+				["搞怪擦边", 1, "剩女", "御姐"],
+				["生活饮食", 1, "面包", "蛋糕"],
+				["生活百科", 2, "过山车", "碰碰车"],
+				["文化历史", 3, "龙凤呈祥", "鸳鸯戏水"],
+				["文化历史", 3, "警察", "捕快"],
+				["文化历史", 3, "两小无猜", "青梅竹马"],
+				["生活饮食", 3, "红烧牛肉面", "香辣牛肉面"],
+				["生活百科", 1, "吉他", "琵琶"],
+				["生活饮食", 2, "鱼香肉丝", "四喜丸子"],
+				["影视动漫", 2, "包青天", "狄仁杰"],
+				["生活饮食", 1, "菠萝蜜", "榴莲"],
+				["生活百科", 1, "搭讪", "勾搭"],
+				["生活百科", 1, "丝袜", "秋裤"],
+				["生活百科", 1, "海豚", "海狮"],
+				["文化历史", 3, "端午节", "中秋节"],
+				["影视动漫", 2, "福尔摩斯", "工藤新一"],
+				["生活百科", 1, "胡子", "眉毛"],
+				["校园职场", 1, "同学", "同桌"],
+				["生活饮食", 1, "饼干", "薯片"],
+				["文化历史", 3, "状元", "冠军"],
+				["生活百科", 2, "自行车", "电动车"],
+				["文化历史", 3, "贵妃醉酒", "黛玉葬花"],
+				["搞怪擦边", 1, "太监", "人妖"],
+				["生活百科", 1, "楼梯", "电梯"],
+				["生活百科", 1, "盒子", "箱子"],
+				["生活百科", 2, "摩托车", "电动车"],
+				["生活百科", 1, "作家", "编剧"],
+				["生活百科", 2, "魔术师", "魔法师"],
+				["生活百科", 1, "纸巾", "手帕"],
+				["校园职场", 2, "班主任", "辅导员"],
+				["文化历史", 3, "董永", "许仙"],
+				["生活百科", 2, "高跟鞋", "增高鞋"],
+				["生活百科", 1, "眉毛", "胡须"],
+				["生活百科", 1, "卷发", "直发"],
+				["生活饮食", 1, "绿茶", "苦茶"],
+				["生活饮食", 1, "大白兔", "金丝猴"],
+				["生活百科", 1, "纸巾", "湿巾"],
+				["影视动漫", 2, "福尔摩斯", "柯南"],
+				["生活百科", 2, "鹅毛", "鸡毛"],
+				["生活百科", 1, "脸盆", "水桶"],
+				["生活百科", 1, "玫瑰", "月季"],
+				["生活百科", 2, "双胞胎", "龙凤胎"],
+				["生活百科", 2, "近视眼镜", "隐形眼镜"],
+				["搞怪擦边", 1, "胖子", "肥肉"],
+				["文化历史", 3, "反弹琵琶", "乱弹棉花"],
+				["生活饮食", 1, "小笼包", "灌汤包"],
+				["文化历史", 3, "梁山伯与祝英台", "罗密欧与朱丽叶"],
+				["生活饮食", 2, "麻婆豆腐", "皮蛋豆腐"],
+				["生活百科", 1, "保安", "保镖"],
+				["生活饮食", 1, "牛肉干", "猪肉脯"],
+				["生活百科", 1, "蝴蝶", "飞蛾"],
+				["生活百科", 1, "玻璃", "镜子"],
+				["生活百科", 2, "打印机", "扫描机"],
+				["生活百科", 1, "气泡", "水泡"],
+				["生活饮食", 1, "汤圆", "丸子"],
+				["生活饮食", 1, "奶茶", "果茶"],
+				["生活饮食", 1, "汉堡", "肉夹馍"],
+				["生活饮食", 1, "火锅", "串串香"],
+				["生活饮食", 1, "可乐", "雪碧"],
+				["生活饮食", 1, "披萨", "馅饼"],
+				["生活饮食", 3, "寿司", "紫菜包饭"],
+				["生活饮食", 1, "麻辣烫", "冒菜"],
+				["生活饮食", 1, "炸鸡", "烤鸡"],
+				["生活饮食", 1, "冰淇淋", "冰棒"],
+				["生活饮食", 1, "包子", "馒头"],
+				["生活饮食", 3, "蛋挞", "老婆饼"],
+				["生活饮食", 1, "薯片", "薯条"],
+				["生活饮食", 2, "螺蛳粉", "桂林米粉"],
+				["生活饮食", 1, "牛排", "猪排"],
+				["生活饮食", 1, "辣条", "豆干"],
+				["生活饮食", 2, "煎饼果子", "手抓饼"],
+				["生活饮食", 1, "酸奶", "纯牛奶"],
+				["生活饮食", 1, "烤鸭", "烧鸭"],
+				["生活饮食", 1, "粽子", "八宝饭"],
+				["生活饮食", 1, "泡面", "挂面"],
+				["生活饮食", 1, "芒果", "菠萝"],
+				["生活饮食", 1, "巧克力", "可可豆"],
+				["生活饮食", 1, "麻辣烫", "关东煮"],
+				["生活百科", 1, "手机", "平板"],
+				["生活百科", 1, "毛巾", "浴巾"],
+				["生活百科", 1, "牙膏", "牙刷"],
+				["生活百科", 2, "洗发水", "护发素"],
+				["生活百科", 1, "拖鞋", "皮鞋"],
+				["生活百科", 2, "笔记本", "练习册"],
+				["生活百科", 1, "钢笔", "铅笔"],
+				["生活百科", 1, "台灯", "吊灯"],
+				["生活百科", 2, "保温杯", "玻璃杯"],
+				["生活百科", 2, "梳子", "卷发棒"],
+				["生活百科", 2, "洗衣粉", "洗洁精"],
+				["生活百科", 1, "闹钟", "手表"],
+				["生活百科", 2, "书包", "手提包"],
+				["生活百科", 2, "拖鞋", "运动鞋"],
+				["生活百科", 2, "电池", "充电宝"],
+				["生活百科", 1, "筷子", "勺子"],
+				["生活百科", 1, "衣架", "衣撑"],
+				["生活百科", 2, "面霜", "乳液"],
+				["生活百科", 1, "口红", "唇釉"],
+				["生活百科", 1, "眼镜", "墨镜"],
+				["生活百科", 1, "帽子", "围巾"],
+				["生活百科", 1, "手套", "袜子"],
+				["生活百科", 2, "牛仔裤", "运动裤"],
+				["生活百科", 2, "运动鞋", "帆布鞋"],
+				["品牌互联网", 2, "苹果", "安卓"],
+				["品牌互联网", 1, "微信", "QQ"],
+				["品牌互联网", 1, "抖音", "快手"],
+				["品牌互联网", 2, "微博", "小红书"],
+				["品牌互联网", 1, "淘宝", "京东"],
+				["影视动漫", 2, "王者荣耀", "英雄联盟"],
+				["影视动漫", 2, "和平精英", "绝地求生"],
+				["影视动漫", 2, "西游记", "封神榜"],
+				["影视动漫", 2, "红楼梦", "三国演义"],
+				["影视动漫", 2, "甄嬛传", "如懿传"],
+				["影视动漫", 2, "超人", "钢铁侠"],
+				["影视动漫", 2, "哈利波特", "指环王"],
+				["影视动漫", 2, "复仇者联盟", "正义联盟"],
+				["影视动漫", 1, "猫和老鼠", "熊出没"],
+				["影视动漫", 1, "喜羊羊", "灰太狼"],
+				["影视动漫", 1, "海绵宝宝", "派大星"],
+				["影视动漫", 1, "小猪佩奇", "汪汪队"],
+				["校园职场", 1, "大学", "高中"],
+				["校园职场", 1, "老师", "学生"],
+				["校园职场", 2, "图书馆", "阅览室"],
+				["生活百科", 1, "黑板", "白板"],
+				["生活百科", 2, "粉笔", "马克笔"],
+				["校园职场", 2, "课本", "辅导书"],
+				["校园职场", 1, "考试", "测验"],
+				["校园职场", 1, "作业", "试卷"],
+				["生活百科", 1, "篮球", "足球"],
+				["生活百科", 1, "围棋", "象棋"],
+				["生活百科", 1, "扑克", "麻将"],
+				["生活百科", 2, "跳绳", "踢毽子"],
+				["生活百科", 2, "公交车", "地铁"],
+				["生活百科", 2, "出租车", "网约车"],
+				["生活饮食", 1, "苹果", "香蕉"],
+				["生活饮食", 1, "草莓", "蓝莓"],
+				["生活饮食", 1, "西瓜", "哈密瓜"],
+				["生活饮食", 1, "荔枝", "龙眼"],
+				["生活饮食", 1, "樱桃", "杨梅"],
+				["生活百科", 1, "牡丹", "玫瑰"],
+				["生活百科", 1, "月季", "蔷薇"],
+				["生活百科", 1, "桂花", "茉莉"],
+				["生活百科", 1, "水仙", "百合"],
+				["生活百科", 1, "春天", "秋天"],
+				["生活百科", 1, "夏天", "冬天"],
+				["生活百科", 1, "超市", "商场"],
+				["生活百科", 1, "厨房", "餐厅"],
+				["生活百科", 1, "沙发", "椅子"],
+				["生活百科", 1, "窗帘", "门帘"],
+				["生活百科", 1, "火箭", "卫星"],
+				["生活百科", 2, "宇宙飞船", "航天飞机"],
+				["生活百科", 1, "跳棋", "军棋"],
+				["生活百科", 2, "电影", "电视剧"],
+				["生活百科", 1, "动画", "漫画"],
+				["生活百科", 1, "小说", "散文"],
+				["生活饮食", 2, "拿铁", "卡布奇诺"],
+				["生活饮食", 1, "馄饨", "饺子"],
+				["生活饮食", 3, "面包", "吐司"],
+				["生活饮食", 3, "饼干", "曲奇"],
+				["生活饮食", 3, "果冻", "凉粉"],
+				["生活饮食", 3, "果脯", "蜜饯"],
+				["生活饮食", 3, "麻花", "馓子"],
+				["生活饮食", 3, "粽子", "青团"],
+				["生活饮食", 3, "汤圆", "艾糍"],
+				["生活饮食", 3, "月饼", "米糕"],
+				["生活饮食", 3, "蛋糕", "慕斯"],
+				["生活饮食", 3, "布丁", "双皮奶"],
+				["生活饮食", 1, "牛奶", "羊奶"],
+				["生活饮食", 1, "果汁", "果泥"],
+				["生活饮食", 1, "咖啡", "可可"],
+				["生活饮食", 1, "茶包", "茶叶"],
+				["生活饮食", 1, "绿茶", "红茶"],
+				["生活饮食", 1, "乌龙茶", "普洱茶"],
+				["生活饮食", 1, "奶茶", "奶绿"],
+				["生活饮食", 3, "烧仙草", "龟苓膏"],
+				["生活饮食", 3, "冰淇淋", "雪媚娘"],
+				["生活饮食", 1, "炸鸡", "炸薯条"],
+				["生活饮食", 1, "烤肠", "火腿肠"],
+				["生活饮食", 1, "牛排", "羊排"],
+				["生活饮食", 1, "烤肉", "烤串"],
+				["生活饮食", 1, "烤鱼", "蒸鱼"],
+				["生活饮食", 1, "炒菜", "炖菜"],
+				["生活饮食", 1, "凉拌菜", "沙拉"],
+				["生活饮食", 1, "寿司", "手卷"],
+				["生活饮食", 1, "刺身", "生鱼片"],
+				["生活饮食", 1, "汉堡", "三明治"],
+				["生活饮食", 1, "薯条", "薯格"],
+				["生活饮食", 1, "披萨", "薄饼"],
+				["生活饮食", 1, "意面", "米粉"],
+				["生活饮食", 1, "咖喱饭", "盖浇饭"],
+				["生活饮食", 1, "炒饭", "炒面"],
+				["生活饮食", 1, "粥", "米糊"],
+				["生活饮食", 3, "豆浆", "豆汁"],
+				["生活饮食", 1, "油条", "油饼"],
+				["生活饮食", 1, "馒头", "花卷"],
+				["生活饮食", 1, "烧麦", "蒸饺"],
+				["生活饮食", 3, "春卷", "麻球"],
+				["生活饮食", 1, "面条", "米线"],
+				["生活饮食", 1, "米粉", "河粉"],
+				["生活饮食", 1, "粉丝", "粉条"],
+				["生活饮食", 1, "腐竹", "豆泡"],
+				["生活饮食", 1, "豆腐", "豆干"],
+				["生活饮食", 3, "千张", "豆皮"],
+				["生活饮食", 1, "蔬菜", "野菜"],
+				["生活饮食", 1, "白菜", "青菜"],
+				["生活百科", 2, "萝卜", "胡萝卜"],
+				["生活饮食", 1, "土豆", "红薯"],
+				["生活饮食", 1, "番茄", "圣女果"],
+				["生活饮食", 1, "黄瓜", "丝瓜"],
+				["生活饮食", 1, "茄子", "青椒"],
+				["生活饮食", 3, "香蕉", "芭蕉"],
+				["生活饮食", 1, "柚子", "柠檬"],
+				["生活饮食", 3, "蓝莓", "蔓越莓"],
+				["生活饮食", 1, "芒果", "木瓜"],
+				["生活饮食", 1, "荔枝", "桂圆"],
+				["生活饮食", 1, "榴莲", "山竹"],
+				["生活饮食", 3, "椰子", "椰青"],
+				["生活饮食", 3, "山竹", "莲雾"],
+				["生活饮食", 1, "火龙果", "猕猴桃"],
+				["生活饮食", 1, "草莓", "杨梅"],
+				["生活饮食", 1, "橙子", "柚子"],
+				["生活百科", 2, "手机壳", "手机膜"],
+				["生活百科", 1, "耳机", "音箱"],
+				["生活百科", 2, "充电器", "充电线"],
+				["生活百科", 2, "充电宝", "充电器"],
+				["生活百科", 1, "鼠标", "键盘"],
+				["生活百科", 2, "显示器", "电视机"],
+				["生活百科", 2, "打印机", "复印机"],
+				["生活百科", 3, "扫描仪", "传真机"],
+				["生活百科", 3, "路由器", "交换机"],
+				["生活百科", 3, "摄像头", "监控器"],
+				["生活百科", 3, "投影仪", "幻灯机"],
+				["生活饮食", 1, "耳机", "耳麦"],
+				["生活百科", 1, "手表", "手环"],
+				["生活百科", 2, "眼镜", "隐形眼镜"],
+				["生活百科", 1, "围巾", "丝巾"],
+				["生活百科", 1, "手套", "袖套"],
+				["生活百科", 1, "鞋子", "靴子"],
+				["生活百科", 1, "裤子", "裙子"],
+				["生活百科", 1, "上衣", "外套"],
+				["生活百科", 2, "牛仔裤", "休闲裤"],
+				["生活百科", 2, "运动服", "校服"],
+				["生活百科", 2, "睡衣", "家居服"],
+				["生活百科", 2, "泳衣", "沙滩裤"],
+				["生活百科", 2, "羽绒服", "棉服"],
+				["生活百科", 1, "皮衣", "皮草"],
+				["生活百科", 1, "风衣", "大衣"],
+				["生活百科", 1, "夹克", "马甲"],
+				["生活百科", 1, "帽子", "头盔"],
+				["生活百科", 1, "口罩", "面罩"],
+				["生活百科", 1, "袜子", "鞋垫"],
+				["生活百科", 3, "鞋子", "鞋油"],
+				["生活百科", 2, "包包", "钱包"],
+				["生活百科", 2, "行李箱", "背包"],
+				["生活百科", 3, "雨伞", "雨披"],
+				["生活百科", 3, "太阳镜", "老花镜"],
+				["生活百科", 1, "项链", "手链"],
+				["生活百科", 1, "耳环", "耳钉"],
+				["生活百科", 1, "戒指", "手镯"],
+				["生活百科", 3, "发夹", "头绳"],
+				["生活百科", 3, "梳子", "篦子"],
+				["生活百科", 2, "镜子", "放大镜"],
+				["生活百科", 3, "牙刷", "牙线"],
+				["生活百科", 2, "毛巾", "面巾纸"],
+				["生活百科", 3, "浴巾", "浴球"],
+				["生活百科", 3, "护发素", "发膜"],
+				["生活百科", 2, "沐浴露", "香皂"],
+				["生活百科", 2, "面霜", "精华液"],
+				["生活百科", 2, "乳液", "啫喱"],
+				["生活百科", 2, "面膜", "眼膜"],
+				["生活百科", 3, "唇釉", "唇彩"],
+				["生活百科", 2, "眼影", "腮红"],
+				["生活百科", 2, "眉笔", "眉粉"],
+				["生活百科", 2, "眼线笔", "眼线液"],
+				["生活百科", 2, "睫毛膏", "睫毛夹"],
+				["生活百科", 2, "卸妆水", "卸妆油"],
+				["生活百科", 2, "香水", "香薰"],
+				["生活百科", 2, "护手霜", "润唇膏"],
+				["生活百科", 2, "身体乳", "润肤露"],
+				["生活百科", 3, "洗衣液", "洗衣皂"],
+				["生活百科", 3, "洗洁精", "洗碗布"],
+				["生活饮食", 1, "消毒液", "酒精"],
+				["生活百科", 1, "拖把", "扫帚"],
+				["生活百科", 3, "抹布", "百洁布"],
+				["生活百科", 2, "垃圾桶", "垃圾袋"],
+				["生活百科", 3, "马桶刷", "洁厕灵"],
+				["生活百科", 2, "洗发水", "沐浴露"],
+				["生活百科", 2, "牙膏", "漱口水"],
+				["生活百科", 2, "台灯", "落地灯"],
+				["生活百科", 3, "加湿器", "除湿机"],
+				["生活百科", 3, "电暖器", "电热毯"],
+				["生活百科", 3, "显示器", "曲面屏"],
+				["生活百科", 3, "移动硬盘", "固态硬盘"],
+				["生活饮食", 1, "西瓜", "冬瓜"],
+				["生活饮食", 1, "南瓜", "西葫芦"],
+				["生活饮食", 1, "芹菜", "香菜"],
+				["生活饮食", 1, "韭菜", "蒜苗"],
+				["生活饮食", 1, "生姜", "大蒜"],
+				["生活饮食", 1, "洋葱", "大葱"],
+				["生活饮食", 1, "豆角", "豇豆"],
+				["生活饮食", 1, "扁豆", "豌豆"],
+				["生活饮食", 1, "黄豆", "绿豆"],
+				["生活饮食", 1, "红豆", "黑豆"],
+				["生活百科", 1, "小米", "大米"],
+				["生活饮食", 1, "面粉", "淀粉"],
+				["生活饮食", 1, "白糖", "冰糖"],
+				["生活饮食", 1, "红糖", "黑糖"],
+				["生活饮食", 1, "蜂蜜", "糖浆"],
+				["生活饮食", 1, "酱油", "食醋"],
+				["生活饮食", 1, "料酒", "黄酒"],
+				["生活饮食", 1, "花椒", "胡椒"],
+				["生活百科", 1, "八角", "桂皮"],
+				["生活饮食", 1, "孜然", "咖喱"],
+				["生活饮食", 1, "味精", "鸡精"],
+				["生活饮食", 1, "沙拉酱", "番茄酱"],
+				["生活饮食", 1, "芝麻酱", "花生酱"],
+				["生活饮食", 1, "咸菜", "泡菜"],
+				["生活饮食", 1, "香肠", "腊肠"],
+				["生活饮食", 1, "火腿", "培根"],
+				["生活饮食", 1, "鸡翅", "鸡腿"],
+				["生活百科", 2, "麻辣香锅", "干锅"],
+				["生活饮食", 1, "米线", "河粉"],
+				["生活饮食", 1, "拉面", "刀削面"],
+				["生活饮食", 1, "炸酱面", "热干面"],
+				["生活饮食", 1, "小笼包", "生煎包"],
+				["生活饮食", 1, "烧饼", "煎饼"],
+				["生活饮食", 2, "肉夹馍", "驴肉火烧"],
+				["生活饮食", 2, "糖炒栗子", "烤红薯"],
+				["生活饮食", 1, "开心果", "腰果"],
+				["生活饮食", 1, "核桃", "板栗"],
+				["生活饮食", 2, "珍珠奶茶", "水果茶"],
+				["品牌互联网", 1, "可口可乐", "百事可乐"],
+				["品牌互联网", 2, "雪碧", "七喜"],
+				["品牌互联网", 2, "农夫山泉", "怡宝"],
+				["品牌互联网", 2, "康师傅", "统一"],
+				["品牌互联网", 1, "华为", "小米"],
+				["品牌互联网", 2, "联想", "戴尔"],
+				["品牌互联网", 1, "微信", "支付宝"],
+				["品牌互联网", 2, "淘宝", "拼多多"],
+				["品牌互联网", 1, "抖音", "视频号"],
+				["生活百科", 1, "高铁", "动车"],
+				["生活百科", 2, "飞机", "热气球"],
+				["生活百科", 1, "快递", "外卖"],
+				["品牌互联网", 2, "京东", "苏宁"],
+				["品牌互联网", 2, "顺丰", "中通"],
+				["生活百科", 2, "电子书", "有声书"],
+				["生活百科", 2, "纸质书", "电子书"],
+				["生活百科", 2, "电影院", "剧院"],
+				["生活百科", 2, "相声", "脱口秀"],
+				["生活百科", 2, "芭蕾", "拉丁舞"],
+				["生活百科", 2, "街舞", "广场舞"],
+				["生活百科", 2, "交响乐", "摇滚乐"],
+				["生活百科", 2, "钢琴", "电子琴"],
+				["生活百科", 2, "小提琴", "大提琴"],
+				["生活百科", 1, "笛子", "箫"],
+				["生活百科", 1, "二胡", "古筝"],
+				["生活百科", 2, "架子鼓", "手鼓"],
+				["生活百科", 1, "外卖", "堂食"],
+				["品牌互联网", 2, "直播", "短视频"],
+				["生活百科", 1, "租房", "买房"],
+				["校园职场", 2, "简历", "面试"],
+				["校园职场", 2, "加班", "值班"],
+				["校园职场", 2, "宿舍", "出租屋"],
+				["品牌互联网", 2, "弹幕", "评论"],
+				["品牌互联网", 2, "二维码", "条形码"],
+				["品牌互联网", 2, "蜜雪冰城", "喜茶"],
+				["品牌互联网", 2, "朋友圈", "微博"],
+				["品牌互联网", 2, "网约车", "顺风车"],
+				["品牌互联网", 2, "共享单车", "共享充电宝"],
+				["生活百科", 2, "地铁票", "公交卡"],
+				["品牌互联网", 2, "扫码支付", "刷脸支付"],
+				["品牌互联网", 2, "快递柜", "外卖柜"],
+				["品牌互联网", 2, "直播带货", "电视购物"],
+				["品牌互联网", 2, "视频会议", "电话会议"],
+				["品牌互联网", 2, "云盘", "U盘"],
+				["品牌互联网", 2, "扫码点餐", "人工点餐"],
+				["品牌互联网", 2, "双十一", "双十二"],
+				["生活百科", 2, "演唱会", "音乐节"],
+				["生活百科", 1, "露营", "野餐"],
+				["生活百科", 2, "剧本杀", "密室逃脱"],
+				["生活百科", 1, "飞盘", "风筝"],
+				["生活百科", 1, "骑行", "徒步"],
+				["生活百科", 1, "打卡", "探店"],
+				["生活百科", 2, "网红店", "老字号"],
+				["生活饮食", 1, "烧烤", "铁板烧"],
+				["生活饮食", 1, "螺蛳粉", "臭豆腐"],
+				["生活饮食", 1, "预制菜", "现炒菜"],
+				["生活百科", 2, "轻食", "减脂餐"],
+				["校园职场", 2, "打工人", "老板"],
+				["校园职场", 2, "实习生", "正式工"],
+				["校园职场", 2, "内卷", "躺平"],
+				["生活饮食", 1, "社恐", "社牛"],
+				["生活百科", 2, "显眼包", "社死"],
+				["生活百科", 1, "搭子", "闺蜜"],
+				["校园职场", 2, "早八", "晚自习"],
+				["校园职场", 2, "考公", "考研"],
+				["文化历史", 3, "彩礼", "嫁妆"],
+				["搞怪擦边", 1, "放屁", "打嗝"],
+				["搞怪擦边", 1, "便秘", "拉稀"],
+				["搞怪擦边", 1, "抠脚", "挖鼻孔"],
+				["搞怪擦边", 1, "鼻屎", "耳屎"],
+				["搞怪擦边", 1, "口臭", "脚臭"],
+				["搞怪擦边", 1, "脚气", "狐臭"],
+				["搞怪擦边", 1, "秃头", "假发"],
+				["搞怪擦边", 1, "啤酒肚", "双下巴"],
+				["搞怪擦边", 1, "打呼噜", "磨牙"],
+				["搞怪擦边", 1, "尿急", "憋尿"],
+				["搞怪擦边", 1, "内裤", "秋裤"],
+				["搞怪擦边", 1, "卫生巾", "纸尿裤"],
+				["搞怪擦边", 1, "马桶", "尿壶"],
+				["搞怪擦边", 1, "蹲坑", "坐便"],
+				["搞怪擦边", 1, "宿醉", "熬夜"],
+				["搞怪擦边", 1, "装醉", "真醉"],
+				["搞怪擦边", 1, "单身狗", "恋爱脑"],
+				["搞怪擦边", 1, "前任", "现任"],
+				["影视动漫", 2, "火影忍者", "海贼王"],
+				["影视动漫", 1, "哆啦A梦", "蜡笔小新"],
+				["影视动漫", 1, "葫芦娃", "黑猫警长"],
+				["影视动漫", 2, "还珠格格", "情深深雨濛濛"],
+				["影视动漫", 2, "仙剑奇侠传", "古剑奇谭"],
+				["影视动漫", 2, "变形金刚", "高达"],
+				["影视动漫", 2, "奥特曼", "假面骑士"],
+				["影视动漫", 2, "灌篮高手", "足球小将"],
+				["文化历史", 3, "诸葛亮", "司马懿"],
+				["文化历史", 3, "李白", "杜甫"],
+				["文化历史", 3, "苏轼", "辛弃疾"],
+				["文化历史", 3, "武则天", "慈禧"],
+				["文化历史", 3, "卧薪尝胆", "破釜沉舟"],
+				["文化历史", 3, "嫦娥奔月", "后羿射日"],
+				["品牌互联网", 2, "美团", "大众点评"],
+				["品牌互联网", 2, "携程", "去哪儿"],
+				["品牌互联网", 2, "哔哩哔哩", "优酷"],
+				["品牌互联网", 2, "爱奇艺", "腾讯视频"],
+				["品牌互联网", 2, "网易云音乐", "QQ音乐"],
+				["品牌互联网", 2, "高德地图", "百度地图"],
+				["品牌互联网", 2, "滴滴出行", "曹操出行"],
+				["品牌互联网", 2, "闲鱼", "转转"],
+				["校园职场", 2, "期末考试", "期中考试"],
+				["校园职场", 2, "毕业论文", "毕业设计"],
+				["校园职场", 2, "高考", "中考"],
+				["校园职场", 2, "社团", "学生会"],
+				["校园职场", 2, "军训", "运动会"],
+				["校园职场", 2, "面试", "笔试"],
+				["搞怪擦边", 1, "打鼾", "说梦话"],
+				["搞怪擦边", 1, "汗脚", "臭袜子"],
+				["搞怪擦边", 1, "头皮屑", "头油"],
+				["搞怪擦边", 1, "尿床", "流口水"],
+				["生活百科", 1, "洗衣机", "烘干机"],
+				["生活百科", 1, "微波炉", "烤箱"],
+				["生活百科", 1, "电饭煲", "高压锅"],
+				["生活百科", 1, "扫地机器人", "吸尘器"],
+				["生活百科", 1, "滑雪", "滑冰"],
+				["生活百科", 1, "羽毛球", "网球"],
+				["生活饮食", 1, "火锅", "烧烤"],
+				["生活饮食", 2, "红茶", "普洱茶"],
+				["生活饮食", 1, "酸奶", "果汁"],
+				["生活饮食", 2, "珍珠奶茶", "咖啡"],
+			].map(function(item){
+				return {"category":item[0],"difficulty":item[1],"good":item[2],"mole":item[3]};
+			});
+		</script>
 		<script>
 			//游戏对象
 			var game={
-				"gameTopics":parseGameTopicELValue(),
 				"currentPersonTopic":"好人题目",
 				"currentMoleTopic":"卧底题目",
 				//当前轮到查看题目的玩家下标（从0开始）
-				"currentViewIndex":0
+				"currentViewIndex":0,
+				//当前轮次
+				"round":1,
+				//下一轮轮次
+				"nextRound":1,
+				//本轮是否进行中（已开始但未公布结果）
+				"playing":false,
+				//本轮开始时间戳（毫秒）
+				"roundStartTime":null,
+				//本轮计时器
+				"roundTimerInterval":null,
+				//已结束轮次的详情记录
+				"roundHistory":[],
+				//当前轮次详情（下一轮开始时结算）
+				"currentRoundInfo":null,
+				//本轮卧底玩家下标（从0开始）
+				"currentMoleIndexes":[],
+				//当前循环还未抽到的题目
+				"topicPool":[],
+				//最近两轮难度，用于保证连续3轮难度不完全相同
+				"recentDifficulties":[],
+				//最近一轮类别，尽量避免连续同类
+				"recentCategories":[],
+				//上一轮用过的题目key
+				"lastTopicKey":null
+			}
+			//从全局题库拷贝一份题库A
+			function resetTopicPool(){
+				game.topicPool=TOPIC_LIBRARY.slice();
+				//刚用过的题从A中移除，避免重新拷贝后立刻重复
+				if(game.lastTopicKey){
+					game.topicPool=game.topicPool.filter(function(entry){
+						return getTopicKey(entry.good,entry.mole)!=game.lastTopicKey;
+					});
+				}
+			}
+			//题目key（忽略好人/卧底顺序）
+			function getTopicKey(good,mole){
+				return [good,mole].sort().join("|");
+			}
+			//按难度和类别约束筛选候选题目
+			function filterTopicCandidates(pool,ignoreCategory){
+				var recentDifficulties=game.recentDifficulties;
+				var lastIndex=recentDifficulties.length-1;
+				var blockedDifficulty=null;
+				//最近两轮难度相同，本轮必须换难度（保证任意连续3轮至少1轮不同）
+				if(recentDifficulties.length>=2&&recentDifficulties[lastIndex]!=null&&recentDifficulties[lastIndex]===recentDifficulties[lastIndex-1]){
+					blockedDifficulty=recentDifficulties[lastIndex];
+				}
+				var lastCategory=game.recentCategories[game.recentCategories.length-1];
+				return pool.filter(function(entry){
+					if(blockedDifficulty!=null&&entry.difficulty===blockedDifficulty){
+						return false;
+					}
+					if(!ignoreCategory&&lastCategory&&lastCategory!="手动"&&entry.category===lastCategory){
+						return false;
+					}
+					return true;
+				});
+			}
+			//随机抽取一道未用过的题目
+			function pickTopic(){
+				//题库A为空时，重新从全局题库拷贝
+				if(game.topicPool.length==0){
+					resetTopicPool();
+				}
+				//优先避开上一轮类别
+				var candidates=filterTopicCandidates(game.topicPool,false);
+				//同类题不够时，放宽类别限制，但难度约束保留
+				if(candidates.length==0){
+					candidates=filterTopicCandidates(game.topicPool,true);
+				}
+				//题库A剩余的题无法满足难度变化时，重新拷贝题库A
+				if(candidates.length==0){
+					resetTopicPool();
+					candidates=filterTopicCandidates(game.topicPool,false);
+					if(candidates.length==0){
+						candidates=filterTopicCandidates(game.topicPool,true);
+					}
+				}
+				if(candidates.length==0){
+					candidates=game.topicPool;
+				}
+				var entry=candidates[Math.floor(Math.random()*candidates.length)];
+				//用过的题目从题库A中删除
+				var poolIndex=game.topicPool.indexOf(entry);
+				if(poolIndex>=0){
+					game.topicPool.splice(poolIndex,1);
+				}
+				game.lastTopicKey=getTopicKey(entry.good,entry.mole);
+				//随机决定哪个词给好人、哪个词给卧底
+				if(Math.random()>0.5){
+					return {"category":entry.category,"difficulty":entry.difficulty,"good":entry.mole,"mole":entry.good};
+				}
+				return entry;
+			}
+			//自定义题目：本地持久保存
+			var CUSTOM_TOPIC_STORAGE_KEY="whoIsMoleCustomTopics";
+			var customTopics=[];
+			function loadCustomTopics(){
+				var saved=[];
+				try{
+					saved=JSON.parse(localStorage.getItem(CUSTOM_TOPIC_STORAGE_KEY)||"[]");
+				}catch(e){
+					console.error(e);
+				}
+				if(!Array.isArray(saved)){
+					return;
+				}
+				saved.forEach(function(item){
+					if(!item||typeof item.good!="string"||typeof item.mole!="string"){
+						return;
+					}
+					var good=item.good.trim();
+					var mole=item.mole.trim();
+					if(good==""||mole==""||good==mole){
+						return;
+					}
+					var key=getTopicKey(good,mole);
+					var exists=TOPIC_LIBRARY.some(function(entry){
+						return getTopicKey(entry.good,entry.mole)==key;
+					});
+					if(exists){
+						return;
+					}
+					var topic={"category":"自定义","difficulty":2,"good":good,"mole":mole};
+					customTopics.push(topic);
+					TOPIC_LIBRARY.push(topic);
+				});
+			}
+			function saveCustomTopics(){
+				try{
+					var data=customTopics.map(function(entry){
+						return {"good":entry.good,"mole":entry.mole};
+					});
+					localStorage.setItem(CUSTOM_TOPIC_STORAGE_KEY,JSON.stringify(data));
+				}catch(e){
+					console.error(e);
+				}
+			}
+			//新增题目弹窗
+			function openAddTopic(){
+				addGoodInput.value="";
+				addMoleInput.value="";
+				addTopicErrorEL.textContent="";
+				addTopicEL.style.display="block";
+				addGoodInput.focus();
+			}
+			function closeAddTopic(){
+				addTopicEL.style.display="none";
+			}
+			function submitAddTopic(){
+				var good=addGoodInput.value.trim();
+				var mole=addMoleInput.value.trim();
+				if(good==""||mole==""){
+					addTopicErrorEL.textContent="好人词和卧底词都要填写";
+					return;
+				}
+				if(good==mole){
+					addTopicErrorEL.textContent="两个词不能相同";
+					return;
+				}
+				var key=getTopicKey(good,mole);
+				var exists=TOPIC_LIBRARY.some(function(entry){
+					return getTopicKey(entry.good,entry.mole)==key;
+				});
+				if(exists){
+					addTopicErrorEL.textContent="该题目已存在";
+					return;
+				}
+				var topic={"category":"自定义","difficulty":2,"good":good,"mole":mole};
+				TOPIC_LIBRARY.push(topic);
+				//加入当前题库A，立刻可以抽到
+				game.topicPool.push(topic);
+				customTopics.push(topic);
+				saveCustomTopics();
+				closeAddTopic();
+				showTips("已新增题目：<strong>{}</strong>",good+" / "+mole);
+			}
+			//读取本地自定义题目
+			loadCustomTopics();
+			//初始化题库A
+			resetTopicPool();
+			//简易提示框（替代浏览器 alert）
+			//template 支持 HTML，{} 占位符按顺序替换为后续参数（参数会做 HTML 转义，避免注入）
+			function showTips(template){
+				var args=Array.prototype.slice.call(arguments,1);
+				var argIndex=0;
+				var html=String(template).replace(/\{\}/g,function(){
+					var value=args[argIndex++];
+					return value==null?"":escapeHtml(String(value));
+				});
+				tipsMessageEL.innerHTML=html;
+				tipsMaskEL.classList.add("show");
+				tipsOkBtn.focus();
+			}
+			//HTML 转义
+			function escapeHtml(str){
+				var escapeMap={"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"};
+				return str.replace(/[&<>"']/g,function(ch){
+					return escapeMap[ch];
+				});
+			}
+			//点击确定关闭提示框
+			tipsOkBtn.onclick=function(){
+				tipsMaskEL.classList.remove("show");
 			}
 			//游戏按钮
 			function handleGameBtnClick(btn){
-				if(btn.innerHTML=="开始游戏"){
-					startGame(btn);
-				}else{
+				if(game.playing){
 					showWhoIsMole(btn);
+				}else{
+					startGame(btn);
 				}
+			}
+			//刷新轮次提示和游戏按钮文字
+			function updateRoundUI(){
+				roundInfoEL.textContent="第 "+game.round+" 轮";
+				gameBtn.textContent=game.playing?"查看谁是卧底":"开始第"+game.nextRound+"轮游戏";
+				gameFullscreenRoundEL.textContent=roundInfoEL.textContent;
+			}
+			updateRoundUI();
+			//进入全屏游戏模式
+			function enterGameFullscreen(){
+				document.body.classList.add("game-fullscreen");
+				gameFullscreenRoundEL.textContent="第 "+game.round+" 轮";
+				gameFullscreenTimerEL.textContent=roundTimerEL.textContent;
+			}
+			//退出全屏游戏模式
+			function exitGameFullscreen(){
+				document.body.classList.remove("game-fullscreen");
+			}
+			//计时：格式化秒数
+			function formatDuration(totalSeconds){
+				var minutes=Math.floor(totalSeconds/60);
+				var seconds=totalSeconds%60;
+				return (minutes<10?"0":"")+minutes+":"+(seconds<10?"0":"")+seconds;
+			}
+			//计时：刷新当前轮用时
+			function updateRoundTimerDisplay(){
+				if(!game.roundStartTime){
+					return;
+				}
+				var text=formatDuration(Math.floor((Date.now()-game.roundStartTime)/1000));
+				roundTimerEL.textContent=text;
+				gameFullscreenTimerEL.textContent=text;
+			}
+			//计时：开始本轮
+			function startRoundTimer(){
+				roundTimerEL.textContent="00:00";
+				gameFullscreenTimerEL.textContent="00:00";
+				game.roundStartTime=Date.now();
+				game.roundTimerInterval=setInterval(updateRoundTimerDisplay,1000);
+			}
+			//计时：停止并返回本轮秒数
+			function stopRoundTimer(){
+				if(game.roundTimerInterval){
+					clearInterval(game.roundTimerInterval);
+					game.roundTimerInterval=null;
+				}
+				if(!game.roundStartTime){
+					return 0;
+				}
+				var seconds=Math.round((Date.now()-game.roundStartTime)/1000);
+				game.roundStartTime=null;
+				return seconds;
+			}
+			//结束当前轮：记录详情（在点击下一轮“开始”时调用）
+			function finishCurrentRound(){
+				if(!game.roundStartTime||!game.currentRoundInfo){
+					return;
+				}
+				var seconds=stopRoundTimer();
+				var info=game.currentRoundInfo;
+				info.seconds=seconds;
+				game.roundHistory.push(info);
+				game.currentRoundInfo=null;
+				renderRoundHistory();
+			}
+			//渲染游戏记录列表
+			function renderRoundHistory(){
+				roundHistoryListEL.textContent="";
+				if(game.roundStartTime){
+					var running=document.createElement("div");
+					running.className="round-history-running";
+					running.textContent="第 "+game.round+" 轮进行中，点击下一轮“开始”后记录";
+					roundHistoryListEL.appendChild(running);
+				}
+				var difficultyNames={1:"简单",2:"普通",3:"困难"};
+				var wrapper=document.createElement("div");
+				wrapper.className="round-history-table-wrap";
+				var table=document.createElement("table");
+				table.className="round-history-table";
+
+				var thead=document.createElement("thead");
+				var headRow=document.createElement("tr");
+				["序号","题目类别","好人题目","卧底题目","卧底玩家","难易度","用时"].forEach(function(text){
+					var th=document.createElement("th");
+					th.textContent=text;
+					headRow.appendChild(th);
+				});
+				thead.appendChild(headRow);
+				table.appendChild(thead);
+
+				var tbody=document.createElement("tbody");
+				if(game.roundHistory.length==0){
+					var emptyRow=document.createElement("tr");
+					var emptyCell=document.createElement("td");
+					emptyCell.colSpan=7;
+					emptyCell.className="round-history-empty";
+					emptyCell.textContent="暂无已结束的轮次";
+					emptyRow.appendChild(emptyCell);
+					tbody.appendChild(emptyRow);
+				}else{
+					game.roundHistory.forEach(function(item){
+						var row=document.createElement("tr");
+						var difficultyName=item.difficulty?difficultyNames[item.difficulty]:"—";
+						var molePlayers=item.moleIndexes&&item.moleIndexes.length?item.moleIndexes.map(function(index){
+							return (index+1)+" 号";
+						}).join("、"):"—";
+						var values=[
+							item.round,
+							item.category,
+							item.good,
+							item.mole,
+							molePlayers,
+							difficultyName,
+							formatDuration(item.seconds)
+						];
+						values.forEach(function(value){
+							var cell=document.createElement("td");
+							cell.textContent=value;
+							row.appendChild(cell);
+						});
+						tbody.appendChild(row);
+					});
+				}
+				table.appendChild(tbody);
+				wrapper.appendChild(table);
+				roundHistoryListEL.appendChild(wrapper);
+			}
+			//游戏记录弹窗
+			function openRoundHistory(){
+				renderRoundHistory();
+				roundHistoryEL.style.display="block";
+			}
+			function closeRoundHistory(){
+				roundHistoryEL.style.display="none";
 			}
 			//开始游戏
 			function startGame(btn){
 				try{
+					//校验人数和卧底数量
+					var playerCount=parseInt(playerCountInput.value,10);
+					if(isNaN(playerCount)||playerCount<3||playerCount>10){
+						throw new Error("游戏人数需在 3-10 之间")
+					}
+					var moleCount=parseInt(moleCountInput.value,10);
+					if(isNaN(moleCount)||moleCount<1){
+						throw new Error("卧底数量至少为 1")
+					}
+					if(moleCount>=playerCount){
+						throw new Error("卧底数量必须小于游戏人数")
+					}
 					//确定题目
 					var topic=determineTopic();
 					//生成玩家
@@ -634,24 +1760,37 @@
 					//从1号玩家开始，依次查看题目
 					game.currentViewIndex=0;
 					refreshPlayerViewState();
-					btn.innerHTML="查看谁是卧底";
-					//禁用按钮
-					randomTopicBtn1.disabled=true
-					randomTopicBtn2.disabled=true
+					//点击“开始下一轮”时，上一轮才算结束
+					finishCurrentRound();
+					game.round=game.nextRound;
+					//保存本轮详情，供下一轮开始时结算
+					game.currentRoundInfo={
+						"round":game.round,
+						"good":topic.good,
+						"mole":topic.mole,
+						"category":topic.category,
+						"difficulty":topic.difficulty,
+						"moleIndexes":game.currentMoleIndexes.slice()
+					};
+					game.playing=true;
+					updateRoundUI();
+					startRoundTimer();
+					enterGameFullscreen();
 				}catch(e){
 					console.error(e);
-					alert(e.message);
+					showTips(e.message);
 				}
 			}
 			//查看游戏结果
 			var showWhoIsMole=function(btn){
-				btn.innerHTML="开始游戏";
+				//公布结果；本轮计时继续，直到点击“开始下一轮”才结束
+				exitGameFullscreen();
+				game.playing=false;
+				game.nextRound=game.round+1;
+				updateRoundUI();
 				//显示题目
 				personTopicInput.value=personTopicInput.gameValue;
 				moleTopicInput.value=moleTopicInput.gameValue;
-				//按钮恢复
-				randomTopicBtn1.disabled=false
-				randomTopicBtn2.disabled=false
 				
 				var players=gameTableEL.children;
 				//已公布结果，玩家不再可以查看题目
@@ -661,9 +1800,9 @@
 					p.className="player";
 					var topic=p.getAttribute("data-topic");
 					if(topic==game.currentMoleTopic){
-						p.style.backgroundColor="red"
+						p.classList.add("mole")
 					}else{
-						
+						p.classList.add("good")
 					}
 					p.innerHTML=(i+1)+"<br>"+topic	
 							
@@ -680,11 +1819,11 @@
 				//只有当前轮到序号的玩家可以查看题目
 				var playerIndex=parseInt(el.getAttribute("data-player-index"));
 				if(playerIndex!=game.currentViewIndex+1){
-					alert("请先让 "+(game.currentViewIndex+1)+" 号玩家查看题目");
+					showTips("请先让 "+(game.currentViewIndex+1)+" 号玩家查看题目");
 					return;
 				}
 				var topic=el.getAttribute("data-topic")
-				alert("你的题目是："+topic)
+				showTips("你的题目是：<strong>{}</strong>",topic)
 				game.currentViewIndex++;
 				refreshPlayerViewState();
 			}
@@ -706,31 +1845,23 @@
 					}
 				}
 			}
-			//确定题目
+			//确定题目：手填优先，留空或与上一轮相同时自动随机
 			function determineTopic(){
-				var rst=[];
-				rst[0]=personTopicInput.value;
-				if(rst[0].trim()==""){
-					throw new Error("请填写好人题目")
+				var good=personTopicInput.value.trim();
+				var mole=moleTopicInput.value.trim();
+				var topic;
+				//和上一轮完全一样时，自动换题，避免重复
+				if(good!=""&&mole!=""&&!(good==game.currentPersonTopic&&mole==game.currentMoleTopic)){
+					topic={"category":"手动","difficulty":null,"good":good,"mole":mole};
+				}else{
+					topic=pickTopic();
 				}
 				
-				rst[1]=moleTopicInput.value;
-				if(rst[1].trim()==""){
-					throw new Error("请填写卧底题目")
-				}
-				//和上次一样，自动随机
-				if(rst[0]==game.currentPersonTopic){
-					rst=randomTopic()
-					if(!rst){
-						throw new Error("已无更多游戏题目，请添加")
-					}
-				}
-				
-				personTopicInput.gameValue=rst[0]
+				personTopicInput.gameValue=topic.good
 				personTopicInput.value="***"
 				moleTopicInput.value="***"
-				moleTopicInput.gameValue=rst[1]
-				return rst;
+				moleTopicInput.gameValue=topic.mole
+				return topic;
 			}
 			//生成玩家
 			function generatePlayers(){
@@ -754,15 +1885,21 @@
 			}
 			//分配卧底
 			function allocateMole(players,topic){
-				game.currentPersonTopic=topic[0]
-				game.currentMoleTopic=topic[1]
-				//卧底数量
-				var moleCount=parseInt(moleCountInput.value)
-				var moleIndexArray=[];
-				for (var i = 0; i < moleCount; i++) {
-					var moleIndex=randomNextInt(0,players.length,moleIndexArray)
-					moleIndexArray.push(moleIndex);
+				game.currentPersonTopic=topic.good
+				game.currentMoleTopic=topic.mole
+				//记录本轮难度和类别，供下一轮出题约束
+				game.recentDifficulties.push(topic.difficulty)
+				if(game.recentDifficulties.length>2){
+					game.recentDifficulties.shift()
 				}
+				game.recentCategories.push(topic.category)
+				if(game.recentCategories.length>2){
+					game.recentCategories.shift()
+				}
+				//卧底数量：等概率抽取不重复的玩家下标
+				var moleCount=parseInt(moleCountInput.value,10)
+				var moleIndexArray=pickMoleIndexes(players.length,moleCount);
+				game.currentMoleIndexes=moleIndexArray;
 								
 				for (var i = 0; i < players.length; i++) {
 					var p=players[i]
@@ -773,122 +1910,60 @@
 						p.setAttribute("data-topic",game.currentPersonTopic)
 					}		
 				}
-				//删除已选题目，避免再次选中
-				var gameTopics=game.gameTopics
-				var currentTopicIndex=indexOfTopic(gameTopics,topic);
-				if(currentTopicIndex>=0){
-					gameTopics.splice(currentTopicIndex,1)	
-				}
 			}
 		
-			//随机生成题目
-			function handleRandomTopicBtnClick(btn){
-				
-				var currentTopic=randomTopic()
-				if(!currentTopic){
-					alert("已无更多游戏题目，请添加")
-					return;
-				}
-				personTopicInput.value=currentTopic[0];
-				moleTopicInput.value=currentTopic[1];
-				
-			
-			}
-			//随机生成题目
-			function randomTopic(){
-				var gameTopics=game.gameTopics
-				if(gameTopics.length==0){
-					return;
-				}
-				
-				var randomTopicIndex=Math.floor(Math.random()*100)%gameTopics.length;
-				//和上次一样，直接+1
-				if(game.randomTopicIndex==gameTopics[randomTopicIndex]){
-					randomTopicIndex=(randomTopicIndex+1)%gameTopics.length;
-				}
-				game.randomTopicIndex=randomTopicIndex
-				var currentTopic=gameTopics[randomTopicIndex];
-				if(Math.random()>0.5){
-					return [currentTopic[1],currentTopic[0]]	
-				}
-				return [currentTopic[0],currentTopic[1]]
-			}
-			
-			//题目管理按钮
+			//题库统计按钮
 			function topicManageBtnClick(){
-				//写入剩余题目
-				var gameTopics=game.gameTopics
-				var topicHtml="";
-				for (var i = 0; i < gameTopics.length; i++) {
-					topicHtml+=gameTopics[i].join(" ");
-					topicHtml+="\n";
-				}
-				gameTopicEL.value=topicHtml;
+				renderTopicStats()
 				topicManageEL.style.display="block";
 			}
 		
-			//题目管理关闭按钮
+			//题库统计关闭按钮
 			function closeTopicManageWindowBtnClick(){
 				topicManageEL.style.display="none";
-				
-				game.gameTopics=parseGameTopicELValue()
 			}
-			
-			function parseGameTopicELValue(){
-				var topicStr=gameTopicEL.value.trim()
-				if(topicStr==""){
-					return [];
-				}
-				var lines=topicStr.split(/(?:\r?\n)+/g);
-				
-				var rst=[];
-				for(var i=0;i<lines.length;i++){
-					var line=lines[i];
-					
-					line=line.replaceAll(/[^\u4e00-\u9fa5a-zA-Z·]+/g," ").trim()
-					if(line.length==0){
-						continue;
-					}
-					var tokens=line.split(/\s+/g);
-					if(tokens.length>1){
-						rst.push([tokens[0],tokens[1]]);
-					}
-				}
-				var rst2=[];
-				//去重
-				for (var i = 0; i < rst.length;i++) {
-					if(indexOfTopic(rst2,rst[i])==-1){
-						rst2.push(rst[i])
-					}
-				}
-				return rst2;
-			}
-			function indexOfTopic(arr,e){
-				for (var i = 0; i < arr.length;i++) {
-					var x=arr[i];
-					if(x[0]==e[0]&&x[1]==e[1]){
-						return i;
-					}
-					if(x[0]==e[1]&&x[1]==e[0]){
-						return i;
-					}
-				}
-				return -1;
+			//题库统计（只读）
+			function renderTopicStats(){
+				var total=TOPIC_LIBRARY.length;
+				var remaining=game.topicPool.length;
+				var categoryCount={};
+				var difficultyCount={1:0,2:0,3:0};
+				TOPIC_LIBRARY.forEach(function(entry){
+					categoryCount[entry.category]=(categoryCount[entry.category]||0)+1;
+					difficultyCount[entry.difficulty]++;
+				});
+				var difficultyNames={1:"简单",2:"普通",3:"困难"};
+				var html="<p>题库总数 <strong>"+total+"</strong> 条，本轮循环剩余 <strong>"+remaining+"</strong> 条</p>";
+				html+="<p><strong>按类别</strong></p><table>";
+				Object.keys(categoryCount).forEach(function(category){
+					html+="<tr><td>"+category+"</td><td>"+categoryCount[category]+" 条</td></tr>";
+				});
+				html+="</table>";
+				html+="<p><strong>按难度</strong></p><table>";
+				[1,2,3].forEach(function(level){
+					html+="<tr><td>"+difficultyNames[level]+"</td><td>"+difficultyCount[level]+" 条</td></tr>";
+				});
+				html+="</table>";
+				html+="<p class=\"topic-stats-tip\">每轮从题库A抽取并删除；题库A用完或无法满足难度变化时，重新从全局题库拷贝（避开上一题）。</p>";
+				topicStatsEL.innerHTML=html;
 			}
 			
 		</script>
 		<script>
 		
-			function randomNextInt(a,b,arr){
-				var tryMax=10;
-				while(tryMax--){
-					var x=Math.floor(Math.random()*Math.abs(a-b))+Math.min(a,b);
-					if(arr.indexOf(x)==-1){
-						return x;
-					}
-	
+			//从 0..playerCount-1 中等概率抽取 moleCount 个不重复的玩家下标
+			function pickMoleIndexes(playerCount,moleCount){
+				var pool=[];
+				for (var i = 0; i < playerCount; i++) {
+					pool.push(i);
 				}
-				throw new Error("无法生成随机数，请检测a,b")
+				var result=[];
+				for (var i = 0; i < moleCount; i++) {
+					var index=Math.floor(Math.random()*pool.length);
+					result.push(pool[index]);
+					pool.splice(index,1);
+				}
+				return result;
 			}
 		</script>
 	</body>
