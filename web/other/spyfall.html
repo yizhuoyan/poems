@@ -1,0 +1,2378 @@
+<!doctype html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+        />
+        <meta name="color-scheme" content="dark" />
+        <meta name="theme-color" content="#070a11" />
+        <title>间谍在哪 · Spyfall</title>
+        <style>
+            :root {
+                color-scheme: dark;
+                --bg: #070a11;
+                --surface: rgba(18, 24, 38, 0.88);
+                --surface-strong: #121827;
+                --border: rgba(255, 255, 255, 0.09);
+                --border-strong: rgba(255, 255, 255, 0.16);
+                --text: #f4f7ff;
+                --muted: #9aa5ba;
+                --muted-2: #707b91;
+                --red: #ff4d6d;
+                --blue: #7c9cff;
+                --green: #4fd1b5;
+                --radius-lg: 26px;
+                --radius-md: 17px;
+                --shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+                --font:
+                    system-ui, -apple-system, "Segoe UI", "PingFang SC",
+                    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            [hidden] {
+                display: none !important;
+            }
+
+            html {
+                min-height: 100%;
+            }
+
+            body {
+                margin: 0;
+                min-height: 100vh;
+                min-height: 100dvh;
+                padding-top: max(20px, env(safe-area-inset-top, 0px));
+                padding-right: max(16px, env(safe-area-inset-right, 0px));
+                padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px));
+                padding-left: max(16px, env(safe-area-inset-left, 0px));
+                overflow-x: hidden;
+                background: var(--bg);
+                color: var(--text);
+                font-family: var(--font);
+                -webkit-font-smoothing: antialiased;
+                -webkit-text-size-adjust: 100%;
+                text-size-adjust: 100%;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            body::before {
+                content: "";
+                position: fixed;
+                inset: 0;
+                z-index: -1;
+                pointer-events: none;
+                background:
+                    radial-gradient(
+                        620px 420px at 12% -4%,
+                        rgba(255, 77, 109, 0.19),
+                        transparent 68%
+                    ),
+                    radial-gradient(
+                        560px 400px at 104% 12%,
+                        rgba(124, 156, 255, 0.16),
+                        transparent 68%
+                    ),
+                    radial-gradient(
+                        520px 360px at 48% 108%,
+                        rgba(79, 209, 181, 0.08),
+                        transparent 70%
+                    );
+            }
+
+            body.modal-open {
+                overflow: hidden;
+            }
+
+            button,
+            input {
+                font: inherit;
+            }
+
+            button {
+                touch-action: manipulation;
+            }
+
+            a {
+                color: inherit;
+            }
+
+            .app {
+                position: relative;
+                width: 100%;
+                max-width: 560px;
+                margin: 0 auto;
+            }
+
+            .screen {
+                width: 100%;
+                animation: screen-in 0.35s ease both;
+            }
+
+            @keyframes screen-in {
+                from {
+                    opacity: 0;
+                    transform: translateY(8px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            /* ---------- 设置页 ---------- */
+
+            .setup-header {
+                position: relative;
+                padding: 6px 0 24px;
+            }
+
+            .back-link {
+                position: absolute;
+                top: 0;
+                left: 0;
+                display: grid;
+                width: 40px;
+                height: 40px;
+                place-items: center;
+                border: 1px solid var(--border);
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.04);
+                color: var(--muted);
+                font-size: 20px;
+                line-height: 1;
+                text-decoration: none;
+                transition:
+                    background 0.18s ease,
+                    color 0.18s ease;
+            }
+
+            .back-link:hover {
+                background: rgba(255, 255, 255, 0.08);
+                color: var(--text);
+            }
+
+            .back-link:focus-visible {
+                outline: 2px solid #ffd166;
+                outline-offset: 2px;
+            }
+
+            .brand-mark {
+                margin: 0 0 10px;
+                color: var(--red);
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 0.34em;
+            }
+
+            h1 {
+                margin: 0;
+                font-size: clamp(38px, 11vw, 52px);
+                font-weight: 760;
+                letter-spacing: -0.02em;
+                line-height: 1.08;
+            }
+
+            h1::after {
+                content: "";
+                display: block;
+                width: 48px;
+                height: 4px;
+                margin-top: 16px;
+                border-radius: 999px;
+                background: linear-gradient(90deg, var(--red), #ff9a6b);
+            }
+
+            .tagline {
+                margin: 16px 0 0;
+                color: var(--muted);
+                font-size: 15px;
+                line-height: 1.6;
+            }
+
+            .meta-row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                margin-top: 18px;
+            }
+
+            .meta-pill {
+                padding: 7px 11px;
+                border: 1px solid var(--border);
+                border-radius: 999px;
+                color: var(--muted);
+                font-size: 12px;
+                letter-spacing: 0.02em;
+            }
+
+            .panel {
+                padding: 20px;
+                border: 1px solid var(--border);
+                border-radius: var(--radius-lg);
+                background: var(--surface);
+                box-shadow: var(--shadow);
+                backdrop-filter: blur(14px);
+            }
+
+            .panel + .panel {
+                margin-top: 14px;
+            }
+
+            .field-label {
+                display: block;
+                margin-bottom: 14px;
+                color: var(--muted-2);
+                font-size: 12px;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+            }
+
+            .stepper {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 16px;
+            }
+
+            .step-btn {
+                display: grid;
+                width: 52px;
+                height: 52px;
+                flex: none;
+                place-items: center;
+                border: 1px solid var(--border-strong);
+                border-radius: var(--radius-md);
+                background: rgba(255, 255, 255, 0.05);
+                color: var(--text);
+                font-size: 26px;
+                line-height: 1;
+                cursor: pointer;
+                transition:
+                    transform 0.16s ease,
+                    background 0.16s ease,
+                    opacity 0.16s ease;
+            }
+
+            .step-btn:hover:not(:disabled) {
+                background: rgba(255, 255, 255, 0.09);
+            }
+
+            .step-btn:active:not(:disabled) {
+                transform: scale(0.94);
+            }
+
+            .step-btn:disabled {
+                opacity: 0.28;
+                cursor: not-allowed;
+            }
+
+            .step-btn:focus-visible {
+                outline: 2px solid #ffd166;
+                outline-offset: 2px;
+            }
+
+            .count-value {
+                font-size: 54px;
+                font-weight: 760;
+                font-variant-numeric: tabular-nums;
+                line-height: 1;
+                text-align: center;
+            }
+
+            .count-value small {
+                margin-left: 5px;
+                color: var(--muted);
+                font-size: 13px;
+                font-weight: 500;
+            }
+
+            .hint {
+                margin: 12px 0 0;
+                color: var(--muted);
+                font-size: 13px;
+                line-height: 1.6;
+            }
+
+            .rules h2 {
+                margin: 0 0 14px;
+                font-size: 17px;
+            }
+
+            .rules-list {
+                display: grid;
+                gap: 12px;
+                margin: 0;
+                padding: 0;
+                list-style: none;
+                counter-reset: rule;
+            }
+
+            .rules-list li {
+                position: relative;
+                padding-left: 38px;
+                color: var(--muted);
+                font-size: 14px;
+                counter-increment: rule;
+                line-height: 1.65;
+            }
+
+            .rules-list li::before {
+                content: counter(rule);
+                position: absolute;
+                top: 0;
+                left: 0;
+                display: grid;
+                width: 26px;
+                height: 26px;
+                place-items: center;
+                border: 1px solid rgba(255, 77, 109, 0.24);
+                border-radius: 9px;
+                background: rgba(255, 77, 109, 0.12);
+                color: #ff9bad;
+                font-size: 12px;
+                font-weight: 700;
+            }
+
+            .rules-list strong {
+                color: var(--text);
+            }
+
+            .actions {
+                display: grid;
+                gap: 10px;
+                margin-top: 18px;
+            }
+
+            .btn {
+                display: inline-flex;
+                width: 100%;
+                min-height: 54px;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                padding: 14px 18px;
+                border: 1px solid transparent;
+                border-radius: var(--radius-md);
+                font-size: 16px;
+                font-weight: 700;
+                letter-spacing: 0.02em;
+                cursor: pointer;
+                transition:
+                    transform 0.16s ease,
+                    background 0.16s ease,
+                    border-color 0.16s ease,
+                    opacity 0.16s ease;
+            }
+
+            .btn:active:not(:disabled) {
+                transform: scale(0.98);
+            }
+
+            .btn:disabled {
+                opacity: 0.35;
+                cursor: not-allowed;
+            }
+
+            .btn:focus-visible {
+                outline: 2px solid #ffd166;
+                outline-offset: 2px;
+            }
+
+            .btn.primary {
+                background: linear-gradient(135deg, #ff4d6d, #ff7a59);
+                box-shadow: 0 14px 34px rgba(255, 77, 109, 0.28);
+                color: #fff;
+            }
+
+            .btn.secondary {
+                border-color: var(--border-strong);
+                background: rgba(255, 255, 255, 0.07);
+                color: var(--text);
+            }
+
+            .btn.ghost {
+                border-color: var(--border);
+                background: transparent;
+                color: var(--muted);
+            }
+
+            .btn.ghost:hover:not(:disabled) {
+                background: rgba(255, 255, 255, 0.04);
+                color: var(--text);
+            }
+
+            .btn.danger {
+                border-color: rgba(255, 77, 109, 0.3);
+                background: rgba(255, 77, 109, 0.12);
+                color: #ff9bad;
+            }
+
+            .footnote {
+                margin: 16px 0 0;
+                color: var(--muted-2);
+                font-size: 12px;
+                line-height: 1.6;
+                text-align: center;
+            }
+
+            /* ---------- 通用顶部 ---------- */
+
+            .topbar {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                padding: 4px 0 18px;
+            }
+
+            .round-pill {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 8px 12px;
+                border: 1px solid var(--border);
+                border-radius: 999px;
+                background: rgba(255, 255, 255, 0.03);
+                color: var(--muted);
+                font-size: 12px;
+                letter-spacing: 0.08em;
+            }
+
+            .round-pill::before {
+                content: "";
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: var(--red);
+                box-shadow: 0 0 12px var(--red);
+            }
+
+            .topbar .btn {
+                width: auto;
+                min-height: 38px;
+                padding: 8px 14px;
+                border-radius: 999px;
+                font-size: 13px;
+            }
+
+            .progress-text {
+                color: var(--muted);
+                font-size: 12px;
+                font-variant-numeric: tabular-nums;
+            }
+
+            .progress-track {
+                height: 4px;
+                margin-bottom: 22px;
+                overflow: hidden;
+                border-radius: 999px;
+                background: rgba(255, 255, 255, 0.07);
+            }
+
+            .progress-fill {
+                width: 0;
+                height: 100%;
+                border-radius: inherit;
+                background: linear-gradient(90deg, var(--red), #ff9a6b);
+                transition: width 0.3s ease;
+            }
+
+            /* ---------- 发身份页 ---------- */
+
+            .deal-main {
+                display: flex;
+                min-height: calc(100dvh - 150px);
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            .eyebrow {
+                margin: 0 0 8px;
+                color: var(--muted-2);
+                font-size: 12px;
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+            }
+
+            .deal-player {
+                margin: 0;
+                font-size: clamp(32px, 9vw, 44px);
+                font-weight: 760;
+                letter-spacing: -0.02em;
+                line-height: 1.1;
+            }
+
+            .deal-tip {
+                margin: 10px 0 22px;
+                color: var(--muted);
+                font-size: 14px;
+            }
+
+            .identity-card {
+                position: relative;
+                display: flex;
+                width: 100%;
+                min-height: clamp(260px, 40vh, 350px);
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+                padding: 28px 22px;
+                border: 1px solid var(--border-strong);
+                border-radius: 28px;
+                background: linear-gradient(155deg, #1a2134 0%, #101624 60%, #0d1220 100%);
+                box-shadow:
+                    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+                    0 24px 60px rgba(0, 0, 0, 0.4);
+                color: var(--text);
+                cursor: pointer;
+                text-align: center;
+                touch-action: none;
+                user-select: none;
+                -webkit-user-select: none;
+                -webkit-touch-callout: none;
+                transition:
+                    border-color 0.2s ease,
+                    background 0.2s ease;
+            }
+
+            .identity-card::before {
+                content: "";
+                position: absolute;
+                inset: -40% -20% auto;
+                height: 70%;
+                background: radial-gradient(closest-side, rgba(255, 77, 109, 0.16), transparent);
+                pointer-events: none;
+            }
+
+            .identity-card::after {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(
+                    115deg,
+                    transparent 30%,
+                    rgba(255, 255, 255, 0.06) 50%,
+                    transparent 70%
+                );
+                pointer-events: none;
+            }
+
+            .identity-card.is-spy {
+                border-color: rgba(255, 77, 109, 0.55);
+                background: linear-gradient(155deg, #2a1420 0%, #170e15 60%, #0d0a10 100%);
+            }
+
+            .identity-card.is-spy::before {
+                background: radial-gradient(closest-side, rgba(255, 77, 109, 0.3), transparent);
+            }
+
+            .identity-card:focus-visible {
+                outline: 2px solid #ffd166;
+                outline-offset: 3px;
+            }
+
+            .card-lock,
+            .card-reveal {
+                position: relative;
+                z-index: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .card-reveal:not([hidden]) {
+                animation: reveal-in 0.18s ease both;
+            }
+
+            @keyframes reveal-in {
+                from {
+                    opacity: 0;
+                    transform: scale(0.97);
+                }
+                to {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+            }
+
+            .lock-glyph {
+                position: relative;
+                width: 36px;
+                height: 28px;
+                border-radius: 8px;
+                background: linear-gradient(135deg, #ff4d6d, #ff7a59);
+                box-shadow: 0 8px 24px rgba(255, 77, 109, 0.28);
+            }
+
+            .lock-glyph::before {
+                content: "";
+                position: absolute;
+                top: -15px;
+                left: 50%;
+                width: 20px;
+                height: 20px;
+                border: 3px solid rgba(255, 255, 255, 0.7);
+                border-bottom: 0;
+                border-radius: 12px 12px 0 0;
+                transform: translateX(-50%);
+            }
+
+            .lock-title {
+                font-size: 20px;
+                font-weight: 700;
+            }
+
+            .lock-sub {
+                color: var(--muted);
+                font-size: 13px;
+            }
+
+            .reveal-kicker {
+                color: var(--muted);
+                font-size: 12px;
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+            }
+
+            .reveal-title {
+                font-size: clamp(38px, 12vw, 56px);
+                font-weight: 800;
+                letter-spacing: -0.03em;
+                line-height: 1.08;
+            }
+
+            .reveal-role {
+                max-width: 300px;
+                color: #c9d2e6;
+                font-size: 16px;
+                line-height: 1.6;
+            }
+
+            .identity-card.is-spy .reveal-kicker {
+                color: #ff9bad;
+            }
+
+            .identity-card.is-spy .reveal-title {
+                color: #ff8fa2;
+            }
+
+            .deal-actions {
+                margin-top: 18px;
+            }
+
+            .privacy-note {
+                margin: 12px 0 0;
+                color: var(--muted-2);
+                font-size: 12px;
+                line-height: 1.6;
+                text-align: center;
+            }
+
+            /* ---------- 讨论页 ---------- */
+
+            .timer-block {
+                padding: clamp(24px, 6vh, 50px) 0 28px;
+                text-align: center;
+            }
+
+            .timer-status {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                color: var(--muted);
+                font-size: 13px;
+                letter-spacing: 0.12em;
+            }
+
+            .status-dot {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: var(--green);
+                box-shadow: 0 0 14px var(--green);
+            }
+
+            .timer-status.is-paused .status-dot {
+                background: var(--muted-2);
+                box-shadow: none;
+            }
+
+            .timer-display {
+                margin: 12px 0 0;
+                font-size: clamp(64px, 21vw, 92px);
+                font-weight: 760;
+                font-variant-numeric: tabular-nums;
+                letter-spacing: 0.02em;
+                line-height: 1;
+            }
+
+            .timer-actions {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                margin-top: 24px;
+            }
+
+            .tips-card {
+                padding: 20px;
+                border: 1px solid var(--border);
+                border-radius: var(--radius-lg);
+                background: var(--surface);
+            }
+
+            .tips-card h2 {
+                margin: 0 0 12px;
+                font-size: 17px;
+            }
+
+            .tips-card p {
+                margin: 0 0 10px;
+                color: var(--muted);
+                font-size: 14px;
+                line-height: 1.65;
+            }
+
+            .tips-card p:last-child {
+                margin-bottom: 0;
+            }
+
+            .tips-card strong {
+                color: var(--text);
+            }
+
+            /* ---------- 结算页 ---------- */
+
+            .end-main {
+                display: flex;
+                min-height: calc(100dvh - 120px);
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            .end-card {
+                padding: 36px 22px;
+                border: 1px solid var(--border);
+                border-radius: 30px;
+                background: var(--surface);
+                box-shadow: var(--shadow);
+                text-align: center;
+            }
+
+            .end-time {
+                margin: 8px 0 0;
+                color: #ffb3be;
+                font-size: clamp(56px, 18vw, 78px);
+                font-weight: 760;
+                font-variant-numeric: tabular-nums;
+                letter-spacing: 0.02em;
+                line-height: 1;
+            }
+
+            @supports ((-webkit-background-clip: text) or (background-clip: text)) {
+                .end-time {
+                    background: linear-gradient(135deg, #fff, #ffb3be);
+                    background-clip: text;
+                    color: transparent;
+                    -webkit-background-clip: text;
+                }
+            }
+
+            .end-note {
+                max-width: 300px;
+                margin: 18px auto 0;
+                color: var(--muted);
+                font-size: 14px;
+                line-height: 1.65;
+            }
+
+            .end-actions {
+                display: grid;
+                gap: 10px;
+                margin-top: 28px;
+            }
+
+            /* ---------- 地点弹层 ---------- */
+
+            .sheet-backdrop {
+                position: fixed;
+                inset: 0;
+                z-index: 100;
+                display: flex;
+                align-items: flex-end;
+                justify-content: center;
+                background: rgba(3, 6, 12, 0.72);
+                backdrop-filter: blur(6px);
+            }
+
+            .sheet {
+                display: flex;
+                width: 100%;
+                max-width: 560px;
+                max-height: 86dvh;
+                flex-direction: column;
+                overflow: hidden;
+                padding: 10px 16px calc(20px + env(safe-area-inset-bottom, 0px));
+                border: 1px solid var(--border);
+                border-bottom: 0;
+                border-radius: 26px 26px 0 0;
+                background: #101624;
+                box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.5);
+                animation: sheet-up 0.28s ease both;
+            }
+
+            @keyframes sheet-up {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .sheet-handle {
+                width: 42px;
+                height: 4px;
+                flex: none;
+                margin: 2px auto 12px;
+                border-radius: 999px;
+                background: rgba(255, 255, 255, 0.18);
+            }
+
+            .sheet-header {
+                display: flex;
+                flex: none;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+            }
+
+            .sheet-header h2 {
+                margin: 0;
+                font-size: 20px;
+            }
+
+            .sheet-close {
+                display: grid;
+                width: 40px;
+                height: 40px;
+                flex: none;
+                place-items: center;
+                border: 1px solid var(--border);
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.04);
+                color: var(--muted);
+                font-size: 22px;
+                line-height: 1;
+                cursor: pointer;
+            }
+
+            .sheet-close:hover {
+                background: rgba(255, 255, 255, 0.08);
+                color: var(--text);
+            }
+
+            .sheet-close:focus-visible {
+                outline: 2px solid #ffd166;
+                outline-offset: 2px;
+            }
+
+            .sheet-hint {
+                flex: none;
+                margin: 8px 0 14px;
+                color: var(--muted);
+                font-size: 13px;
+                line-height: 1.6;
+            }
+
+            .location-search {
+                width: 100%;
+                height: 46px;
+                flex: none;
+                padding: 0 14px;
+                border: 1px solid var(--border);
+                border-radius: 14px;
+                outline: none;
+                background: rgba(255, 255, 255, 0.05);
+                color: var(--text);
+            }
+
+            .location-search::placeholder {
+                color: var(--muted-2);
+            }
+
+            .location-search:focus {
+                border-color: rgba(124, 156, 255, 0.6);
+                box-shadow: 0 0 0 3px rgba(124, 156, 255, 0.12);
+            }
+
+            .location-scroll {
+                min-height: 0;
+                margin-top: 12px;
+                overflow-y: auto;
+                overscroll-behavior: contain;
+                padding-bottom: 4px;
+            }
+
+            .location-grid {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 9px;
+            }
+
+            .location-item {
+                display: flex;
+                min-height: 48px;
+                align-items: center;
+                gap: 10px;
+                padding: 10px 12px;
+                border: 1px solid var(--border);
+                border-radius: 13px;
+                background: rgba(255, 255, 255, 0.035);
+                font-size: 15px;
+                font-weight: 600;
+            }
+
+            .loc-index {
+                color: var(--muted-2);
+                font-size: 11px;
+                font-variant-numeric: tabular-nums;
+            }
+
+            .location-empty {
+                margin: 18px 0;
+                color: var(--muted);
+                font-size: 14px;
+                text-align: center;
+            }
+
+            /* ---------- 确认弹窗 ---------- */
+
+            .modal-backdrop {
+                position: fixed;
+                inset: 0;
+                z-index: 120;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+                background: rgba(3, 6, 12, 0.76);
+                backdrop-filter: blur(6px);
+            }
+
+            .modal {
+                width: 100%;
+                max-width: 380px;
+                padding: 24px;
+                border: 1px solid var(--border-strong);
+                border-radius: 24px;
+                background: var(--surface-strong);
+                box-shadow: var(--shadow);
+                animation: modal-in 0.2s ease both;
+            }
+
+            @keyframes modal-in {
+                from {
+                    opacity: 0;
+                    transform: scale(0.97);
+                }
+                to {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+            }
+
+            .modal h2 {
+                margin: 0;
+                font-size: 22px;
+            }
+
+            .modal p {
+                margin: 10px 0 0;
+                color: var(--muted);
+                font-size: 14px;
+                line-height: 1.65;
+            }
+
+            .modal-actions {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                margin-top: 22px;
+            }
+
+            /* ---------- 适配 ---------- */
+
+            @media (min-width: 480px) {
+                .location-grid {
+                    grid-template-columns: repeat(3, minmax(0, 1fr));
+                }
+            }
+
+            @media (min-width: 640px) {
+                body {
+                    padding-top: max(32px, env(safe-area-inset-top, 0px));
+                    padding-right: max(24px, env(safe-area-inset-right, 0px));
+                    padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px));
+                    padding-left: max(24px, env(safe-area-inset-left, 0px));
+                }
+
+                .setup-header {
+                    padding-top: 12px;
+                }
+
+                .panel {
+                    padding: 24px;
+                }
+
+                .identity-card {
+                    min-height: 380px;
+                }
+
+                .sheet-backdrop {
+                    align-items: center;
+                    padding: 24px;
+                }
+
+                .sheet {
+                    max-height: 80vh;
+                    border-bottom: 1px solid var(--border);
+                    border-radius: 26px;
+                }
+            }
+
+            @media (max-height: 700px) {
+                .deal-main {
+                    min-height: auto;
+                    padding: 8px 0 18px;
+                }
+
+                .identity-card {
+                    min-height: 240px;
+                }
+
+                .timer-block {
+                    padding-top: 12px;
+                }
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                .screen,
+                .card-reveal:not([hidden]),
+                .sheet,
+                .modal {
+                    animation: none;
+                }
+
+                .progress-fill,
+                .btn,
+                .step-btn,
+                .identity-card {
+                    transition: none;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <main class="app" id="app">
+            <!-- 设置页 -->
+            <section class="screen" id="setupScreen">
+                <header class="setup-header">
+                    <a class="back-link" href="./index.html" aria-label="返回入口">←</a>
+                    <p class="brand-mark">SPYFALL</p>
+                    <h1>间谍在哪</h1>
+                    <p class="tagline">一台手机，轮流查看身份。谁在假装知道地点？</p>
+                    <div class="meta-row">
+                        <span class="meta-pill">3–10 人</span>
+                        <span class="meta-pill">30 个地点</span>
+                        <span class="meta-pill">纯本地运行</span>
+                    </div>
+                </header>
+
+                <section class="panel" aria-labelledby="playerCountLabel">
+                    <label class="field-label" id="playerCountLabel" for="playerCountOut">
+                        玩家人数
+                    </label>
+                    <div class="stepper">
+                        <button
+                            class="step-btn"
+                            id="minusBtn"
+                            type="button"
+                            aria-label="减少玩家人数"
+                        >
+                            −
+                        </button>
+                        <output
+                            class="count-value"
+                            id="playerCountOut"
+                            aria-live="polite"
+                            >6<small>人</small></output
+                        >
+                        <button
+                            class="step-btn"
+                            id="plusBtn"
+                            type="button"
+                            aria-label="增加玩家人数"
+                        >
+                            +
+                        </button>
+                    </div>
+                    <p class="hint">3–10 人 · 其中 1 人是间谍</p>
+                </section>
+
+                <section class="panel rules" aria-labelledby="rulesTitle">
+                    <h2 id="rulesTitle">怎么玩</h2>
+                    <ol class="rules-list">
+                        <li>每人依次<strong>按住卡片</strong>查看身份，松手立即隐藏。</li>
+                        <li>大多数人拿到<strong>同一个地点</strong>和不同身份；1 人是间谍，不知道地点。</li>
+                        <li>轮流提问回答，不能直接说出地点。回答要像知道，但别太具体。</li>
+                        <li>结束后口头揭晓间谍和地点。App 不投票、不判定胜负、不计分。</li>
+                    </ol>
+                </section>
+
+                <div class="actions">
+                    <button class="btn primary" id="startBtn" type="button">
+                        开始发身份
+                    </button>
+                </div>
+                <p class="footnote">无需联网 · 不收集任何数据 · 最多 10 人</p>
+            </section>
+
+            <!-- 发身份页 -->
+            <section class="screen" id="dealScreen" hidden>
+                <header class="topbar">
+                    <span class="round-pill" id="dealRoundLabel">第 1 局</span>
+                    <span class="progress-text" id="dealProgress">1 / 6</span>
+                </header>
+                <div class="progress-track">
+                    <div class="progress-fill" id="dealProgressFill"></div>
+                </div>
+
+                <div class="deal-main">
+                    <p class="eyebrow">请把手机交给</p>
+                    <h2 class="deal-player" id="dealPlayerName">玩家 1</h2>
+                    <p class="deal-tip">确认只有你在看屏幕</p>
+
+                    <button
+                        class="identity-card"
+                        id="identityCard"
+                        type="button"
+                        aria-label="按住查看身份，松手隐藏"
+                        aria-describedby="privacyNote"
+                    >
+                        <span class="card-lock" id="cardLock">
+                            <span class="lock-glyph" aria-hidden="true"></span>
+                            <span class="lock-title">按住查看身份</span>
+                            <span class="lock-sub">松手立即隐藏</span>
+                        </span>
+                        <span class="card-reveal" id="cardReveal" hidden>
+                            <span class="reveal-kicker" id="revealKicker"></span>
+                            <span class="reveal-title" id="revealTitle"></span>
+                            <span class="reveal-role" id="revealRole"></span>
+                        </span>
+                    </button>
+
+                    <div class="deal-actions">
+                        <button class="btn primary" id="nextBtn" type="button" disabled>
+                            我记住了，下一位
+                        </button>
+                    </div>
+                    <p class="privacy-note" id="privacyNote">
+                        身份只在按住时显示，松手即隐藏；松手后点「下一位」（键盘可按住空格）
+                    </p>
+                </div>
+            </section>
+
+            <!-- 讨论页 -->
+            <section class="screen" id="discussScreen" hidden>
+                <header class="topbar">
+                    <span class="round-pill" id="discussRoundLabel">第 1 局</span>
+                    <button class="btn ghost" id="endBtn" type="button">
+                        结束本局
+                    </button>
+                </header>
+
+                <div class="timer-block">
+                    <span class="timer-status" id="timerStatus">
+                        <span class="status-dot" aria-hidden="true"></span>
+                        <span id="timerStatusText">讨论中</span>
+                    </span>
+                    <div class="timer-display" id="timer" role="timer" aria-live="off">
+                        00:00
+                    </div>
+                    <div class="timer-actions">
+                        <button class="btn secondary" id="pauseBtn" type="button">
+                            暂停
+                        </button>
+                        <button class="btn secondary" id="locationsBtn" type="button">
+                            查看地点
+                        </button>
+                    </div>
+                </div>
+
+                <section class="tips-card" aria-labelledby="tipsTitle">
+                    <h2 id="tipsTitle">提问方式</h2>
+                    <p>
+                        <strong>A 问 B，B 回答后问 C</strong>，依次轮下去；不能反问刚问自己的人。
+                    </p>
+                    <p>
+                        回答得像知道地点，但别说得太具体。太具体会泄露给间谍，太模糊又会被怀疑。
+                    </p>
+                    <p>随时可以点「查看地点」，所有人包括间谍都能看。</p>
+                </section>
+            </section>
+
+            <!-- 本局结束页 -->
+            <section class="screen" id="endScreen" hidden>
+                <div class="end-main">
+                    <div class="end-card">
+                        <p class="eyebrow">本局结束</p>
+                        <h2>讨论用时</h2>
+                        <div class="end-time" id="endTime">00:00</div>
+                        <p class="end-note">
+                            胜负、间谍和地点由大家口头揭晓。休息一下，再开一局。
+                        </p>
+                        <div class="end-actions">
+                            <button class="btn primary" id="nextRoundBtn" type="button">
+                                再来一局
+                            </button>
+                            <button class="btn ghost" id="backSetupBtn" type="button">
+                                返回设置
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 地点列表 -->
+        <div class="sheet-backdrop" id="sheetBackdrop" hidden>
+            <section
+                class="sheet"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="sheetTitle"
+            >
+                <div class="sheet-handle" aria-hidden="true"></div>
+                <header class="sheet-header">
+                    <h2 id="sheetTitle">地点列表</h2>
+                    <button
+                        class="sheet-close"
+                        id="closeSheetBtn"
+                        type="button"
+                        aria-label="关闭地点列表"
+                    >
+                        ×
+                    </button>
+                </header>
+                <p class="sheet-hint">所有人都能看，包括间谍。用来伪装或猜地点。</p>
+                <input
+                    class="location-search"
+                    id="locationSearch"
+                    type="search"
+                    placeholder="搜索地点…"
+                    autocomplete="off"
+                    spellcheck="false"
+                    aria-label="搜索地点"
+                />
+                <div class="location-scroll">
+                    <div class="location-grid" id="locationGrid"></div>
+                    <p class="location-empty" id="locationEmpty" hidden>
+                        没有匹配的地点
+                    </p>
+                </div>
+            </section>
+        </div>
+
+        <!-- 结束确认 -->
+        <div class="modal-backdrop" id="confirmBackdrop" hidden>
+            <section
+                class="modal"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="confirmTitle"
+            >
+                <h2 id="confirmTitle">结束本局？</h2>
+                <p>计时会停止，并进入本局结束页。胜负仍由大家口头判定。</p>
+                <div class="modal-actions">
+                    <button class="btn secondary" id="cancelEndBtn" type="button">
+                        继续讨论
+                    </button>
+                    <button class="btn danger" id="confirmEndBtn" type="button">
+                        结束本局
+                    </button>
+                </div>
+            </section>
+        </div>
+
+        <noscript>
+            <p style="text-align: center; color: #ff9bad">
+                这个小游戏需要启用 JavaScript 才能运行。
+            </p>
+        </noscript>
+
+        <script>
+            (function () {
+                "use strict";
+
+                var LOCATIONS = [
+                    {
+                        name: "飞机",
+                        roles: [
+                            "机长",
+                            "副驾驶",
+                            "空乘",
+                            "乘客",
+                            "航空安全员",
+                            "地勤",
+                            "航空管制员",
+                            "行李搬运工",
+                            "头等舱旅客",
+                            "逃票者"
+                        ]
+                    },
+                    {
+                        name: "机场",
+                        roles: [
+                            "值机员",
+                            "安检员",
+                            "海关人员",
+                            "免税店店员",
+                            "旅客",
+                            "机务维修员",
+                            "摆渡车司机",
+                            "失物招领员",
+                            "接机的人",
+                            "偷渡者"
+                        ]
+                    },
+                    {
+                        name: "火车站",
+                        roles: [
+                            "站长",
+                            "售票员",
+                            "列车员",
+                            "乘客",
+                            "检票员",
+                            "保洁员",
+                            "站台小贩",
+                            "铁路警察",
+                            "流浪歌手",
+                            "迟到旅客"
+                        ]
+                    },
+                    {
+                        name: "地铁",
+                        roles: [
+                            "地铁司机",
+                            "站务员",
+                            "乘客",
+                            "安检员",
+                            "维修工",
+                            "保洁员",
+                            "逃票者",
+                            "街头艺人",
+                            "调度员",
+                            "坐过站的人"
+                        ]
+                    },
+                    {
+                        name: "邮轮",
+                        roles: [
+                            "船长",
+                            "大副",
+                            "客房服务员",
+                            "乘客",
+                            "主厨",
+                            "娱乐总监",
+                            "赌场荷官",
+                            "救生员",
+                            "摄影师",
+                            "偷渡者"
+                        ]
+                    },
+                    {
+                        name: "海滩",
+                        roles: [
+                            "救生员",
+                            "游客",
+                            "冲浪教练",
+                            "沙滩小贩",
+                            "摄影师",
+                            "排球选手",
+                            "潜水员",
+                            "拾贝的人",
+                            "救生艇驾驶员",
+                            "乱丢垃圾的人"
+                        ]
+                    },
+                    {
+                        name: "酒店",
+                        roles: [
+                            "前台",
+                            "客房服务员",
+                            "经理",
+                            "住客",
+                            "门童",
+                            "厨师",
+                            "保安",
+                            "维修工",
+                            "婚宴宾客",
+                            "逃单者"
+                        ]
+                    },
+                    {
+                        name: "餐厅",
+                        roles: [
+                            "厨师",
+                            "服务员",
+                            "领班",
+                            "食客",
+                            "洗碗工",
+                            "调酒师",
+                            "外卖员",
+                            "美食评论家",
+                            "驻唱歌手",
+                            "吃霸王餐的人"
+                        ]
+                    },
+                    {
+                        name: "电影院",
+                        roles: [
+                            "放映员",
+                            "售票员",
+                            "检票员",
+                            "观众",
+                            "爆米花店员",
+                            "保洁员",
+                            "影评人",
+                            "情侣",
+                            "逃票者",
+                            "睡着的观众"
+                        ]
+                    },
+                    {
+                        name: "剧院",
+                        roles: [
+                            "演员",
+                            "导演",
+                            "舞台监督",
+                            "灯光师",
+                            "观众",
+                            "售票员",
+                            "化妆师",
+                            "乐手",
+                            "剧评人",
+                            "后台闯入者"
+                        ]
+                    },
+                    {
+                        name: "博物馆",
+                        roles: [
+                            "馆长",
+                            "讲解员",
+                            "保安",
+                            "游客",
+                            "修复师",
+                            "策展人",
+                            "摄影师",
+                            "清洁工",
+                            "文物贩子",
+                            "参观的学生"
+                        ]
+                    },
+                    {
+                        name: "图书馆",
+                        roles: [
+                            "管理员",
+                            "读者",
+                            "保洁员",
+                            "志愿者",
+                            "保安",
+                            "古籍修复师",
+                            "自习学生",
+                            "作家",
+                            "借书逾期的人",
+                            "偷书贼"
+                        ]
+                    },
+                    {
+                        name: "学校",
+                        roles: [
+                            "校长",
+                            "老师",
+                            "学生",
+                            "保安",
+                            "食堂阿姨",
+                            "校医",
+                            "家长",
+                            "教务主任",
+                            "清洁工",
+                            "逃课学生"
+                        ]
+                    },
+                    {
+                        name: "大学实验室",
+                        roles: [
+                            "教授",
+                            "研究生",
+                            "实验员",
+                            "保安",
+                            "清洁工",
+                            "设备供应商",
+                            "访问学者",
+                            "本科生",
+                            "安全员",
+                            "偷实验材料的人"
+                        ]
+                    },
+                    {
+                        name: "医院",
+                        roles: [
+                            "医生",
+                            "护士",
+                            "病人",
+                            "家属",
+                            "药剂师",
+                            "保安",
+                            "清洁工",
+                            "救护车司机",
+                            "实习医生",
+                            "医闹"
+                        ]
+                    },
+                    {
+                        name: "银行",
+                        roles: [
+                            "柜员",
+                            "经理",
+                            "保安",
+                            "客户",
+                            "运钞员",
+                            "理财顾问",
+                            "清洁工",
+                            "贷款专员",
+                            "劫匪",
+                            "排队的人"
+                        ]
+                    },
+                    {
+                        name: "警察局",
+                        roles: [
+                            "警察",
+                            "局长",
+                            "嫌疑人",
+                            "律师",
+                            "报案人",
+                            "法医",
+                            "文员",
+                            "清洁工",
+                            "记者",
+                            "走失儿童"
+                        ]
+                    },
+                    {
+                        name: "监狱",
+                        roles: [
+                            "狱警",
+                            "囚犯",
+                            "典狱长",
+                            "律师",
+                            "探监家属",
+                            "厨师",
+                            "医生",
+                            "维修工",
+                            "新来的囚犯",
+                            "越狱者"
+                        ]
+                    },
+                    {
+                        name: "赌场",
+                        roles: [
+                            "荷官",
+                            "赌客",
+                            "保安",
+                            "经理",
+                            "调酒师",
+                            "服务员",
+                            "放高利贷的人",
+                            "魔术师",
+                            "清洁工",
+                            "出千的人"
+                        ]
+                    },
+                    {
+                        name: "马戏团",
+                        roles: [
+                            "团长",
+                            "小丑",
+                            "杂技演员",
+                            "驯兽师",
+                            "售票员",
+                            "观众",
+                            "魔术师",
+                            "灯光师",
+                            "清洁工",
+                            "动物饲养员"
+                        ]
+                    },
+                    {
+                        name: "游乐园",
+                        roles: [
+                            "售票员",
+                            "游客",
+                            "小丑",
+                            "过山车操作员",
+                            "保安",
+                            "保洁员",
+                            "玩偶人",
+                            "小吃摊主",
+                            "走失的孩子",
+                            "插队的人"
+                        ]
+                    },
+                    {
+                        name: "体育馆",
+                        roles: [
+                            "运动员",
+                            "教练",
+                            "裁判",
+                            "观众",
+                            "保安",
+                            "队医",
+                            "解说员",
+                            "球童",
+                            "清洁工",
+                            "球迷"
+                        ]
+                    },
+                    {
+                        name: "婚礼现场",
+                        roles: [
+                            "新郎",
+                            "新娘",
+                            "伴郎",
+                            "伴娘",
+                            "司仪",
+                            "摄影师",
+                            "宾客",
+                            "婚庆策划",
+                            "乐队",
+                            "前任"
+                        ]
+                    },
+                    {
+                        name: "农场",
+                        roles: [
+                            "农场主",
+                            "农夫",
+                            "兽医",
+                            "挤奶工",
+                            "拖拉机司机",
+                            "游客",
+                            "帮工",
+                            "收购商",
+                            "偷菜贼",
+                            "农业检查员"
+                        ]
+                    },
+                    {
+                        name: "建筑工地",
+                        roles: [
+                            "包工头",
+                            "建筑工人",
+                            "工程师",
+                            "监理",
+                            "塔吊司机",
+                            "保安",
+                            "送餐员",
+                            "材料供应商",
+                            "学徒",
+                            "偷钢筋的人"
+                        ]
+                    },
+                    {
+                        name: "军事基地",
+                        roles: [
+                            "指挥官",
+                            "士兵",
+                            "哨兵",
+                            "工程师",
+                            "军医",
+                            "炊事员",
+                            "通讯员",
+                            "访客",
+                            "情报官",
+                            "新兵"
+                        ]
+                    },
+                    {
+                        name: "北极科考站",
+                        roles: [
+                            "科考队长",
+                            "气象学家",
+                            "生物学家",
+                            "厨师",
+                            "医生",
+                            "工程师",
+                            "驾驶员",
+                            "通讯员",
+                            "访客",
+                            "迷路的探险家"
+                        ]
+                    },
+                    {
+                        name: "太空站",
+                        roles: [
+                            "指令长",
+                            "宇航员",
+                            "飞行工程师",
+                            "科学家",
+                            "太空医生",
+                            "地面控制员",
+                            "太空游客",
+                            "通讯员",
+                            "机械师",
+                            "外星人"
+                        ]
+                    },
+                    {
+                        name: "潜水艇",
+                        roles: [
+                            "艇长",
+                            "大副",
+                            "声呐员",
+                            "轮机长",
+                            "水手",
+                            "厨师",
+                            "通讯员",
+                            "鱼雷手",
+                            "医生",
+                            "偷渡者"
+                        ]
+                    },
+                    {
+                        name: "温泉度假村",
+                        roles: [
+                            "经理",
+                            "服务员",
+                            "游客",
+                            "按摩师",
+                            "厨师",
+                            "救生员",
+                            "保洁员",
+                            "摄影师",
+                            "导游",
+                            "常客"
+                        ]
+                    }
+                ];
+
+                var STORAGE_KEY = "spyfall_player_count_v1";
+                var MIN_PLAYERS = 3;
+                var MAX_PLAYERS = 10;
+
+                var els = {
+                    app: document.getElementById("app"),
+                    setupScreen: document.getElementById("setupScreen"),
+                    dealScreen: document.getElementById("dealScreen"),
+                    discussScreen: document.getElementById("discussScreen"),
+                    endScreen: document.getElementById("endScreen"),
+                    minusBtn: document.getElementById("minusBtn"),
+                    plusBtn: document.getElementById("plusBtn"),
+                    playerCountOut: document.getElementById("playerCountOut"),
+                    startBtn: document.getElementById("startBtn"),
+                    dealRoundLabel: document.getElementById("dealRoundLabel"),
+                    dealProgress: document.getElementById("dealProgress"),
+                    dealProgressFill: document.getElementById("dealProgressFill"),
+                    dealPlayerName: document.getElementById("dealPlayerName"),
+                    identityCard: document.getElementById("identityCard"),
+                    cardLock: document.getElementById("cardLock"),
+                    cardReveal: document.getElementById("cardReveal"),
+                    revealKicker: document.getElementById("revealKicker"),
+                    revealTitle: document.getElementById("revealTitle"),
+                    revealRole: document.getElementById("revealRole"),
+                    nextBtn: document.getElementById("nextBtn"),
+                    discussRoundLabel: document.getElementById("discussRoundLabel"),
+                    endBtn: document.getElementById("endBtn"),
+                    timerStatus: document.getElementById("timerStatus"),
+                    timerStatusText: document.getElementById("timerStatusText"),
+                    timer: document.getElementById("timer"),
+                    pauseBtn: document.getElementById("pauseBtn"),
+                    locationsBtn: document.getElementById("locationsBtn"),
+                    endTime: document.getElementById("endTime"),
+                    nextRoundBtn: document.getElementById("nextRoundBtn"),
+                    backSetupBtn: document.getElementById("backSetupBtn"),
+                    sheetBackdrop: document.getElementById("sheetBackdrop"),
+                    closeSheetBtn: document.getElementById("closeSheetBtn"),
+                    locationSearch: document.getElementById("locationSearch"),
+                    locationGrid: document.getElementById("locationGrid"),
+                    locationEmpty: document.getElementById("locationEmpty"),
+                    confirmBackdrop: document.getElementById("confirmBackdrop"),
+                    cancelEndBtn: document.getElementById("cancelEndBtn"),
+                    confirmEndBtn: document.getElementById("confirmEndBtn")
+                };
+
+                var state = {
+                    playerCount: loadPlayerCount(),
+                    round: 1,
+                    dealIndex: 0,
+                    assignments: [],
+                    location: null,
+                    viewed: false,
+                    lastSpyIndex: null,
+                    lastLocationIndex: null,
+                    endElapsed: 0
+                };
+
+                var reveal = {
+                    active: false,
+                    pointerId: null
+                };
+
+                var timer = {
+                    running: false,
+                    startedAt: 0,
+                    elapsed: 0,
+                    intervalId: null
+                };
+
+                var lastFocused = null;
+                var confirmWasRunning = false;
+
+                init();
+
+                function init() {
+                    setPlayerCount(state.playerCount);
+                    renderLocationGrid();
+                    bindEvents();
+                    showSetup();
+                }
+
+                function bindEvents() {
+                    els.minusBtn.addEventListener("click", function () {
+                        setPlayerCount(state.playerCount - 1);
+                    });
+
+                    els.plusBtn.addEventListener("click", function () {
+                        setPlayerCount(state.playerCount + 1);
+                    });
+
+                    els.startBtn.addEventListener("click", function () {
+                        startGame();
+                    });
+
+                    els.identityCard.addEventListener("pointerdown", handleRevealStart);
+                    els.identityCard.addEventListener("pointerup", handleRevealEnd);
+                    els.identityCard.addEventListener("pointercancel", handleRevealEnd);
+                    els.identityCard.addEventListener("lostpointercapture", handleRevealEnd);
+                    els.identityCard.addEventListener("keydown", handleRevealKeyDown);
+                    els.identityCard.addEventListener("keyup", handleRevealKeyUp);
+                    els.identityCard.addEventListener("blur", forceHideIdentity);
+                    els.identityCard.addEventListener("contextmenu", function (event) {
+                        event.preventDefault();
+                    });
+
+                    window.addEventListener("pointerup", function () {
+                        if (reveal.active) {
+                            finishReveal();
+                        }
+                    });
+
+                    window.addEventListener("pointercancel", function () {
+                        if (reveal.active) {
+                            finishReveal();
+                        }
+                    });
+
+                    document.addEventListener("visibilitychange", function () {
+                        if (document.hidden) {
+                            forceHideIdentity();
+                        } else {
+                            renderTimer();
+                        }
+                    });
+
+                    els.nextBtn.addEventListener("click", nextPlayer);
+
+                    els.pauseBtn.addEventListener("click", function () {
+                        if (timer.running) {
+                            pauseTimer();
+                        } else {
+                            startTimer();
+                        }
+                    });
+
+                    els.locationsBtn.addEventListener("click", openSheet);
+                    els.closeSheetBtn.addEventListener("click", closeSheet);
+                    els.sheetBackdrop.addEventListener("click", function (event) {
+                        if (event.target === els.sheetBackdrop) {
+                            closeSheet();
+                        }
+                    });
+                    els.locationSearch.addEventListener("input", filterLocations);
+
+                    els.endBtn.addEventListener("click", openConfirm);
+                    els.cancelEndBtn.addEventListener("click", function () {
+                        closeConfirm(true);
+                    });
+                    els.confirmEndBtn.addEventListener("click", endRound);
+                    els.confirmBackdrop.addEventListener("click", function (event) {
+                        if (event.target === els.confirmBackdrop) {
+                            closeConfirm(true);
+                        }
+                    });
+
+                    els.nextRoundBtn.addEventListener("click", nextRound);
+                    els.backSetupBtn.addEventListener("click", showSetup);
+
+                    document.addEventListener("keydown", function (event) {
+                        if (event.key !== "Escape") {
+                            return;
+                        }
+                        if (!els.sheetBackdrop.hidden) {
+                            closeSheet();
+                        } else if (!els.confirmBackdrop.hidden) {
+                            closeConfirm(true);
+                        }
+                    });
+                }
+
+                function setPlayerCount(value) {
+                    var next = Math.max(MIN_PLAYERS, Math.min(MAX_PLAYERS, value));
+                    state.playerCount = next;
+                    els.playerCountOut.innerHTML = next + "<small>人</small>";
+                    els.minusBtn.disabled = next <= MIN_PLAYERS;
+                    els.plusBtn.disabled = next >= MAX_PLAYERS;
+                    savePlayerCount(next);
+                }
+
+                function loadPlayerCount() {
+                    try {
+                        var saved = parseInt(localStorage.getItem(STORAGE_KEY), 10);
+                        if (saved >= MIN_PLAYERS && saved <= MAX_PLAYERS) {
+                            return saved;
+                        }
+                    } catch (error) {
+                        // localStorage 不可用时使用默认人数
+                    }
+                    return 6;
+                }
+
+                function savePlayerCount(value) {
+                    try {
+                        localStorage.setItem(STORAGE_KEY, String(value));
+                    } catch (error) {
+                        // 忽略存储失败
+                    }
+                }
+
+                function showSetup() {
+                    stopTimer();
+                    resetTimer();
+                    state.round = 1;
+                    state.lastSpyIndex = null;
+                    state.lastLocationIndex = null;
+                    state.assignments = [];
+                    state.location = null;
+                    state.viewed = false;
+                    setScreen(els.setupScreen);
+                }
+
+                function startGame() {
+                    state.round = 1;
+                    state.lastSpyIndex = null;
+                    state.lastLocationIndex = null;
+                    startRound();
+                }
+
+                function startRound() {
+                    var locationIndex = pickDifferentIndex(LOCATIONS.length, state.lastLocationIndex);
+                    state.lastLocationIndex = locationIndex;
+                    state.location = LOCATIONS[locationIndex];
+
+                    var spyIndex = pickDifferentIndex(state.playerCount, state.lastSpyIndex);
+                    state.lastSpyIndex = spyIndex;
+
+                    var roles = shuffle(state.location.roles.slice()).slice(0, state.playerCount - 1);
+                    var roleIndex = 0;
+                    state.assignments = [];
+
+                    for (var i = 0; i < state.playerCount; i += 1) {
+                        if (i === spyIndex) {
+                            state.assignments.push({ spy: true, role: "" });
+                        } else {
+                            state.assignments.push({ spy: false, role: roles[roleIndex] });
+                            roleIndex += 1;
+                        }
+                    }
+
+                    state.dealIndex = 0;
+                    state.viewed = false;
+                    resetTimer();
+                    renderDeal();
+                    setScreen(els.dealScreen);
+                }
+
+                function nextRound() {
+                    state.round += 1;
+                    startRound();
+                }
+
+                function renderDeal() {
+                    var playerNumber = state.dealIndex + 1;
+                    var isLast = state.dealIndex === state.playerCount - 1;
+
+                    els.dealRoundLabel.textContent = "第 " + state.round + " 局";
+                    els.dealProgress.textContent = playerNumber + " / " + state.playerCount;
+                    els.dealProgressFill.style.width =
+                        ((playerNumber / state.playerCount) * 100).toFixed(2) + "%";
+                    els.dealPlayerName.textContent = "玩家 " + playerNumber;
+                    els.nextBtn.textContent = isLast
+                        ? "我记住了，开始讨论"
+                        : "我记住了，下一位";
+                    els.nextBtn.disabled = true;
+                    state.viewed = false;
+                    reveal.active = false;
+                    reveal.pointerId = null;
+                    clearIdentity();
+                }
+
+                function nextPlayer() {
+                    if (!state.viewed) {
+                        return;
+                    }
+
+                    if (state.dealIndex < state.playerCount - 1) {
+                        state.dealIndex += 1;
+                        state.viewed = false;
+                        renderDeal();
+                        return;
+                    }
+
+                    startDiscussion();
+                }
+
+                function handleRevealStart(event) {
+                    if (event.pointerType === "mouse" && event.button !== 0) {
+                        return;
+                    }
+                    reveal.active = true;
+                    reveal.pointerId = event.pointerId;
+
+                    try {
+                        els.identityCard.setPointerCapture(event.pointerId);
+                    } catch (error) {
+                        // 某些浏览器不支持指针捕获，window 上的 pointerup 仍可兜底
+                    }
+
+                    showIdentity();
+                    event.preventDefault();
+                }
+
+                function handleRevealEnd() {
+                    if (reveal.active) {
+                        finishReveal();
+                    }
+                }
+
+                function handleRevealKeyDown(event) {
+                    if (event.key !== " " && event.key !== "Enter") {
+                        return;
+                    }
+                    event.preventDefault();
+                    if (!event.repeat) {
+                        showIdentity();
+                    }
+                }
+
+                function handleRevealKeyUp(event) {
+                    if (event.key !== " " && event.key !== "Enter") {
+                        return;
+                    }
+                    event.preventDefault();
+                    if (reveal.active) {
+                        finishReveal();
+                    }
+                }
+
+                function showIdentity() {
+                    var assignment = state.assignments[state.dealIndex];
+
+                    if (!assignment) {
+                        return;
+                    }
+
+                    reveal.active = true;
+                    els.cardLock.hidden = true;
+                    els.cardReveal.hidden = false;
+                    els.identityCard.classList.toggle("is-spy", assignment.spy);
+
+                    if (assignment.spy) {
+                        els.revealKicker.textContent = "你的身份";
+                        els.revealTitle.textContent = "间谍";
+                        els.revealRole.textContent =
+                            "你知道自己是间谍，但不知道地点。观察大家，别暴露。";
+                        els.identityCard.setAttribute(
+                            "aria-label",
+                            "你的身份是间谍。你知道自己是间谍，但不知道地点。"
+                        );
+                    } else {
+                        els.revealKicker.textContent = "你的地点";
+                        els.revealTitle.textContent = state.location.name;
+                        els.revealRole.textContent = "你的身份：" + assignment.role;
+                        els.identityCard.setAttribute(
+                            "aria-label",
+                            "你的地点是" +
+                                state.location.name +
+                                "，你的身份是" +
+                                assignment.role +
+                                "。"
+                        );
+                    }
+                }
+
+                function finishReveal() {
+                    var wasActive = reveal.active;
+                    reveal.active = false;
+                    reveal.pointerId = null;
+                    clearIdentity();
+
+                    if (wasActive) {
+                        state.viewed = true;
+                        els.nextBtn.disabled = false;
+                    }
+                }
+
+                function forceHideIdentity() {
+                    reveal.active = false;
+                    reveal.pointerId = null;
+                    clearIdentity();
+                }
+
+                function clearIdentity() {
+                    els.cardReveal.hidden = true;
+                    els.cardLock.hidden = false;
+                    els.identityCard.classList.remove("is-spy");
+                    els.identityCard.setAttribute(
+                        "aria-label",
+                        "按住查看身份，松手隐藏"
+                    );
+                    els.revealKicker.textContent = "";
+                    els.revealTitle.textContent = "";
+                    els.revealRole.textContent = "";
+                }
+
+                function startDiscussion() {
+                    els.discussRoundLabel.textContent = "第 " + state.round + " 局";
+                    resetTimer();
+                    setScreen(els.discussScreen);
+                    startTimer();
+                }
+
+                function resetTimer() {
+                    stopTimer();
+                    timer.elapsed = 0;
+                    renderTimer();
+                    updateTimerStatus();
+                }
+
+                function startTimer() {
+                    if (timer.running) {
+                        return;
+                    }
+                    timer.running = true;
+                    timer.startedAt = Date.now() - timer.elapsed;
+                    timer.intervalId = window.setInterval(renderTimer, 250);
+                    renderTimer();
+                    updateTimerStatus();
+                }
+
+                function pauseTimer() {
+                    if (!timer.running) {
+                        return;
+                    }
+                    timer.elapsed = Date.now() - timer.startedAt;
+                    timer.running = false;
+                    if (timer.intervalId !== null) {
+                        window.clearInterval(timer.intervalId);
+                        timer.intervalId = null;
+                    }
+                    renderTimer();
+                    updateTimerStatus();
+                }
+
+                function stopTimer() {
+                    pauseTimer();
+                }
+
+                function getElapsed() {
+                    return timer.running ? Date.now() - timer.startedAt : timer.elapsed;
+                }
+
+                function renderTimer() {
+                    els.timer.textContent = formatTime(getElapsed());
+                }
+
+                function updateTimerStatus() {
+                    els.timerStatus.classList.toggle("is-paused", !timer.running);
+                    els.timerStatusText.textContent = timer.running ? "讨论中" : "已暂停";
+                    els.pauseBtn.textContent = timer.running ? "暂停" : "继续";
+                }
+
+                function formatTime(milliseconds) {
+                    var totalSeconds = Math.max(0, Math.floor(milliseconds / 1000));
+                    var hours = Math.floor(totalSeconds / 3600);
+                    var minutes = Math.floor((totalSeconds % 3600) / 60);
+                    var seconds = totalSeconds % 60;
+                    var pad = function (value) {
+                        return value < 10 ? "0" + value : String(value);
+                    };
+
+                    if (hours > 0) {
+                        return hours + ":" + pad(minutes) + ":" + pad(seconds);
+                    }
+                    return pad(minutes) + ":" + pad(seconds);
+                }
+
+                function openConfirm() {
+                    confirmWasRunning = timer.running;
+                    pauseTimer();
+                    lastFocused = document.activeElement;
+                    els.confirmBackdrop.hidden = false;
+                    document.body.classList.add("modal-open");
+                    els.app.inert = true;
+                    els.cancelEndBtn.focus();
+                }
+
+                function closeConfirm(resume) {
+                    if (els.confirmBackdrop.hidden) {
+                        return;
+                    }
+                    var shouldResume = Boolean(resume) && confirmWasRunning;
+                    els.confirmBackdrop.hidden = true;
+                    document.body.classList.remove("modal-open");
+                    els.app.inert = false;
+                    confirmWasRunning = false;
+                    if (shouldResume) {
+                        startTimer();
+                    }
+                    if (lastFocused && typeof lastFocused.focus === "function") {
+                        lastFocused.focus();
+                    }
+                }
+
+                function endRound() {
+                    closeConfirm(false);
+                    pauseTimer();
+                    state.endElapsed = getElapsed();
+                    els.endTime.textContent = formatTime(state.endElapsed);
+                    setScreen(els.endScreen);
+                }
+
+                function openSheet() {
+                    lastFocused = document.activeElement;
+                    els.locationSearch.value = "";
+                    filterLocations();
+                    els.sheetBackdrop.hidden = false;
+                    document.body.classList.add("modal-open");
+                    els.app.inert = true;
+                    els.closeSheetBtn.focus();
+                }
+
+                function closeSheet() {
+                    if (els.sheetBackdrop.hidden) {
+                        return;
+                    }
+                    els.sheetBackdrop.hidden = true;
+                    document.body.classList.remove("modal-open");
+                    els.app.inert = false;
+                    if (lastFocused && typeof lastFocused.focus === "function") {
+                        lastFocused.focus();
+                    }
+                }
+
+                function filterLocations() {
+                    var query = els.locationSearch.value.trim().toLowerCase();
+                    var visibleCount = 0;
+                    var items = els.locationGrid.children;
+
+                    for (var i = 0; i < items.length; i += 1) {
+                        var item = items[i];
+                        var matches =
+                            query === "" ||
+                            item.getAttribute("data-name").toLowerCase().indexOf(query) !== -1;
+                        item.hidden = !matches;
+                        if (matches) {
+                            visibleCount += 1;
+                        }
+                    }
+
+                    els.locationEmpty.hidden = visibleCount !== 0;
+                }
+
+                function renderLocationGrid() {
+                    var fragment = document.createDocumentFragment();
+
+                    LOCATIONS.forEach(function (location, index) {
+                        var item = document.createElement("div");
+                        item.className = "location-item";
+                        item.setAttribute("data-name", location.name);
+
+                        var number = document.createElement("span");
+                        number.className = "loc-index";
+                        number.textContent = String(index + 1).padStart(2, "0");
+
+                        var name = document.createElement("span");
+                        name.textContent = location.name;
+
+                        item.appendChild(number);
+                        item.appendChild(name);
+                        fragment.appendChild(item);
+                    });
+
+                    els.locationGrid.textContent = "";
+                    els.locationGrid.appendChild(fragment);
+                }
+
+                function pickDifferentIndex(length, lastIndex) {
+                    if (length <= 1) {
+                        return 0;
+                    }
+
+                    var index = Math.floor(Math.random() * length);
+                    if (lastIndex !== null && index === lastIndex) {
+                        index = (index + 1 + Math.floor(Math.random() * (length - 1))) % length;
+                    }
+                    return index;
+                }
+
+                function shuffle(array) {
+                    for (var i = array.length - 1; i > 0; i -= 1) {
+                        var j = Math.floor(Math.random() * (i + 1));
+                        var temporary = array[i];
+                        array[i] = array[j];
+                        array[j] = temporary;
+                    }
+                    return array;
+                }
+
+                function setScreen(screen) {
+                    els.setupScreen.hidden = screen !== els.setupScreen;
+                    els.dealScreen.hidden = screen !== els.dealScreen;
+                    els.discussScreen.hidden = screen !== els.discussScreen;
+                    els.endScreen.hidden = screen !== els.endScreen;
+                    window.scrollTo(0, 0);
+                }
+            })();
+        </script>
+    </body>
+</html>
