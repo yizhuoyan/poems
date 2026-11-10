@@ -3,8 +3,13 @@
     <head>
         <meta charset="utf-8" />
         <title>Links</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+        />
         <meta name="color-scheme" content="light dark" />
+        <meta name="theme-color" content="#f4f6fb" media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content="#11141c" media="(prefers-color-scheme: dark)" />
         <style>
             :root {
                 --bg: #f4f6fb;
@@ -30,7 +35,10 @@
 
             body {
                 min-height: 100vh;
-                padding: 64px 24px 80px;
+                min-height: 100dvh;
+                padding: 32px 16px calc(40px + env(safe-area-inset-bottom, 0px));
+                padding-left: max(16px, env(safe-area-inset-left, 0px));
+                padding-right: max(16px, env(safe-area-inset-right, 0px));
                 background-color: var(--bg);
                 background-image:
                     radial-gradient(680px 420px at 12% -10%, rgba(91, 124, 250, 0.18), transparent 70%),
@@ -41,6 +49,9 @@
                 font-family: system-ui, -apple-system, "Segoe UI", "PingFang SC", "Hiragino Sans GB",
                     "Microsoft YaHei", sans-serif;
                 -webkit-font-smoothing: antialiased;
+                -webkit-text-size-adjust: 100%;
+                text-size-adjust: 100%;
+                -webkit-tap-highlight-color: transparent;
                 text-rendering: optimizeLegibility;
             }
 
@@ -51,12 +62,12 @@
             }
 
             header {
-                margin-bottom: 36px;
+                margin-bottom: 24px;
             }
 
             header h1 {
                 margin: 0;
-                font-size: clamp(28px, 5vw, 40px);
+                font-size: clamp(26px, 8vw, 40px);
                 font-weight: 700;
                 letter-spacing: 0.06em;
                 line-height: 1.2;
@@ -65,24 +76,24 @@
             header h1::after {
                 content: "";
                 display: block;
-                width: 52px;
-                height: 4px;
-                margin-top: 14px;
+                width: 44px;
+                height: 3px;
+                margin-top: 10px;
                 border-radius: 999px;
                 background: linear-gradient(90deg, #5b7cfa, #40c9b0);
             }
 
             header p {
-                margin: 16px 0 0;
+                margin: 12px 0 0;
                 color: var(--muted);
-                font-size: 15px;
+                font-size: 14px;
                 letter-spacing: 0.02em;
             }
 
             .links {
                 display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-                gap: 18px;
+                grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+                gap: 12px;
                 margin: 0;
                 padding: 0;
                 list-style: none;
@@ -93,20 +104,24 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                min-height: 92px;
-                padding: 24px 22px;
+                min-height: 84px;
+                padding: 16px 12px;
                 text-align: center;
                 border: 1px solid var(--border);
                 border-radius: var(--radius);
                 background: var(--card);
                 box-shadow: var(--shadow);
                 color: inherit;
-                font-size: 17px;
+                font-size: 16px;
                 font-weight: 600;
+                line-height: 1.35;
                 letter-spacing: 0.01em;
                 text-decoration: none;
+                overflow-wrap: anywhere;
                 overflow: hidden;
-                transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+                touch-action: manipulation;
+                transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease,
+                    background-color 0.18s ease;
             }
 
             /* 顶部彩色细条：每张卡片轮换一种强调色 */
@@ -126,12 +141,12 @@
             .links li:nth-child(6n + 5) a { --dot: #f2b544; }
             .links li:nth-child(6n + 6) a { --dot: #4fa8e8; }
 
-            .links a:hover,
-            .links a:focus-visible {
-                transform: translateY(-4px);
-                box-shadow: var(--shadow-hover);
-                border-color: color-mix(in srgb, var(--dot, var(--accent)) 45%, transparent);
-                outline: none;
+            @media (hover: hover) and (pointer: fine) {
+                .links a:hover {
+                    transform: translateY(-3px);
+                    box-shadow: var(--shadow-hover);
+                    border-color: color-mix(in srgb, var(--dot, var(--accent)) 45%, transparent);
+                }
             }
 
             .links a:focus-visible {
@@ -139,8 +154,11 @@
                 outline-offset: 2px;
             }
 
+            /* 触摸按压反馈：手机上没有 hover，用按下态给出明确响应 */
             .links a:active {
-                transform: translateY(-1px);
+                transform: scale(0.97);
+                background-color: color-mix(in srgb, var(--dot, var(--accent)) 10%, var(--card));
+                border-color: color-mix(in srgb, var(--dot, var(--accent)) 45%, transparent);
             }
 
             @media (prefers-color-scheme: dark) {
@@ -162,18 +180,40 @@
                 }
             }
 
-            @media (max-width: 520px) {
+            /* 平板 / 桌面：手机优先，此处按需放大 */
+            @media (min-width: 560px) {
                 body {
-                    padding: 44px 18px 56px;
+                    padding: 56px 24px calc(72px + env(safe-area-inset-bottom, 0px));
+                }
+
+                header {
+                    margin-bottom: 36px;
+                }
+
+                header h1 {
+                    font-size: clamp(32px, 4vw, 40px);
+                }
+
+                header h1::after {
+                    width: 52px;
+                    height: 4px;
+                    margin-top: 14px;
+                }
+
+                header p {
+                    margin-top: 16px;
+                    font-size: 15px;
                 }
 
                 .links {
-                    grid-template-columns: 1fr;
-                    gap: 14px;
+                    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                    gap: 18px;
                 }
 
                 .links a {
-                    padding: 18px 20px;
+                    min-height: 96px;
+                    padding: 24px 22px;
+                    font-size: 17px;
                 }
             }
 
@@ -183,7 +223,7 @@
                 }
 
                 .links a:hover,
-                .links a:focus-visible {
+                .links a:active {
                     transform: none;
                 }
             }
