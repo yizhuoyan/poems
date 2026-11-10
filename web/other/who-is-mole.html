@@ -439,6 +439,14 @@
 				flex-wrap: wrap;
 				gap: 12px 18px;
 			}
+			.setup-panel .blank-prob-field{
+				grid-column: 1 / -1;
+				flex-wrap: wrap;
+			}
+			.field-hint{
+				font-size: 12px;
+				color: #94a3b8;
+			}
 			.topic-field{
 				display: inline-flex;
 				align-items: center;
@@ -490,7 +498,8 @@
 				box-shadow: 0 0 0 3px rgba(240,140,0,.15);
 			}
 			#playerCountInput,
-			#moleCountInput{
+			#moleCountInput,
+			#blankProbabilityInput{
 				width: 5.5em;
 			}
 			.topic-field input{
@@ -590,6 +599,12 @@
 			}
 			.player.good{
 				background: #fff;
+			}
+			.player.blank{
+				background: linear-gradient(135deg, #74c0fc, #4dabf7);
+				color: #fff;
+				border-color: transparent;
+				box-shadow: 0 10px 24px rgba(77,171,247,.3);
 			}
 			/* 全屏游戏模式 */
 			body.game-fullscreen{
@@ -775,7 +790,8 @@
 					width: 120px;
 				}
 				#playerCountInput,
-				#moleCountInput{
+				#moleCountInput,
+				#blankProbabilityInput{
 					width: 5em;
 				}
 				main#gameTableEL{
@@ -815,6 +831,9 @@
 				</p>
 				<p class="field">
 				<label for="moleCountInput">卧底数量</label><input id="moleCountInput" type="number" value="1" min="1" max="3" step="1" />
+				</p>
+				<p class="field blank-prob-field">
+				<label for="blankProbabilityInput" title="设为 0 表示不含白板">白板概率</label><input id="blankProbabilityInput" type="number" value="0" min="0" max="100" step="5" /><span class="field-hint">% · 每个卧底独立判定，建议 10%~30%</span>
 				</p>
 				<p class="status-row">
 				<span><label>当前轮次</label><strong id="roundInfoEL">第 1 轮</strong></span>
@@ -1404,6 +1423,8 @@
 				"currentRoundInfo":null,
 				//本轮卧底玩家下标（从0开始）
 				"currentMoleIndexes":[],
+				//本轮白板玩家下标（从0开始）
+				"currentBlankIndexes":[],
 				//当前循环还未抽到的题目
 				"topicPool":[],
 				//最近两轮难度，用于保证连续3轮难度不完全相同
@@ -1704,8 +1725,9 @@
 					game.roundHistory.forEach(function(item){
 						var row=document.createElement("tr");
 						var difficultyName=item.difficulty?difficultyNames[item.difficulty]:"—";
+						var blankIndexes=item.blankIndexes||[];
 						var molePlayers=item.moleIndexes&&item.moleIndexes.length?item.moleIndexes.map(function(index){
-							return (index+1)+" 号";
+							return (index+1)+" 号"+(blankIndexes.indexOf(index)>=0?"（白板）":"");
 						}).join("、"):"—";
 						var values=[
 							item.round,
@@ -1751,6 +1773,10 @@
 					if(moleCount>=playerCount){
 						throw new Error("卧底数量必须小于游戏人数")
 					}
+					var blankProbability=parseInt(blankProbabilityInput.value,10);
+					if(isNaN(blankProbability)||blankProbability<0||blankProbability>100){
+						throw new Error("白板概率需在 0-100 之间")
+					}
 					//确定题目
 					var topic=determineTopic();
 					//生成玩家
@@ -1770,7 +1796,8 @@
 						"mole":topic.mole,
 						"category":topic.category,
 						"difficulty":topic.difficulty,
-						"moleIndexes":game.currentMoleIndexes.slice()
+						"moleIndexes":game.currentMoleIndexes.slice(),
+						"blankIndexes":game.currentBlankIndexes.slice()
 					};
 					game.playing=true;
 					updateRoundUI();
@@ -1799,7 +1826,9 @@
 					var p=players[i];
 					p.className="player";
 					var topic=p.getAttribute("data-topic");
-					if(topic==game.currentMoleTopic){
+					if(game.currentBlankIndexes.indexOf(i)>=0){
+						p.classList.add("blank")
+					}else if(topic==game.currentMoleTopic){
 						p.classList.add("mole")
 					}else{
 						p.classList.add("good")
@@ -1823,7 +1852,11 @@
 					return;
 				}
 				var topic=el.getAttribute("data-topic")
-				showTips("你的题目是：<strong>{}</strong>",topic)
+				if(el.getAttribute("data-blank")=="1"){
+					showTips("你是白板，没有题目，请伪装成好人")
+				}else{
+					showTips("你的题目是：<strong>{}</strong>",topic)
+				}
 				game.currentViewIndex++;
 				refreshPlayerViewState();
 			}
@@ -1900,16 +1933,29 @@
 				var moleCount=parseInt(moleCountInput.value,10)
 				var moleIndexArray=pickMoleIndexes(players.length,moleCount);
 				game.currentMoleIndexes=moleIndexArray;
-								
+				//白板概率：每名卧底独立判定是否变成白板
+				var blankProbability=parseInt(blankProbabilityInput.value,10)
+				if(isNaN(blankProbability)||blankProbability<0||blankProbability>100){
+					blankProbability=0
+				}
+				var blankIndexArray=[];
 				for (var i = 0; i < players.length; i++) {
 					var p=players[i]
 					if(moleIndexArray.indexOf(i)>=0){
-						//is mole
-						p.setAttribute("data-topic",game.currentMoleTopic)
+						if(Math.random()*100<blankProbability){
+							//is blank
+							blankIndexArray.push(i)
+							p.setAttribute("data-blank","1")
+							p.setAttribute("data-topic","白板")
+						}else{
+							//is mole
+							p.setAttribute("data-topic",game.currentMoleTopic)
+						}
 					}else{
 						p.setAttribute("data-topic",game.currentPersonTopic)
 					}		
 				}
+				game.currentBlankIndexes=blankIndexArray;
 			}
 		
 			//题库统计按钮
