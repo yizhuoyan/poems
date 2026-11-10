@@ -697,6 +697,15 @@
                 }
             }
 
+            .word-placeholder {
+                margin: 0;
+                color: var(--muted);
+                font-family: var(--font-display);
+                font-size: clamp(22px, 6.4vw, 28px);
+                letter-spacing: 0.18em;
+                text-indent: 0.18em;
+            }
+
             .word-hint {
                 margin: 0;
                 color: var(--dim);
@@ -932,6 +941,8 @@
                 border-radius: 30px;
                 background: linear-gradient(170deg, #261d49, #120e26);
                 box-shadow: 0 30px 90px rgba(0, 0, 0, 0.72);
+                max-height: calc(100dvh - 36px);
+                overflow-y: auto;
                 text-align: center;
                 animation: modal-in 0.28s cubic-bezier(0.2, 0.8, 0.3, 1) both;
             }
@@ -999,6 +1010,54 @@
                 line-height: 1.7;
             }
 
+            .modal-words {
+                width: 100%;
+                margin-top: 2px;
+                padding: 12px 14px;
+                border: 1px solid var(--border);
+                border-radius: 18px;
+                background: rgba(255, 255, 255, 0.035);
+            }
+
+            .modal-words-label {
+                margin: 0 0 8px;
+                color: var(--dim);
+                font-size: 11px;
+                letter-spacing: 0.16em;
+            }
+
+            .modal-word-list {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 8px;
+                margin: 0;
+                padding: 0;
+                list-style: none;
+            }
+
+            .modal-word {
+                display: inline-flex;
+                align-items: baseline;
+                gap: 5px;
+                padding: 5px 11px;
+                border: 1px solid rgba(177, 140, 255, 0.28);
+                border-radius: 999px;
+                background: rgba(177, 140, 255, 0.1);
+                color: var(--ink);
+            }
+
+            .modal-word-index {
+                color: var(--dim);
+                font-size: 10px;
+            }
+
+            .modal-word-text {
+                font-family: var(--font-display);
+                font-size: 18px;
+                letter-spacing: 0.06em;
+            }
+
             .modal-note {
                 margin: 0;
                 color: var(--dim);
@@ -1007,6 +1066,103 @@
 
             .modal-card .btn {
                 margin-top: 6px;
+            }
+
+            .rules-card {
+                align-items: stretch;
+                text-align: left;
+            }
+
+            .rules-card .modal-kicker,
+            .rules-title {
+                text-align: center;
+            }
+
+            .rules-title {
+                margin: 0;
+                font-family: var(--font-display);
+                font-size: 30px;
+                font-weight: 600;
+                letter-spacing: 0.12em;
+            }
+
+            .rules-body {
+                display: flex;
+                flex-direction: column;
+                gap: 14px;
+                width: 100%;
+                max-height: min(52vh, 430px);
+                overflow-y: auto;
+                padding-right: 4px;
+                scrollbar-width: thin;
+                scrollbar-color: rgba(177, 140, 255, 0.35) transparent;
+            }
+
+            .rules-body::-webkit-scrollbar {
+                width: 6px;
+            }
+
+            .rules-body::-webkit-scrollbar-thumb {
+                border-radius: 999px;
+                background: rgba(177, 140, 255, 0.35);
+            }
+
+            .rules-body::-webkit-scrollbar-track {
+                background: transparent;
+            }
+
+            .rules-roles {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .rules-role {
+                display: flex;
+                align-items: flex-start;
+                gap: 10px;
+                color: var(--muted);
+                font-size: 13px;
+                line-height: 1.6;
+            }
+
+            .rules-role .badge {
+                margin-top: 1px;
+                flex: none;
+            }
+
+            .rules-subtitle {
+                margin: 2px 0 0;
+                color: var(--ink);
+                font-size: 14px;
+                font-weight: 600;
+                letter-spacing: 0.06em;
+            }
+
+            .rules-steps {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                margin: 0;
+                padding-left: 1.25em;
+                color: var(--muted);
+                font-size: 13px;
+                line-height: 1.7;
+            }
+
+            .rules-steps li::marker {
+                color: var(--purple);
+            }
+
+            .rules-note {
+                margin: 0;
+                color: var(--dim);
+                font-size: 12px;
+                line-height: 1.7;
+            }
+
+            .rules-card .btn {
+                margin-top: 4px;
             }
 
             /* ---------- 适配 ---------- */
@@ -1055,6 +1211,40 @@
 
                 .word {
                     font-size: clamp(44px, 12vw, 64px);
+                }
+
+                .modal-card {
+                    gap: 8px;
+                    padding: 22px 18px 16px;
+                }
+
+                .role-name {
+                    font-size: 32px;
+                }
+
+                .role-hint {
+                    min-height: 0;
+                    line-height: 1.5;
+                }
+
+                .modal-words {
+                    padding: 8px 10px;
+                }
+
+                .modal-words-label {
+                    margin-bottom: 6px;
+                }
+
+                .modal-note {
+                    font-size: 11px;
+                }
+
+                .rules-title {
+                    font-size: 24px;
+                }
+
+                .rules-body {
+                    max-height: 30vh;
                 }
             }
 
@@ -1152,6 +1342,9 @@
                 <button class="btn btn-primary" id="startBtn" type="button">
                     开始游戏
                 </button>
+                <button class="btn btn-ghost" id="rulesBtn" type="button">
+                    怎么玩
+                </button>
             </section>
 
             <!-- 皇帝准备 -->
@@ -1182,25 +1375,25 @@
                     <p class="lead">看完确认，再交给下一位。</p>
                 </div>
                 <button class="btn btn-primary" id="seerBtn" type="button">
-                    查看我的身份
+                    查看身份和梦词
                 </button>
             </section>
 
             <!-- 看词准备 -->
             <section class="screen" id="screen-wordIntro" hidden>
                 <div class="stage">
-                    <p class="kicker">大臣看词</p>
+                    <p class="kicker">准备猜词</p>
                     <div class="orb" aria-hidden="true"></div>
                     <h1 class="headline">请把手机放在中间</h1>
                     <p class="lead">
-                        皇帝 <b id="wordIntroDreamer">玩家 1</b> 不要看屏幕。
+                        皇帝 <b id="wordIntroDreamer">玩家 1</b> 可以睁眼。
                     </p>
                     <p class="lead">
-                        每位大臣口头给一个词的提示，不能直接说出梦词。
+                        每个词由大臣轮流给一个词的提示，不能直接说出梦词；判定后才揭晓。
                     </p>
                 </div>
                 <button class="btn btn-primary" id="showWordBtn" type="button">
-                    显示第 1 个梦境词
+                    开始猜词
                 </button>
             </section>
 
@@ -1208,10 +1401,13 @@
             <section class="screen" id="screen-word" hidden>
                 <div class="word-top">
                     <span class="kicker" id="wordProgress">第 1 / 3 个梦境词</span>
-                    <span class="pill">皇帝不要看屏幕</span>
+                    <span class="pill" id="wordStatus">判定后揭晓</span>
                 </div>
                 <div class="word-card">
-                    <p class="word" id="wordText"></p>
+                    <p class="word" id="wordText" hidden></p>
+                    <p class="word-placeholder" id="wordPlaceholder">
+                        梦词已隐藏
+                    </p>
                     <p class="word-hint">大臣给提示 · 皇帝猜词</p>
                 </div>
                 <div class="judge" id="judgePanel">
@@ -1307,7 +1503,7 @@
                 class="modal-card"
                 role="dialog"
                 aria-modal="true"
-                aria-label="查看身份"
+                aria-label="查看身份和梦词"
             >
                 <button
                     class="modal-close"
@@ -1320,9 +1516,83 @@
                 <p class="modal-kicker" id="modalPlayer"></p>
                 <p class="role-name" id="roleName"></p>
                 <p class="role-hint" id="roleHint"></p>
+                <div class="modal-words">
+                    <p class="modal-words-label">本轮三个梦境词</p>
+                    <ol class="modal-word-list" id="modalWordList"></ol>
+                </div>
                 <p class="modal-note" id="modalNote"></p>
                 <button class="btn btn-primary" id="modalConfirm" type="button">
                     确认
+                </button>
+            </div>
+        </div>
+
+        <!-- 规则说明 -->
+        <div class="modal" id="rulesModal" hidden>
+            <div class="modal-backdrop" id="rulesBackdrop"></div>
+            <div
+                class="modal-card rules-card"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="rulesTitle"
+            >
+                <button
+                    class="modal-close"
+                    id="rulesClose"
+                    type="button"
+                    aria-label="关闭"
+                >
+                    ×
+                </button>
+                <p class="modal-kicker">4–10 人 · 每轮 3 个梦境词</p>
+                <h2 class="rules-title" id="rulesTitle">怎么玩</h2>
+                <div class="rules-body">
+                    <div class="rules-roles">
+                        <div class="rules-role">
+                            <span class="badge badge-dreamer">皇帝</span>
+                            <span>根据提示猜 3 个梦境词。</span>
+                        </div>
+                        <div class="rules-role">
+                            <span class="badge badge-good">忠臣</span>
+                            <span>提示要帮皇帝猜对。</span>
+                        </div>
+                        <div class="rules-role">
+                            <span class="badge badge-bad">奸臣</span>
+                            <span>提示要引皇帝猜错。</span>
+                        </div>
+                    </div>
+                    <h3 class="rules-subtitle">每轮流程</h3>
+                    <ol class="rules-steps">
+                        <li>皇帝闭眼，手机交给大臣。</li>
+                        <li>
+                            大臣按玩家顺序逐个查看自己的身份和本轮 3 个梦境词，看完确认交给下一位。
+                        </li>
+                        <li>全部看完，手机放中间，皇帝睁眼。</li>
+                        <li>
+                            大臣轮流给一个词的提示，不能直接说出梦词；皇帝猜。
+                        </li>
+                        <li>
+                            每猜完一个词，由大臣点“猜对了”或“猜错了”，揭晓答案；3 个词后结算。
+                        </li>
+                    </ol>
+                    <p class="rules-note">
+                        猜对忠臣阵营 +1，猜错奸臣阵营 +1，只记阵营总分。
+                    </p>
+                    <p class="rules-note">
+                        猜词时梦词隐藏，判定后才揭晓。
+                    </p>
+                    <p class="rules-note">
+                        皇帝不能看身份和梦词；提示不能直接说出梦词本身。
+                    </p>
+                    <p class="rules-note">
+                        不用投票或指认忠奸；本轮结束公布所有身份。
+                    </p>
+                    <p class="rules-note">
+                        下一轮换皇帝，重新分配身份和梦境词。
+                    </p>
+                </div>
+                <button class="btn btn-primary" id="rulesConfirm" type="button">
+                    知道了
                 </button>
             </div>
         </div>
@@ -1381,7 +1651,8 @@
                     "handoffPlayer", "handoffNote", "handoffBtn",
                     "screen-seer", "seerProgress", "seerPlayer", "seerBtn",
                     "screen-wordIntro", "wordIntroDreamer", "showWordBtn",
-                    "screen-word", "wordProgress", "wordText", "judgePanel",
+                    "screen-word", "wordProgress", "wordStatus", "wordText",
+                    "wordPlaceholder", "judgePanel",
                     "correctBtn", "wrongBtn", "resultPanel", "resultTitle",
                     "resultScore", "nextWordBtn", "screen-summary",
                     "summaryKicker", "wordResults", "roundGood", "roundBad",
@@ -1389,7 +1660,9 @@
                     "screen-end", "endTitle", "endRounds", "finalGood",
                     "finalBad", "againBtn", "setupBtn", "modal",
                     "modalBackdrop", "modalClose", "modalPlayer", "roleName",
-                    "roleHint", "modalNote", "modalConfirm"
+                    "roleHint", "modalWordList", "modalNote", "modalConfirm",
+                    "rulesBtn", "rulesModal", "rulesBackdrop", "rulesClose",
+                    "rulesConfirm"
                 ];
 
                 var ui = Object.fromEntries(
@@ -1428,6 +1701,7 @@
 
                 var modalConfirmAction = null;
                 var lastFocused = null;
+                var rulesLastFocused = null;
 
                 /* ---------- 工具 ---------- */
 
@@ -1699,18 +1973,20 @@
                     state.wordIndex = 0;
                     ui.wordIntroDreamer.textContent =
                         "玩家 " + (state.dreamer + 1) + "";
-                    ui.showWordBtn.textContent = "显示第 1 个梦境词";
+                    ui.showWordBtn.textContent = "开始猜词";
                     updateHud();
                     showScreen("wordIntro");
                 }
 
                 function renderWord() {
-                    var word = state.words[state.wordIndex];
                     ui.wordProgress.textContent =
                         "第 " +
                         (state.wordIndex + 1) +
                         " / 3 个梦境词";
-                    ui.wordText.textContent = word;
+                    ui.wordText.textContent = "";
+                    ui.wordText.hidden = true;
+                    ui.wordPlaceholder.hidden = false;
+                    ui.wordStatus.textContent = "判定后揭晓";
                     ui.judgePanel.hidden = false;
                     ui.resultPanel.hidden = true;
                     ui.resultTitle.textContent = "";
@@ -1741,7 +2017,10 @@
                         state.bad += 1;
                     }
 
+                    ui.wordText.hidden = false;
                     ui.wordText.textContent = word;
+                    ui.wordPlaceholder.hidden = true;
+                    ui.wordStatus.textContent = "已揭晓";
                     ui.resultTitle.textContent = correct ? "猜对了" : "猜错了";
                     ui.resultTitle.className =
                         "result-title " + (correct ? "is-good" : "is-bad");
@@ -1835,6 +2114,9 @@
 
                 function clearWordDom() {
                     ui.wordText.textContent = "";
+                    ui.wordText.hidden = false;
+                    ui.wordPlaceholder.hidden = true;
+                    ui.wordStatus.textContent = "判定后揭晓";
                     ui.wordProgress.textContent = "";
                     ui.resultTitle.textContent = "";
                     ui.resultTitle.className = "result-title";
@@ -1877,11 +2159,28 @@
                     ui.roleHint.textContent = isBad
                         ? "你给皇帝的提示，要引他猜错。"
                         : "你给皇帝的提示，要帮他猜对。";
+                    ui.modalWordList.replaceChildren.apply(
+                        ui.modalWordList,
+                        state.words.map(function (word, index) {
+                            var item = el("li", "modal-word");
+                            item.append(
+                                el(
+                                    "span",
+                                    "modal-word-index",
+                                    String(index + 1)
+                                )
+                            );
+                            item.append(
+                                el("span", "modal-word-text", word)
+                            );
+                            return item;
+                        })
+                    );
                     ui.modalNote.textContent = isLast
-                        ? "看完点确认，进入看词。"
+                        ? "确认后把手机放中间，皇帝再睁眼。"
                         : "看完点确认，再交给下一位。";
                     ui.modalConfirm.textContent = isLast
-                        ? "确认，收起手机"
+                        ? "确认，开始猜词"
                         : "确认，交给下一位";
 
                     modalConfirmAction = function advance() {
@@ -1909,6 +2208,7 @@
                     ui.roleName.textContent = "";
                     ui.roleName.className = "role-name";
                     ui.roleHint.textContent = "";
+                    ui.modalWordList.replaceChildren();
                     ui.modalNote.textContent = "";
                     ui.modalConfirm.textContent = "确认";
                     modalConfirmAction = null;
@@ -1924,6 +2224,54 @@
                     closeModal();
                     if (action) {
                         action();
+                    }
+                }
+
+                function openRulesModal() {
+                    if (!ui.modal.hidden) {
+                        return;
+                    }
+                    rulesLastFocused = document.activeElement;
+                    ui.rulesModal.hidden = false;
+                    ui.app.setAttribute("inert", "");
+                    document.body.classList.add("modal-open");
+                    ui.rulesClose.focus({ preventScroll: true });
+                }
+
+                function closeRulesModal() {
+                    if (ui.rulesModal.hidden) {
+                        return;
+                    }
+                    ui.rulesModal.hidden = true;
+                    ui.app.removeAttribute("inert");
+                    document.body.classList.remove("modal-open");
+                    if (
+                        rulesLastFocused &&
+                        typeof rulesLastFocused.focus === "function"
+                    ) {
+                        rulesLastFocused.focus({ preventScroll: true });
+                    }
+                    rulesLastFocused = null;
+                }
+
+                function handleModalKey(event, first, last, close) {
+                    if (event.key === "Escape") {
+                        event.preventDefault();
+                        close();
+                        return;
+                    }
+                    if (event.key !== "Tab") {
+                        return;
+                    }
+                    if (event.shiftKey && document.activeElement === first) {
+                        event.preventDefault();
+                        last.focus();
+                    } else if (
+                        !event.shiftKey &&
+                        document.activeElement === last
+                    ) {
+                        event.preventDefault();
+                        first.focus();
                     }
                 }
 
@@ -1984,29 +2332,28 @@
                 ui.modalClose.addEventListener("click", closeModal);
                 ui.modalBackdrop.addEventListener("click", closeModal);
 
+                ui.rulesBtn.addEventListener("click", openRulesModal);
+                ui.rulesClose.addEventListener("click", closeRulesModal);
+                ui.rulesConfirm.addEventListener("click", closeRulesModal);
+                ui.rulesBackdrop.addEventListener("click", closeRulesModal);
+
                 document.addEventListener("keydown", function (event) {
-                    if (ui.modal.hidden) {
+                    if (!ui.modal.hidden) {
+                        handleModalKey(
+                            event,
+                            ui.modalClose,
+                            ui.modalConfirm,
+                            closeModal
+                        );
                         return;
                     }
-                    if (event.key === "Escape") {
-                        event.preventDefault();
-                        closeModal();
-                        return;
-                    }
-                    if (event.key !== "Tab") {
-                        return;
-                    }
-                    var first = ui.modalClose;
-                    var last = ui.modalConfirm;
-                    if (event.shiftKey && document.activeElement === first) {
-                        event.preventDefault();
-                        last.focus();
-                    } else if (
-                        !event.shiftKey &&
-                        document.activeElement === last
-                    ) {
-                        event.preventDefault();
-                        first.focus();
+                    if (!ui.rulesModal.hidden) {
+                        handleModalKey(
+                            event,
+                            ui.rulesClose,
+                            ui.rulesConfirm,
+                            closeRulesModal
+                        );
                     }
                 });
 
