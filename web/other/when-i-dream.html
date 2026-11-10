@@ -505,29 +505,12 @@
                 letter-spacing: 0.2em;
             }
 
-            .chips {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 8px;
-            }
-
-            .chip {
-                padding: 7px 12px;
-                border: 1px solid var(--border-soft);
-                border-radius: 999px;
-                background: rgba(255, 255, 255, 0.045);
-                color: var(--muted);
-                font-size: 12px;
-                letter-spacing: 0.04em;
-            }
-
             .comp {
                 display: flex;
                 flex-wrap: wrap;
                 justify-content: center;
                 gap: 6px;
-                margin: 14px 0 0;
+                margin: 4px 0 0;
             }
 
             .comp-item {
@@ -1157,7 +1140,6 @@
                             +
                         </button>
                     </div>
-                    <div class="chips" id="playerChips"></div>
                     <p class="comp" id="compLine"></p>
                 </section>
 
@@ -1172,13 +1154,15 @@
                     <p class="kicker" id="handoffKicker">第 1 轮</p>
                     <div class="orb" aria-hidden="true"></div>
                     <h1 class="headline" id="handoffTitle">
-                        请把手机交给皇帝
+                        请皇帝闭眼或背对屏幕
                     </h1>
                     <p class="player-tag" id="handoffPlayer">玩家 1</p>
-                    <p class="lead" id="handoffNote">其他人先不要看屏幕</p>
+                    <p class="lead" id="handoffNote">
+                        把手机交给大臣，等叫到名字再睁眼
+                    </p>
                 </div>
                 <button class="btn btn-primary" id="handoffBtn" type="button">
-                    我准备好了
+                    大臣开始查看
                 </button>
             </section>
 
@@ -1386,7 +1370,7 @@
                 var ids = [
                     "app", "hud", "hudRound", "hudDreamer", "hudGood",
                     "hudBad", "screen-setup", "startBtn", "minusBtn",
-                    "plusBtn", "countValue", "playerChips", "compLine",
+                    "plusBtn", "countValue", "compLine",
                     "screen-handoff", "handoffKicker", "handoffTitle",
                     "handoffPlayer", "handoffNote", "handoffBtn",
                     "screen-seer", "seerProgress", "seerPlayer", "seerBtn",
@@ -1436,7 +1420,6 @@
                     lastWords: []
                 };
 
-                var handoffStage = 1;
                 var modalConfirmAction = null;
                 var lastFocused = null;
 
@@ -1611,7 +1594,6 @@
 
                     clearWordDom();
                     clearSummaryDom();
-                    handoffStage = 1;
                     renderHandoff();
                     updateHud();
                     showScreen("handoff");
@@ -1660,19 +1642,9 @@
                     ui.minusBtn.disabled = state.playerCount <= MIN_PLAYERS;
                     ui.plusBtn.disabled = state.playerCount >= MAX_PLAYERS;
 
-                    var chips = [];
-                    for (var i = 0; i < state.playerCount; i += 1) {
-                        chips.push(el("span", "chip", "玩家 " + (i + 1)));
-                    }
-                    ui.playerChips.replaceChildren.apply(
-                        ui.playerChips,
-                        chips
-                    );
-
                     var seers = state.playerCount - 1;
                     var bad = nightmareCountFor(state.playerCount);
                     ui.compLine.replaceChildren(
-                        el("span", "comp-item", "大臣 " + seers + " 人"),
                         el(
                             "span",
                             "comp-item is-good",
@@ -1690,17 +1662,10 @@
                     ui.handoffKicker.textContent = "第 " + state.round + " 轮";
                     ui.handoffPlayer.textContent =
                         "玩家 " + (state.dreamer + 1);
-
-                    if (handoffStage === 1) {
-                        ui.handoffTitle.textContent = "请把手机交给皇帝";
-                        ui.handoffNote.textContent = "其他人先不要看屏幕";
-                        ui.handoffBtn.textContent = "我准备好了";
-                    } else {
-                        ui.handoffTitle.textContent = "请闭眼或背对屏幕";
-                        ui.handoffNote.textContent =
-                            "把手机交给其他玩家，等叫到你再睁眼";
-                        ui.handoffBtn.textContent = "大臣开始查看";
-                    }
+                    ui.handoffTitle.textContent = "请皇帝闭眼或背对屏幕";
+                    ui.handoffNote.textContent =
+                        "把手机交给大臣，等叫到名字再睁眼";
+                    ui.handoffBtn.textContent = "大臣开始查看";
                 }
 
                 function renderSeer() {
@@ -1975,14 +1940,7 @@
 
                 ui.startBtn.addEventListener("click", startGame);
 
-                ui.handoffBtn.addEventListener("click", function () {
-                    if (handoffStage === 1) {
-                        handoffStage = 2;
-                        renderHandoff();
-                        return;
-                    }
-                    renderSeer();
-                });
+                ui.handoffBtn.addEventListener("click", renderSeer);
 
                 ui.seerBtn.addEventListener("click", openRoleModal);
 
