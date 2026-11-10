@@ -195,22 +195,6 @@
                 line-height: 1.6;
             }
 
-            .meta-row {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 8px;
-                margin-top: 18px;
-            }
-
-            .meta-pill {
-                padding: 7px 11px;
-                border: 1px solid var(--border);
-                border-radius: 999px;
-                color: var(--muted);
-                font-size: 12px;
-                letter-spacing: 0.02em;
-            }
-
             .panel {
                 padding: 20px;
                 border: 1px solid var(--border);
@@ -411,14 +395,6 @@
                 border-color: rgba(255, 77, 109, 0.3);
                 background: rgba(255, 77, 109, 0.12);
                 color: #ff9bad;
-            }
-
-            .footnote {
-                margin: 16px 0 0;
-                color: var(--muted-2);
-                font-size: 12px;
-                line-height: 1.6;
-                text-align: center;
             }
 
             /* ---------- 通用顶部 ---------- */
@@ -1113,11 +1089,6 @@
                     <p class="brand-mark">SPYFALL</p>
                     <h1>间谍在哪</h1>
                     <p class="tagline">一台手机，轮流查看身份。谁在假装知道地点？</p>
-                    <div class="meta-row">
-                        <span class="meta-pill">3–10 人</span>
-                        <span class="meta-pill">30 个地点</span>
-                        <span class="meta-pill">纯本地运行</span>
-                    </div>
                 </header>
 
                 <section class="panel" aria-labelledby="playerCountLabel">
@@ -1154,7 +1125,7 @@
                 <section class="panel rules" aria-labelledby="rulesTitle">
                     <h2 id="rulesTitle">怎么玩</h2>
                     <ol class="rules-list">
-                        <li>每人依次<strong>按住卡片</strong>查看身份，松手立即隐藏。</li>
+                        <li>每人依次<strong>点击卡片</strong>查看身份，确认后自动进入下一位。</li>
                         <li>大多数人拿到<strong>同一个地点</strong>和不同身份；1 人是间谍，不知道地点。</li>
                         <li>轮流提问回答，不能直接说出地点。回答要像知道，但别太具体。</li>
                         <li>结束后口头揭晓间谍和地点。App 不投票、不判定胜负、不计分。</li>
@@ -1166,7 +1137,6 @@
                         开始发身份
                     </button>
                 </div>
-                <p class="footnote">无需联网 · 不收集任何数据 · 最多 10 人</p>
             </section>
 
             <!-- 发身份页 -->
