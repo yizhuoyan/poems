@@ -1,0 +1,1935 @@
+<!doctype html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+        />
+        <meta name="color-scheme" content="dark" />
+        <meta name="theme-color" content="#0a0b0f" />
+        <link
+            rel="icon"
+            href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230a0b0f'/%3E%3Ccircle cx='32' cy='32' r='12' fill='%23efc47a'/%3E%3C/svg%3E"
+        />
+        <title>独家暗语 · Just One</title>
+        <style>
+            :root {
+                color-scheme: dark;
+                --bg: #0a0b0f;
+                --surface: #151821;
+                --surface-2: #1c202b;
+                --border: rgba(255, 255, 255, 0.08);
+                --border-strong: rgba(255, 255, 255, 0.14);
+                --text: #f6f1e6;
+                --muted: #a7a093;
+                --muted-2: #958e81;
+                --gold: #efc47a;
+                --gold-bright: #ffe4a8;
+                --gold-dim: rgba(239, 196, 122, 0.12);
+                --danger: #ff9b9b;
+                --radius: 24px;
+                --shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+                --font:
+                    system-ui, -apple-system, "Segoe UI", "PingFang SC",
+                    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            [hidden] {
+                display: none !important;
+            }
+
+            html {
+                min-height: 100%;
+                background: var(--bg);
+            }
+
+            body {
+                margin: 0;
+                min-height: 100vh;
+                min-height: 100dvh;
+                display: flex;
+                flex-direction: column;
+                padding-top: max(18px, env(safe-area-inset-top, 0px));
+                padding-right: max(18px, env(safe-area-inset-right, 0px));
+                padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+                padding-left: max(18px, env(safe-area-inset-left, 0px));
+                overflow-x: hidden;
+                background:
+                    radial-gradient(
+                        760px 520px at 8% -8%,
+                        rgba(239, 196, 122, 0.15),
+                        transparent 66%
+                    ),
+                    radial-gradient(
+                        620px 460px at 108% 18%,
+                        rgba(255, 120, 90, 0.1),
+                        transparent 68%
+                    ),
+                    radial-gradient(
+                        760px 560px at 50% 112%,
+                        rgba(239, 196, 122, 0.05),
+                        transparent 70%
+                    ),
+                    var(--bg);
+                color: var(--text);
+                font-family: var(--font);
+                -webkit-font-smoothing: antialiased;
+                -webkit-text-size-adjust: 100%;
+                text-size-adjust: 100%;
+                overscroll-behavior-y: contain;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            body.modal-open {
+                overflow: hidden;
+            }
+
+            ::selection {
+                background: rgba(239, 196, 122, 0.28);
+            }
+
+            button,
+            input {
+                font: inherit;
+            }
+
+            button {
+                cursor: pointer;
+            }
+
+            button:disabled {
+                cursor: not-allowed;
+            }
+
+            :focus-visible {
+                outline: 2px solid var(--gold);
+                outline-offset: 3px;
+            }
+
+            .title:focus,
+            .display:focus,
+            .answer:focus,
+            .end-rounds:focus,
+            .hero-title:focus {
+                outline: none;
+            }
+
+            #app {
+                position: relative;
+                z-index: 1;
+                display: flex;
+                flex: 1;
+                flex-direction: column;
+                width: 100%;
+                max-width: 560px;
+                margin: 0 auto;
+            }
+
+            .topbar {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                min-height: 48px;
+                padding-bottom: 14px;
+            }
+
+            .brand {
+                display: flex;
+                align-items: center;
+                gap: 9px;
+                color: var(--muted);
+                font-size: 13px;
+                font-weight: 700;
+                letter-spacing: 0.18em;
+                white-space: nowrap;
+            }
+
+            .brand-dot {
+                width: 7px;
+                height: 7px;
+                border-radius: 50%;
+                background: var(--gold);
+                box-shadow: 0 0 14px rgba(239, 196, 122, 0.85);
+            }
+
+            .top-actions {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            #stage {
+                display: flex;
+                flex: 1;
+                flex-direction: column;
+                gap: 14px;
+                min-height: 0;
+                padding: 6px 0 10px;
+            }
+
+            .status {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 8px;
+                padding: 0 2px;
+            }
+
+            .chip {
+                display: inline-flex;
+                align-items: center;
+                min-height: 30px;
+                padding: 4px 11px;
+                border: 1px solid var(--border);
+                border-radius: 999px;
+                background: rgba(255, 255, 255, 0.035);
+                color: var(--muted);
+                font-size: 12px;
+                font-weight: 600;
+                letter-spacing: 0.03em;
+            }
+
+            .screen {
+                display: flex;
+                flex: 1;
+                flex-direction: column;
+                justify-content: center;
+                gap: 18px;
+                width: 100%;
+                min-height: 0;
+            }
+
+            .panel {
+                position: relative;
+                width: 100%;
+                padding: 26px 22px;
+                overflow: hidden;
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                background: linear-gradient(
+                    165deg,
+                    rgba(32, 36, 48, 0.94),
+                    rgba(18, 20, 28, 0.97)
+                );
+                box-shadow: var(--shadow);
+            }
+
+            .panel::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                right: 12%;
+                left: 12%;
+                height: 1px;
+                background: linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.22),
+                    transparent
+                );
+                pointer-events: none;
+            }
+
+            .btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                min-height: 52px;
+                padding: 0 22px;
+                border: 1px solid transparent;
+                border-radius: 16px;
+                background: transparent;
+                color: var(--text);
+                font-size: 16px;
+                font-weight: 700;
+                letter-spacing: 0.02em;
+                line-height: 1.2;
+                text-align: center;
+                touch-action: manipulation;
+                user-select: none;
+                transition:
+                    transform 0.15s ease,
+                    background 0.15s ease,
+                    border-color 0.15s ease,
+                    box-shadow 0.15s ease,
+                    opacity 0.15s ease;
+            }
+
+            .btn:active {
+                transform: translateY(1px) scale(0.995);
+            }
+
+            .btn.primary {
+                background: linear-gradient(
+                    180deg,
+                    #ffe4a8 0%,
+                    #efc47a 52%,
+                    #d7a553 100%
+                );
+                color: #241b0a;
+                box-shadow:
+                    0 14px 32px rgba(239, 196, 122, 0.2),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+            }
+
+            .btn.secondary {
+                border-color: var(--border-strong);
+                background: rgba(255, 255, 255, 0.055);
+                color: var(--text);
+            }
+
+            .btn.ghost {
+                border-color: var(--border);
+                background: transparent;
+                color: var(--muted);
+            }
+
+            .btn.danger {
+                border-color: rgba(255, 120, 120, 0.34);
+                background: rgba(255, 110, 110, 0.12);
+                color: var(--danger);
+            }
+
+            .btn.small {
+                min-height: 44px;
+                padding: 0 14px;
+                border-radius: 13px;
+                font-size: 13.5px;
+                font-weight: 600;
+            }
+
+            .btn.block {
+                width: 100%;
+            }
+
+            .btn:disabled {
+                opacity: 0.35;
+                transform: none;
+            }
+
+            .eyebrow {
+                margin: 0;
+                color: var(--gold);
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 0.2em;
+                line-height: 1.4;
+                text-transform: uppercase;
+            }
+
+            .display {
+                margin: 0;
+                font-size: clamp(30px, 9vw, 44px);
+                font-weight: 800;
+                letter-spacing: -0.02em;
+                line-height: 1.24;
+                text-align: center;
+                text-wrap: balance;
+            }
+
+            .display .accent {
+                color: var(--gold);
+            }
+
+            .title {
+                margin: 0;
+                font-size: clamp(27px, 8vw, 34px);
+                font-weight: 800;
+                letter-spacing: -0.02em;
+                line-height: 1.25;
+                text-wrap: balance;
+            }
+
+            .lede {
+                margin: 0;
+                color: var(--muted);
+                font-size: 14.5px;
+                line-height: 1.7;
+            }
+
+            .note {
+                margin: 0;
+                color: var(--muted-2);
+                font-size: 12.5px;
+                line-height: 1.65;
+                text-align: center;
+            }
+
+            .helper {
+                margin: 0;
+                color: var(--muted-2);
+                font-size: 12.5px;
+                line-height: 1.6;
+            }
+
+            .error {
+                margin: 0;
+                color: #ffb2a8;
+                font-size: 13px;
+                line-height: 1.5;
+            }
+
+            .hero {
+                padding: 8px 4px 2px;
+            }
+
+            .kicker {
+                margin: 0 0 10px;
+                color: var(--gold);
+                font-size: 10.5px;
+                font-weight: 700;
+                letter-spacing: 0.34em;
+            }
+
+            .hero-title {
+                margin: 0;
+                font-size: clamp(44px, 14vw, 66px);
+                font-weight: 800;
+                letter-spacing: -0.035em;
+                line-height: 1.02;
+                text-wrap: balance;
+            }
+
+            .hero-sub {
+                margin: 14px 0 0;
+                color: var(--muted);
+                font-size: 15px;
+                line-height: 1.7;
+            }
+
+            .setup-view {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                gap: 22px;
+            }
+
+            .setup-card {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .field-head {
+                display: flex;
+                align-items: baseline;
+                justify-content: space-between;
+                gap: 12px;
+            }
+
+            .field-label {
+                font-size: 15px;
+                font-weight: 700;
+                letter-spacing: 0.02em;
+            }
+
+            .field-note {
+                color: var(--muted-2);
+                font-size: 12.5px;
+            }
+
+            .stepper {
+                display: grid;
+                grid-template-columns: 56px minmax(0, 1fr) 56px;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .step-btn {
+                min-height: 56px;
+                border: 1px solid var(--border-strong);
+                border-radius: 16px;
+                background: rgba(255, 255, 255, 0.05);
+                color: var(--text);
+                font-size: 26px;
+                font-weight: 500;
+                line-height: 1;
+                transition:
+                    background 0.15s ease,
+                    border-color 0.15s ease,
+                    opacity 0.15s ease;
+            }
+
+            .step-btn:active {
+                background: rgba(239, 196, 122, 0.12);
+            }
+
+            .count {
+                color: var(--gold);
+                font-size: 40px;
+                font-weight: 800;
+                font-variant-numeric: tabular-nums;
+                line-height: 1;
+                text-align: center;
+            }
+
+            .setup-note {
+                margin: 0;
+                color: var(--muted-2);
+                font-size: 13px;
+                line-height: 1.65;
+            }
+
+            .handoff {
+                display: flex;
+                flex-direction: column;
+                gap: 14px;
+                padding: 34px 24px;
+                text-align: center;
+            }
+
+            .handoff .eyebrow,
+            .handoff .lede {
+                text-align: center;
+            }
+
+            .handoff .btn {
+                margin-top: 8px;
+            }
+
+            .input-panel {
+                display: flex;
+                flex-direction: column;
+                gap: 18px;
+            }
+
+            .input-head {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+            }
+
+            .player-tag {
+                display: inline-flex;
+                align-items: center;
+                min-height: 28px;
+                padding: 3px 10px;
+                border: 1px solid rgba(239, 196, 122, 0.25);
+                border-radius: 999px;
+                background: var(--gold-dim);
+                color: var(--gold);
+                font-size: 11.5px;
+                font-weight: 700;
+                letter-spacing: 0.04em;
+                white-space: nowrap;
+            }
+
+            .answer-card {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 6px;
+                padding: 20px 18px;
+                border: 1px solid rgba(239, 196, 122, 0.22);
+                border-radius: 20px;
+                background: linear-gradient(
+                    180deg,
+                    rgba(239, 196, 122, 0.11),
+                    rgba(239, 196, 122, 0.035)
+                );
+                text-align: center;
+            }
+
+            .micro-label {
+                color: var(--gold);
+                font-size: 10.5px;
+                font-weight: 700;
+                letter-spacing: 0.22em;
+            }
+
+            .answer {
+                color: var(--gold-bright);
+                font-weight: 800;
+                letter-spacing: 0.06em;
+                line-height: 1.15;
+                overflow-wrap: anywhere;
+            }
+
+            .answer-mid {
+                font-size: clamp(38px, 12vw, 52px);
+            }
+
+            .answer-xl {
+                font-size: clamp(56px, 18vw, 88px);
+                text-align: center;
+                text-shadow: 0 0 42px rgba(239, 196, 122, 0.3);
+            }
+
+            .hint-form {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .label-row {
+                display: flex;
+                align-items: baseline;
+                justify-content: space-between;
+                gap: 12px;
+            }
+
+            .input {
+                width: 100%;
+                min-height: 58px;
+                padding: 0 16px;
+                border: 1px solid var(--border-strong);
+                border-radius: 16px;
+                outline: none;
+                background: #0d0f15;
+                color: var(--text);
+                font-size: 18px;
+                font-weight: 600;
+                letter-spacing: 0.03em;
+                -webkit-appearance: none;
+                appearance: none;
+                transition:
+                    border-color 0.15s ease,
+                    box-shadow 0.15s ease;
+            }
+
+            .input::placeholder {
+                color: var(--muted-2);
+                font-weight: 400;
+                letter-spacing: 0;
+            }
+
+            .input:focus {
+                border-color: rgba(239, 196, 122, 0.6);
+                box-shadow: 0 0 0 3px rgba(239, 196, 122, 0.12);
+            }
+
+            .guess-panel,
+            .reveal-panel {
+                display: flex;
+                flex-direction: column;
+                gap: 18px;
+            }
+
+            .view-head {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .hint-list {
+                display: grid;
+                gap: 10px;
+            }
+
+            .hint-list.dense {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 8px;
+            }
+
+            .hint-list.dense .hint-card {
+                min-height: 56px;
+                padding: 12px 10px;
+                font-size: 19px;
+                letter-spacing: 0.03em;
+            }
+
+            .hint-list.dense .hint-card:last-child:nth-child(odd) {
+                grid-column: 1 / -1;
+            }
+
+            .hint-card {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 64px;
+                padding: 17px 20px;
+                border: 1px solid var(--border);
+                border-radius: 18px;
+                background: linear-gradient(
+                    180deg,
+                    rgba(255, 255, 255, 0.055),
+                    rgba(255, 255, 255, 0.025)
+                );
+                color: #fff8ea;
+                font-size: 22px;
+                font-weight: 700;
+                letter-spacing: 0.04em;
+                line-height: 1.4;
+                overflow-wrap: anywhere;
+                text-align: center;
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            }
+
+            .empty-hints {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 6px;
+                padding: 26px 20px;
+                border: 1px dashed rgba(255, 255, 255, 0.14);
+                border-radius: 18px;
+                background: rgba(255, 255, 255, 0.02);
+                text-align: center;
+            }
+
+            .empty-title {
+                margin: 0;
+                color: var(--muted);
+                font-size: 18px;
+                font-weight: 700;
+            }
+
+            .empty-copy {
+                margin: 0;
+                color: var(--muted-2);
+                font-size: 13px;
+                line-height: 1.6;
+            }
+
+            .reveal-panel {
+                padding: 30px 22px;
+                text-align: center;
+            }
+
+            .summary {
+                display: flex;
+                align-items: baseline;
+                justify-content: center;
+                gap: 6px;
+                margin: 0;
+                color: var(--muted);
+                font-size: 13px;
+                line-height: 1.6;
+            }
+
+            .summary strong {
+                color: var(--gold);
+                font-size: 18px;
+                font-weight: 800;
+            }
+
+            .actions {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .end-panel {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 18px;
+                padding: 36px 24px;
+                text-align: center;
+            }
+
+            .end-rounds {
+                display: flex;
+                align-items: baseline;
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .end-rounds strong {
+                color: var(--gold);
+                font-size: clamp(64px, 22vw, 96px);
+                font-weight: 800;
+                letter-spacing: -0.04em;
+                line-height: 1;
+            }
+
+            .end-rounds span {
+                color: var(--muted);
+                font-size: 18px;
+                font-weight: 700;
+            }
+
+            .end-meta {
+                margin: 0;
+                color: var(--muted-2);
+                font-size: 13px;
+                line-height: 1.6;
+            }
+
+            .end-panel .actions {
+                width: 100%;
+            }
+
+            .modal {
+                position: fixed;
+                inset: 0;
+                z-index: 100;
+                display: flex;
+                align-items: flex-end;
+                justify-content: center;
+                padding: 16px;
+                padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+            }
+
+            .modal-backdrop {
+                position: absolute;
+                inset: 0;
+                background: rgba(4, 5, 8, 0.72);
+                -webkit-backdrop-filter: blur(6px);
+                backdrop-filter: blur(6px);
+            }
+
+            .modal-card {
+                position: relative;
+                z-index: 1;
+                width: 100%;
+                max-width: 430px;
+                padding: 24px;
+                border: 1px solid var(--border-strong);
+                border-radius: 24px;
+                background: linear-gradient(170deg, #1c202b, #11131a);
+                box-shadow: var(--shadow);
+                animation: modal-rise 0.18s ease-out;
+            }
+
+            @keyframes modal-rise {
+                from {
+                    opacity: 0;
+                    transform: translateY(14px);
+                }
+                to {
+                    opacity: 1;
+                    transform: none;
+                }
+            }
+
+            .modal-title {
+                margin: 0 0 10px;
+                font-size: 21px;
+                font-weight: 800;
+                letter-spacing: -0.01em;
+            }
+
+            .modal-body {
+                color: var(--muted);
+                font-size: 14px;
+                line-height: 1.75;
+            }
+
+            .modal-text {
+                margin: 0;
+            }
+
+            .rules {
+                display: grid;
+                gap: 8px;
+                margin: 0;
+                padding-left: 1.15em;
+            }
+
+            .rules li {
+                padding-left: 2px;
+            }
+
+            .rules li::marker {
+                color: var(--gold);
+            }
+
+            .modal-actions {
+                display: flex;
+                gap: 10px;
+                margin-top: 22px;
+            }
+
+            .modal-actions .btn {
+                flex: 1;
+                min-height: 48px;
+                padding: 0 12px;
+                font-size: 14.5px;
+            }
+
+            .noscript {
+                position: fixed;
+                inset: 0;
+                display: grid;
+                place-items: center;
+                padding: 24px;
+                background: var(--bg);
+                color: var(--text);
+                font-family: var(--font);
+                font-size: 16px;
+                text-align: center;
+            }
+
+            @media (min-width: 520px) {
+                .modal {
+                    align-items: center;
+                }
+            }
+
+            @media (max-height: 600px) and (orientation: landscape) {
+                body {
+                    padding-top: max(8px, env(safe-area-inset-top, 0px));
+                    padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+                }
+
+                .topbar {
+                    min-height: 40px;
+                    padding-bottom: 6px;
+                }
+
+                #stage {
+                    padding-top: 2px;
+                }
+
+                .screen {
+                    justify-content: flex-start;
+                    gap: 12px;
+                }
+
+                .panel {
+                    padding: 20px;
+                }
+
+                .handoff {
+                    gap: 10px;
+                    padding: 22px;
+                }
+
+                .display {
+                    font-size: clamp(24px, 4.5vw, 32px);
+                }
+
+                .answer-xl {
+                    font-size: clamp(44px, 11vw, 64px);
+                }
+
+                .setup-view {
+                    display: grid;
+                    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+                    align-items: center;
+                    justify-content: initial;
+                    gap: 24px;
+                }
+
+                .hero {
+                    padding: 0;
+                }
+
+                .hero-title {
+                    font-size: clamp(32px, 6.5vw, 44px);
+                }
+
+                .hero-sub {
+                    margin-top: 10px;
+                    font-size: 13px;
+                }
+
+                .setup-card {
+                    gap: 14px;
+                    padding: 20px;
+                }
+
+                .stepper {
+                    grid-template-columns: 48px minmax(0, 1fr) 48px;
+                    gap: 8px;
+                }
+
+                .step-btn {
+                    min-height: 48px;
+                    font-size: 22px;
+                }
+
+                .count {
+                    font-size: 32px;
+                }
+
+                .setup-note {
+                    font-size: 12px;
+                }
+
+                .end-panel {
+                    padding: 24px;
+                }
+
+                .end-rounds strong {
+                    font-size: 64px;
+                }
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                *,
+                *::before,
+                *::after {
+                    animation-duration: 0.01ms !important;
+                    animation-iteration-count: 1 !important;
+                    scroll-behavior: auto !important;
+                    transition-duration: 0.01ms !important;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <header class="topbar">
+                <div class="brand">
+                    <span class="brand-dot" aria-hidden="true"></span>独家暗语
+                </div>
+                <div class="top-actions" id="top-actions"></div>
+            </header>
+            <main id="stage"></main>
+        </div>
+
+        <div class="modal" id="modal" hidden>
+            <div class="modal-backdrop" id="modal-backdrop"></div>
+            <div
+                class="modal-card"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="modal-title"
+                aria-describedby="modal-body"
+            >
+                <h2 class="modal-title" id="modal-title"></h2>
+                <div class="modal-body" id="modal-body"></div>
+                <div class="modal-actions" id="modal-actions"></div>
+            </div>
+        </div>
+
+        <noscript>
+            <div class="noscript">请启用 JavaScript 后开始游戏。</div>
+        </noscript>
+
+        <script>
+            (function () {
+                "use strict";
+
+                const MIN_PLAYERS = 3;
+                const MAX_PLAYERS = 10;
+                const SETTINGS_KEY = "just-one:settings:v1";
+
+                const WORDS = [
+                    "苹果",
+                    "香蕉",
+                    "西瓜",
+                    "葡萄",
+                    "橘子",
+                    "草莓",
+                    "桃子",
+                    "菠萝",
+                    "芒果",
+                    "樱桃",
+                    "柠檬",
+                    "柚子",
+                    "石榴",
+                    "椰子",
+                    "面包",
+                    "蛋糕",
+                    "饺子",
+                    "火锅",
+                    "冰淇淋",
+                    "巧克力",
+                    "咖啡",
+                    "牛奶",
+                    "米饭",
+                    "面条",
+                    "包子",
+                    "披萨",
+                    "汉堡",
+                    "薯条",
+                    "粽子",
+                    "月饼",
+                    "糖果",
+                    "饼干",
+                    "鸡蛋",
+                    "豆腐",
+                    "玉米",
+                    "红薯",
+                    "花生",
+                    "蜂蜜",
+                    "酸奶",
+                    "爆米花",
+                    "老虎",
+                    "大象",
+                    "熊猫",
+                    "长颈鹿",
+                    "企鹅",
+                    "海豚",
+                    "鲸鱼",
+                    "兔子",
+                    "狮子",
+                    "猴子",
+                    "松鼠",
+                    "蝴蝶",
+                    "蜜蜂",
+                    "猫头鹰",
+                    "孔雀",
+                    "乌龟",
+                    "螃蟹",
+                    "章鱼",
+                    "蜗牛",
+                    "青蛙",
+                    "骆驼",
+                    "斑马",
+                    "袋鼠",
+                    "刺猬",
+                    "蝙蝠",
+                    "鲨鱼",
+                    "海星",
+                    "水母",
+                    "雨伞",
+                    "牙刷",
+                    "杯子",
+                    "枕头",
+                    "钥匙",
+                    "剪刀",
+                    "眼镜",
+                    "电脑",
+                    "电视",
+                    "冰箱",
+                    "空调",
+                    "洗衣机",
+                    "沙发",
+                    "台灯",
+                    "镜子",
+                    "梳子",
+                    "毛巾",
+                    "拖鞋",
+                    "钱包",
+                    "背包",
+                    "手表",
+                    "相机",
+                    "钢琴",
+                    "吉他",
+                    "篮球",
+                    "足球",
+                    "风筝",
+                    "积木",
+                    "蜡烛",
+                    "水壶",
+                    "闹钟",
+                    "扫帚",
+                    "雨衣",
+                    "手套",
+                    "围巾",
+                    "帽子",
+                    "画笔",
+                    "尺子",
+                    "橡皮",
+                    "书包",
+                    "电风扇",
+                    "微波炉",
+                    "热水器",
+                    "吹风机",
+                    "行李箱",
+                    "充电器",
+                    "耳机",
+                    "麦克风",
+                    "望远镜",
+                    "放大镜",
+                    "指南针",
+                    "自行车",
+                    "公交车",
+                    "地铁",
+                    "飞机",
+                    "轮船",
+                    "火车",
+                    "摩托车",
+                    "出租车",
+                    "热气球",
+                    "滑板",
+                    "帆船",
+                    "学校",
+                    "医院",
+                    "银行",
+                    "超市",
+                    "公园",
+                    "车站",
+                    "图书馆",
+                    "电影院",
+                    "博物馆",
+                    "幼儿园",
+                    "游乐场",
+                    "加油站",
+                    "理发店",
+                    "咖啡馆",
+                    "火车站",
+                    "机场",
+                    "商场",
+                    "餐厅",
+                    "酒店",
+                    "体育馆",
+                    "游泳馆",
+                    "停车场",
+                    "动物园",
+                    "植物园",
+                    "水族馆",
+                    "天文馆",
+                    "太阳",
+                    "月亮",
+                    "星星",
+                    "彩虹",
+                    "雪花",
+                    "火山",
+                    "沙漠",
+                    "瀑布",
+                    "森林",
+                    "岛屿",
+                    "草原",
+                    "闪电",
+                    "龙卷风",
+                    "冰川",
+                    "流星",
+                    "云朵",
+                    "海浪",
+                    "峡谷",
+                    "珊瑚",
+                    "贝壳",
+                    "露珠",
+                    "晚霞",
+                    "医生",
+                    "老师",
+                    "厨师",
+                    "警察",
+                    "消防员",
+                    "宇航员",
+                    "理发师",
+                    "快递员",
+                    "气球",
+                    "地图",
+                    "时钟",
+                    "礼物",
+                    "帐篷",
+                    "灯塔",
+                    "城堡",
+                    "火箭",
+                    "机器人",
+                    "显微镜",
+                    "游泳池",
+                    "旋转木马",
+                    "摩天轮",
+                    "舞台",
+                    "剧院",
+                    "邮局",
+                    "消防车",
+                    "救护车",
+                    "警车",
+                    "垃圾车",
+                    "挖掘机",
+                    "拖拉机",
+                    "起重机",
+                    "潜水艇",
+                    "直升机",
+                ];
+
+                const appEl = document.getElementById("app");
+                const stageEl = document.getElementById("stage");
+                const topActionsEl = document.getElementById("top-actions");
+                const modalEl = document.getElementById("modal");
+                const modalBackdropEl = document.getElementById("modal-backdrop");
+                const modalTitleEl = document.getElementById("modal-title");
+                const modalBodyEl = document.getElementById("modal-body");
+                const modalActionsEl = document.getElementById("modal-actions");
+
+                const state = {
+                    screen: "setup",
+                    players: loadPlayers(),
+                    round: 1,
+                    completedRounds: 0,
+                    guesser: 1,
+                    answer: "",
+                    hinterOrder: [],
+                    hinterIndex: 0,
+                    hints: [],
+                    validHints: [],
+                    usedWords: [],
+                    lastWord: "",
+                };
+
+                let lastFocused = null;
+
+                function el(tag, className, text) {
+                    const node = document.createElement(tag);
+                    if (className) node.className = className;
+                    if (text !== undefined && text !== null) {
+                        node.textContent = String(text);
+                    }
+                    return node;
+                }
+
+                function append(parent, ...children) {
+                    for (const child of children) {
+                        if (child === null || child === undefined || child === false) {
+                            continue;
+                        }
+                        parent.append(child);
+                    }
+                    return parent;
+                }
+
+                function button(label, variant, onClick) {
+                    const node = el("button", "btn" + (variant ? " " + variant : ""), label);
+                    node.type = "button";
+                    if (onClick) node.addEventListener("click", onClick);
+                    return node;
+                }
+
+                function normalizeHint(text) {
+                    return text
+                        .trim()
+                        .toLowerCase()
+                        .replace(/[\s\p{P}\p{S}]/gu, "");
+                }
+
+                function loadPlayers() {
+                    try {
+                        const raw = window.localStorage.getItem(SETTINGS_KEY);
+                        if (!raw) return 4;
+                        const saved = JSON.parse(raw);
+                        const value = Number(saved && saved.players);
+                        if (
+                            Number.isInteger(value) &&
+                            value >= MIN_PLAYERS &&
+                            value <= MAX_PLAYERS
+                        ) {
+                            return value;
+                        }
+                    } catch (error) {
+                        // localStorage 不可用时使用默认人数
+                    }
+                    return 4;
+                }
+
+                function savePlayers() {
+                    try {
+                        window.localStorage.setItem(
+                            SETTINGS_KEY,
+                            JSON.stringify({ players: state.players }),
+                        );
+                    } catch (error) {
+                        // 忽略存储不可用
+                    }
+                }
+
+                function pickWord() {
+                    let pool = WORDS.filter(
+                        (word) =>
+                            word !== state.lastWord && !state.usedWords.includes(word),
+                    );
+                    if (pool.length === 0) {
+                        state.usedWords = [];
+                        pool = WORDS.filter((word) => word !== state.lastWord);
+                    }
+                    if (pool.length === 0) {
+                        pool = WORDS.slice();
+                    }
+                    const word = pool[Math.floor(Math.random() * pool.length)];
+                    state.usedWords.push(word);
+                    state.lastWord = word;
+                    return word;
+                }
+
+                function beginGame() {
+                    savePlayers();
+                    state.round = 1;
+                    state.completedRounds = 0;
+                    state.guesser = 1;
+                    state.usedWords = [];
+                    state.lastWord = "";
+                    startRound();
+                }
+
+                function startRound() {
+                    state.answer = pickWord();
+                    state.hints = [];
+                    state.validHints = [];
+                    state.hinterOrder = [];
+                    state.hinterIndex = 0;
+                    for (let player = 1; player <= state.players; player += 1) {
+                        if (player !== state.guesser) state.hinterOrder.push(player);
+                    }
+                    state.screen = "hinter-handoff";
+                    render();
+                }
+
+                function nextRound() {
+                    state.round += 1;
+                    state.guesser = state.guesser >= state.players ? 1 : state.guesser + 1;
+                    startRound();
+                }
+
+                function computeValidHints() {
+                    const counts = new Map();
+                    for (const hint of state.hints) {
+                        counts.set(hint.key, (counts.get(hint.key) || 0) + 1);
+                    }
+                    state.validHints = state.hints.filter(
+                        (hint) => counts.get(hint.key) === 1,
+                    );
+                }
+
+                function validateHint(raw) {
+                    if (!raw) return "请输入一个提示词。";
+                    if ([...raw].length > 12) return "提示最多 12 个字。";
+                    if (!normalizeHint(raw)) return "提示需要包含文字。";
+                    if (raw === state.answer) return "提示不能与谜底相同。";
+                    for (const char of state.answer) {
+                        if (raw.includes(char)) return "提示不能包含谜底中的字。";
+                    }
+                    return "";
+                }
+
+                function endGame() {
+                    state.screen = "end";
+                    state.answer = "";
+                    state.hints = [];
+                    state.validHints = [];
+                    state.hinterOrder = [];
+                    state.hinterIndex = 0;
+                    render();
+                }
+
+                function backToSetup() {
+                    state.screen = "setup";
+                    state.answer = "";
+                    state.hints = [];
+                    state.validHints = [];
+                    state.hinterOrder = [];
+                    state.hinterIndex = 0;
+                    render();
+                }
+
+                function render() {
+                    window.scrollTo(0, 0);
+                    stageEl.replaceChildren();
+                    renderTopActions();
+
+                    if (state.screen === "setup") {
+                        const screen = el("div", "screen");
+                        screen.append(setupView());
+                        stageEl.append(screen);
+                    } else if (state.screen === "end") {
+                        const screen = el("div", "screen");
+                        screen.append(endView());
+                        stageEl.append(screen);
+                    } else {
+                        stageEl.append(statusBar());
+                        const screen = el("div", "screen");
+                        screen.append(gameView());
+                        stageEl.append(screen);
+                    }
+
+                    requestAnimationFrame(() => {
+                        const target = stageEl.querySelector(
+                            '[data-autofocus="true"]',
+                        );
+                        if (target) target.focus({ preventScroll: true });
+                    });
+                }
+
+                function renderTopActions() {
+                    topActionsEl.replaceChildren();
+                    if (state.screen === "setup" || state.screen === "end") {
+                        topActionsEl.append(
+                            button("玩法", "ghost small", openRules),
+                        );
+                    } else {
+                        topActionsEl.append(
+                            button("结束", "ghost small", confirmEnd),
+                        );
+                    }
+                }
+
+                function statusBar() {
+                    const bar = el("div", "status");
+                    bar.setAttribute("aria-label", "对局状态");
+                    bar.append(
+                        el("span", "chip", "第 " + state.round + " 轮"),
+                        el("span", "chip", "猜词人 " + state.guesser + " 号"),
+                    );
+                    return bar;
+                }
+
+                function gameView() {
+                    switch (state.screen) {
+                        case "hinter-handoff":
+                            return hinterHandoffView();
+                        case "hint-input":
+                            return hintInputView();
+                        case "guesser-handoff":
+                            return guesserHandoffView();
+                        case "guess":
+                            return guessView();
+                        case "reveal":
+                            return revealView();
+                        default:
+                            return el("div", "panel");
+                    }
+                }
+
+                function setupView() {
+                    const wrap = el("div", "setup-view");
+                    const hero = el("section", "hero");
+                    append(
+                        hero,
+                        el("p", "kicker", "JUST ONE"),
+                        el("h1", "hero-title", "独家暗语"),
+                        el(
+                            "p",
+                            "hero-sub",
+                            "每轮一个谜底，每人一个提示。",
+                        ),
+                    );
+
+                    const card = el("section", "panel setup-card");
+                    const head = el("div", "field-head");
+                    append(
+                        head,
+                        el("span", "field-label", "玩家人数"),
+                        el(
+                            "span",
+                            "field-note",
+                            MIN_PLAYERS + "–" + MAX_PLAYERS + " 人",
+                        ),
+                    );
+
+                    const countEl = el("div", "count", state.players);
+                    countEl.setAttribute("aria-live", "polite");
+                    countEl.setAttribute("aria-atomic", "true");
+
+                    const minus = el("button", "step-btn", "−");
+                    minus.type = "button";
+                    minus.setAttribute("aria-label", "减少一位玩家");
+
+                    const plus = el("button", "step-btn", "+");
+                    plus.type = "button";
+                    plus.setAttribute("aria-label", "增加一位玩家");
+
+                    const update = (delta) => {
+                        const next = Math.min(
+                            MAX_PLAYERS,
+                            Math.max(MIN_PLAYERS, state.players + delta),
+                        );
+                        if (next === state.players) return;
+                        state.players = next;
+                        countEl.textContent = String(next);
+                        minus.disabled = next <= MIN_PLAYERS;
+                        plus.disabled = next >= MAX_PLAYERS;
+                        savePlayers();
+                    };
+
+                    minus.disabled = state.players <= MIN_PLAYERS;
+                    plus.disabled = state.players >= MAX_PLAYERS;
+                    minus.addEventListener("click", () => update(-1));
+                    plus.addEventListener("click", () => update(1));
+
+                    const stepper = el("div", "stepper");
+                    append(stepper, minus, countEl, plus);
+
+                    const note = el(
+                        "p",
+                        "setup-note",
+                        "猜词人每轮轮换；相同的提示会全部作废。",
+                    );
+
+                    const start = button("开始游戏", "primary block", beginGame);
+                    append(card, head, stepper, note, start);
+                    append(wrap, hero, card);
+                    return wrap;
+                }
+
+                function hinterHandoffView() {
+                    const isFirst = state.hinterIndex === 0;
+                    const player = state.hinterOrder[state.hinterIndex];
+                    const panel = el("section", "panel handoff");
+
+                    const eyebrowText = isFirst
+                        ? "第 " + state.round + " 轮 · 第一位提示者"
+                        : "提示 " +
+                          (state.hinterIndex + 1) +
+                          " / " +
+                          state.hinterOrder.length;
+                    const eyebrow = el("p", "eyebrow", eyebrowText);
+
+                    const title = el("h1", "display");
+                    title.append(
+                        "请把手机交给",
+                        el("br"),
+                        el("span", "accent", player + " 号玩家"),
+                    );
+
+                    const lede = el(
+                        "p",
+                        "lede",
+                        isFirst
+                            ? "猜词人 " +
+                                  state.guesser +
+                                  " 号请回避；其他玩家依次查看谜底并输入提示。"
+                            : "只查看谜底并输入提示，不要说出声。",
+                    );
+
+                    const action = button(
+                        "我是 " + player + " 号，开始提示",
+                        "primary block",
+                        () => {
+                            state.screen = "hint-input";
+                            render();
+                        },
+                    );
+                    action.dataset.autofocus = "true";
+
+                    append(panel, eyebrow, title, lede, action);
+                    return panel;
+                }
+
+                function hintInputView() {
+                    const player = state.hinterOrder[state.hinterIndex];
+                    const panel = el("section", "panel input-panel");
+
+                    const head = el("div", "input-head");
+                    append(
+                        head,
+                        el(
+                            "p",
+                            "eyebrow",
+                            "提示 " +
+                                (state.hinterIndex + 1) +
+                                " / " +
+                                state.hinterOrder.length,
+                        ),
+                        el("span", "player-tag", player + " 号玩家"),
+                    );
+
+                    const answerCard = el("div", "answer-card");
+                    append(
+                        answerCard,
+                        el("span", "micro-label", "本轮谜底"),
+                        el("div", "answer answer-mid", state.answer),
+                    );
+
+                    const form = el("form", "hint-form");
+                    form.noValidate = true;
+
+                    const labelRow = el("div", "label-row");
+                    const label = el("label", "field-label", "你的提示");
+                    label.htmlFor = "hint-input";
+                    append(
+                        labelRow,
+                        label,
+                        el("span", "field-note", "1–12 字"),
+                    );
+
+                    const input = el("input", "input");
+                    input.id = "hint-input";
+                    input.type = "text";
+                    input.maxLength = 12;
+                    input.placeholder = "输入一个词";
+                    input.autocomplete = "off";
+                    input.setAttribute("autocapitalize", "off");
+                    input.setAttribute("autocorrect", "off");
+                    input.setAttribute("spellcheck", "false");
+                    input.setAttribute("enterkeyhint", "done");
+
+                    const error = el("p", "error");
+                    error.id = "hint-error";
+                    error.hidden = true;
+                    error.setAttribute("role", "alert");
+
+                    const helper = el("p", "helper", "不能出现谜底中的字。");
+                    const submit = el("button", "btn primary block", "提交提示");
+                    submit.type = "submit";
+
+                    append(form, labelRow, input, error, helper, submit);
+
+                    input.addEventListener("input", () => {
+                        error.hidden = true;
+                    });
+
+                    form.addEventListener("submit", (event) => {
+                        event.preventDefault();
+                        const raw = input.value.trim();
+                        const message = validateHint(raw);
+                        if (message) {
+                            error.textContent = message;
+                            error.hidden = false;
+                            input.focus();
+                            return;
+                        }
+                        state.hints.push({
+                            player: player,
+                            text: raw,
+                            key: normalizeHint(raw),
+                        });
+                        input.value = "";
+                        state.hinterIndex += 1;
+                        state.screen =
+                            state.hinterIndex < state.hinterOrder.length
+                                ? "hinter-handoff"
+                                : "guesser-handoff";
+                        render();
+                    });
+
+                    const note = el(
+                        "p",
+                        "note",
+                        "提交后不能修改；其他提示者看不到你的内容。",
+                    );
+                    append(panel, head, answerCard, form, note);
+                    input.dataset.autofocus = "true";
+                    return panel;
+                }
+
+                function guesserHandoffView() {
+                    const panel = el("section", "panel handoff");
+                    const title = el("h1", "display");
+                    title.append(
+                        "请把手机交给",
+                        el("br"),
+                        "猜词人 ",
+                        el("span", "accent", state.guesser + " 号"),
+                    );
+                    const lede = el(
+                        "p",
+                        "lede",
+                        "只有猜词人能看到这些提示。重复的提示已经作废。",
+                    );
+                    const action = button(
+                        "我是猜词人，查看提示",
+                        "primary block",
+                        () => {
+                            computeValidHints();
+                            state.screen = "guess";
+                            render();
+                        },
+                    );
+                    action.dataset.autofocus = "true";
+                    append(panel, el("p", "eyebrow", "提示已收集"), title, lede, action);
+                    return panel;
+                }
+
+                function guessView() {
+                    const panel = el("section", "panel guess-panel");
+                    const head = el("div", "view-head");
+                    const title = el("h1", "title", "根据提示，猜出谜底");
+                    title.tabIndex = -1;
+                    title.dataset.autofocus = "true";
+                    head.append(title);
+                    panel.append(head);
+
+                    if (state.validHints.length > 0) {
+                        const list = el("div", "hint-list");
+                        if (state.validHints.length > 6) list.classList.add("dense");
+                        list.setAttribute("aria-label", "本轮有效提示");
+                        for (const hint of state.validHints) {
+                            const card = el("div", "hint-card");
+                            card.textContent = hint.text;
+                            list.append(card);
+                        }
+                        panel.append(list);
+                    } else {
+                        const empty = el("div", "empty-hints");
+                        append(
+                            empty,
+                            el("p", "empty-title", "没有可用提示"),
+                            el(
+                                "p",
+                                "empty-copy",
+                                "提示全部重复作废，仍可以继续猜。",
+                            ),
+                        );
+                        panel.append(empty);
+                    }
+
+                    panel.append(el("p", "note", "先口头说出答案，再查看谜底。"));
+                    const reveal = button("查看答案", "primary block", () => {
+                        state.completedRounds += 1;
+                        state.screen = "reveal";
+                        render();
+                    });
+                    panel.append(reveal);
+                    return panel;
+                }
+
+                function revealView() {
+                    const panel = el("section", "panel reveal-panel");
+                    panel.append(el("p", "eyebrow", "本轮谜底"));
+
+                    const answer = el("div", "answer answer-xl", state.answer);
+                    answer.tabIndex = -1;
+                    answer.dataset.autofocus = "true";
+                    panel.append(answer);
+
+                    const summary = el("p", "summary");
+                    summary.append(
+                        "本轮有效提示 ",
+                        el("strong", "", String(state.validHints.length)),
+                        " 条",
+                    );
+                    panel.append(summary);
+
+                    const actions = el("div", "actions");
+                    append(
+                        actions,
+                        button("下一轮", "primary block", nextRound),
+                        button("结束本局", "secondary block", confirmEnd),
+                    );
+                    panel.append(actions);
+                    return panel;
+                }
+
+                function endView() {
+                    const panel = el("section", "panel end-panel");
+                    const eyebrow = el("h1", "eyebrow", "本局结束");
+
+                    const count = el("div", "end-rounds");
+                    count.append(
+                        el("strong", "", String(state.completedRounds)),
+                        el("span", "", "轮"),
+                    );
+                    count.tabIndex = -1;
+                    count.dataset.autofocus = "true";
+                    count.setAttribute(
+                        "aria-label",
+                        "本局结束，已完成 " + state.completedRounds + " 轮",
+                    );
+
+                    const meta = el(
+                        "p",
+                        "end-meta",
+                        state.completedRounds > 0
+                            ? "已完成轮数"
+                            : "本局尚未完成一轮",
+                    );
+
+                    const actions = el("div", "actions");
+                    append(
+                        actions,
+                        button("再来一局", "primary block", beginGame),
+                        button("返回设置", "secondary block", backToSetup),
+                    );
+
+                    append(panel, eyebrow, count, meta, actions);
+                    return panel;
+                }
+
+                function openModal(options) {
+                    lastFocused = document.activeElement;
+                    modalTitleEl.textContent = options.title || "";
+                    modalBodyEl.replaceChildren();
+                    if (options.text) {
+                        modalBodyEl.append(el("p", "modal-text", options.text));
+                    }
+                    if (options.list) {
+                        const list = el("ul", "rules");
+                        for (const item of options.list) {
+                            list.append(el("li", "", item));
+                        }
+                        modalBodyEl.append(list);
+                    }
+                    modalActionsEl.replaceChildren();
+
+                    const actionButtons = [];
+                    for (const action of options.actions || []) {
+                        const node = button(
+                            action.label,
+                            action.variant || "secondary",
+                            () => {
+                                closeModal();
+                                if (action.onSelect) action.onSelect();
+                            },
+                        );
+                        modalActionsEl.append(node);
+                        actionButtons.push(node);
+                    }
+
+                    modalEl.hidden = false;
+                    appEl.inert = true;
+                    document.body.classList.add("modal-open");
+                    document.addEventListener("keydown", onModalKeydown);
+
+                    requestAnimationFrame(() => {
+                        if (actionButtons.length > 0) {
+                            actionButtons[0].focus({ preventScroll: true });
+                        }
+                    });
+                }
+
+                function closeModal() {
+                    if (modalEl.hidden) return;
+                    modalEl.hidden = true;
+                    appEl.inert = false;
+                    document.body.classList.remove("modal-open");
+                    document.removeEventListener("keydown", onModalKeydown);
+                    modalTitleEl.textContent = "";
+                    modalBodyEl.replaceChildren();
+                    modalActionsEl.replaceChildren();
+
+                    const target = lastFocused;
+                    lastFocused = null;
+                    if (
+                        target &&
+                        typeof target.focus === "function" &&
+                        document.contains(target)
+                    ) {
+                        target.focus({ preventScroll: true });
+                    }
+                }
+
+                function onModalKeydown(event) {
+                    if (event.key === "Escape") {
+                        event.preventDefault();
+                        closeModal();
+                        return;
+                    }
+                    if (event.key !== "Tab") return;
+
+                    const focusables = Array.from(
+                        modalEl.querySelectorAll("button:not([disabled])"),
+                    );
+                    if (focusables.length === 0) return;
+                    const first = focusables[0];
+                    const last = focusables[focusables.length - 1];
+                    if (event.shiftKey && document.activeElement === first) {
+                        event.preventDefault();
+                        last.focus();
+                    } else if (!event.shiftKey && document.activeElement === last) {
+                        event.preventDefault();
+                        first.focus();
+                    }
+                }
+
+                function openRules() {
+                    openModal({
+                        title: "玩法",
+                        list: [
+                            "每轮一名猜词人，其他玩家依次传阅手机，各写一个词作为提示。",
+                            "提示不能为空，最多 12 字；不能与谜底相同，也不能出现谜底中的字。",
+                            "相同的提示全部作废；猜词人只看到没有重复的提示。",
+                            "猜词人口头猜答案，再点击查看谜底；顶部「结束」可随时结束本局。",
+                        ],
+                        actions: [{ label: "知道了", variant: "primary" }],
+                    });
+                }
+
+                function confirmEnd() {
+                    const text =
+                        state.completedRounds > 0
+                            ? "当前已完成 " + state.completedRounds + " 轮。"
+                            : "当前尚未完成一轮。";
+                    openModal({
+                        title: "结束本局？",
+                        text: text,
+                        actions: [
+                            { label: "继续游戏", variant: "ghost" },
+                            {
+                                label: "结束本局",
+                                variant: "danger",
+                                onSelect: endGame,
+                            },
+                        ],
+                    });
+                }
+
+                modalBackdropEl.addEventListener("click", closeModal);
+                render();
+            })();
+        </script>
+    </body>
+</html>
