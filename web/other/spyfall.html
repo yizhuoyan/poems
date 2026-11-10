@@ -532,7 +532,7 @@
                 color: var(--text);
                 cursor: pointer;
                 text-align: center;
-                touch-action: none;
+                touch-action: manipulation;
                 user-select: none;
                 -webkit-user-select: none;
                 -webkit-touch-callout: none;
@@ -563,43 +563,18 @@
                 pointer-events: none;
             }
 
-            .identity-card.is-spy {
-                border-color: rgba(255, 77, 109, 0.55);
-                background: linear-gradient(155deg, #2a1420 0%, #170e15 60%, #0d0a10 100%);
-            }
-
-            .identity-card.is-spy::before {
-                background: radial-gradient(closest-side, rgba(255, 77, 109, 0.3), transparent);
-            }
-
             .identity-card:focus-visible {
                 outline: 2px solid #ffd166;
                 outline-offset: 3px;
             }
 
-            .card-lock,
-            .card-reveal {
+            .card-lock {
                 position: relative;
                 z-index: 1;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 gap: 12px;
-            }
-
-            .card-reveal:not([hidden]) {
-                animation: reveal-in 0.18s ease both;
-            }
-
-            @keyframes reveal-in {
-                from {
-                    opacity: 0;
-                    transform: scale(0.97);
-                }
-                to {
-                    opacity: 1;
-                    transform: scale(1);
-                }
             }
 
             .lock-glyph {
@@ -653,18 +628,6 @@
                 color: #c9d2e6;
                 font-size: 16px;
                 line-height: 1.6;
-            }
-
-            .identity-card.is-spy .reveal-kicker {
-                color: #ff9bad;
-            }
-
-            .identity-card.is-spy .reveal-title {
-                color: #ff8fa2;
-            }
-
-            .deal-actions {
-                margin-top: 18px;
             }
 
             .privacy-note {
@@ -1009,6 +972,66 @@
                 margin-top: 22px;
             }
 
+            /* ---------- 身份弹窗 ---------- */
+
+            .identity-dialog {
+                display: flex;
+                width: 100%;
+                max-width: 400px;
+                flex-direction: column;
+                align-items: center;
+                padding: 30px 24px 24px;
+                border: 1px solid var(--border-strong);
+                border-radius: 28px;
+                background: linear-gradient(155deg, #1a2134 0%, #101624 60%, #0d1220 100%);
+                box-shadow: var(--shadow);
+                text-align: center;
+                animation: modal-in 0.2s ease both;
+            }
+
+            .identity-dialog.is-spy {
+                border-color: rgba(255, 77, 109, 0.55);
+                background: linear-gradient(155deg, #2a1420 0%, #170e15 60%, #0d0a10 100%);
+            }
+
+            .identity-dialog .eyebrow {
+                margin-bottom: 18px;
+            }
+
+            .identity-dialog .reveal-kicker,
+            .identity-dialog .reveal-title,
+            .identity-dialog .reveal-role {
+                display: block;
+            }
+
+            .identity-dialog .reveal-title {
+                margin-top: 8px;
+            }
+
+            .identity-dialog .reveal-role {
+                margin-top: 10px;
+            }
+
+            .identity-dialog.is-spy .reveal-kicker {
+                color: #ff9bad;
+            }
+
+            .identity-dialog.is-spy .reveal-title {
+                color: #ff8fa2;
+            }
+
+            .identity-dialog-actions {
+                width: 100%;
+                margin-top: 24px;
+            }
+
+            .identity-dialog-note {
+                margin: 12px 0 0;
+                color: var(--muted-2);
+                font-size: 12px;
+                line-height: 1.6;
+            }
+
             /* ---------- 适配 ---------- */
 
             @media (min-width: 480px) {
@@ -1066,9 +1089,9 @@
 
             @media (prefers-reduced-motion: reduce) {
                 .screen,
-                .card-reveal:not([hidden]),
                 .sheet,
-                .modal {
+                .modal,
+                .identity-dialog {
                     animation: none;
                 }
 
@@ -1165,28 +1188,19 @@
                         class="identity-card"
                         id="identityCard"
                         type="button"
-                        aria-label="按住查看身份，松手隐藏"
+                        aria-label="点击查看身份"
                         aria-describedby="privacyNote"
+                        aria-haspopup="dialog"
                     >
                         <span class="card-lock" id="cardLock">
                             <span class="lock-glyph" aria-hidden="true"></span>
-                            <span class="lock-title">按住查看身份</span>
-                            <span class="lock-sub">松手立即隐藏</span>
-                        </span>
-                        <span class="card-reveal" id="cardReveal" hidden>
-                            <span class="reveal-kicker" id="revealKicker"></span>
-                            <span class="reveal-title" id="revealTitle"></span>
-                            <span class="reveal-role" id="revealRole"></span>
+                            <span class="lock-title">点击查看身份</span>
+                            <span class="lock-sub">确认后进入下一位</span>
                         </span>
                     </button>
 
-                    <div class="deal-actions">
-                        <button class="btn primary" id="nextBtn" type="button" disabled>
-                            我记住了，下一位
-                        </button>
-                    </div>
                     <p class="privacy-note" id="privacyNote">
-                        身份只在按住时显示，松手即隐藏；松手后点「下一位」（键盘可按住空格）
+                        身份会显示在弹窗中，请确认周围没人偷看；确认后自动进入下一位
                     </p>
                 </div>
             </section>
@@ -1310,6 +1324,33 @@
                         结束本局
                     </button>
                 </div>
+            </section>
+        </div>
+
+        <!-- 身份弹窗 -->
+        <div class="modal-backdrop" id="identityBackdrop" hidden>
+            <section
+                class="identity-dialog"
+                id="identityDialog"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="identityDialogTitle"
+                aria-describedby="identityKicker identityTitle identityRole"
+            >
+                <p class="eyebrow" id="identityDialogTitle"></p>
+                <span class="reveal-kicker" id="identityKicker"></span>
+                <span class="reveal-title" id="identityTitle"></span>
+                <span class="reveal-role" id="identityRole"></span>
+                <div class="identity-dialog-actions">
+                    <button
+                        class="btn primary"
+                        id="identityConfirmBtn"
+                        type="button"
+                    >
+                        我记住了，下一位
+                    </button>
+                </div>
+                <p class="identity-dialog-note" id="identityDialogNote"></p>
             </section>
         </div>
 
@@ -1795,12 +1836,14 @@
                     dealProgressFill: document.getElementById("dealProgressFill"),
                     dealPlayerName: document.getElementById("dealPlayerName"),
                     identityCard: document.getElementById("identityCard"),
-                    cardLock: document.getElementById("cardLock"),
-                    cardReveal: document.getElementById("cardReveal"),
-                    revealKicker: document.getElementById("revealKicker"),
-                    revealTitle: document.getElementById("revealTitle"),
-                    revealRole: document.getElementById("revealRole"),
-                    nextBtn: document.getElementById("nextBtn"),
+                    identityBackdrop: document.getElementById("identityBackdrop"),
+                    identityDialog: document.getElementById("identityDialog"),
+                    identityDialogTitle: document.getElementById("identityDialogTitle"),
+                    identityKicker: document.getElementById("identityKicker"),
+                    identityTitle: document.getElementById("identityTitle"),
+                    identityRole: document.getElementById("identityRole"),
+                    identityConfirmBtn: document.getElementById("identityConfirmBtn"),
+                    identityDialogNote: document.getElementById("identityDialogNote"),
                     discussRoundLabel: document.getElementById("discussRoundLabel"),
                     endBtn: document.getElementById("endBtn"),
                     timerStatus: document.getElementById("timerStatus"),
@@ -1827,15 +1870,9 @@
                     dealIndex: 0,
                     assignments: [],
                     location: null,
-                    viewed: false,
                     lastSpyIndex: null,
                     lastLocationIndex: null,
                     endElapsed: 0
-                };
-
-                var reveal = {
-                    active: false,
-                    pointerId: null
                 };
 
                 var timer = {
@@ -1870,38 +1907,24 @@
                         startGame();
                     });
 
-                    els.identityCard.addEventListener("pointerdown", handleRevealStart);
-                    els.identityCard.addEventListener("pointerup", handleRevealEnd);
-                    els.identityCard.addEventListener("pointercancel", handleRevealEnd);
-                    els.identityCard.addEventListener("lostpointercapture", handleRevealEnd);
-                    els.identityCard.addEventListener("keydown", handleRevealKeyDown);
-                    els.identityCard.addEventListener("keyup", handleRevealKeyUp);
-                    els.identityCard.addEventListener("blur", forceHideIdentity);
+                    els.identityCard.addEventListener("click", openIdentityModal);
                     els.identityCard.addEventListener("contextmenu", function (event) {
                         event.preventDefault();
                     });
-
-                    window.addEventListener("pointerup", function () {
-                        if (reveal.active) {
-                            finishReveal();
-                        }
-                    });
-
-                    window.addEventListener("pointercancel", function () {
-                        if (reveal.active) {
-                            finishReveal();
+                    els.identityConfirmBtn.addEventListener("click", confirmIdentity);
+                    els.identityBackdrop.addEventListener("click", function (event) {
+                        if (event.target === els.identityBackdrop) {
+                            closeIdentityModal(true);
                         }
                     });
 
                     document.addEventListener("visibilitychange", function () {
                         if (document.hidden) {
-                            forceHideIdentity();
+                            closeIdentityModal(false);
                         } else {
                             renderTimer();
                         }
                     });
-
-                    els.nextBtn.addEventListener("click", nextPlayer);
 
                     els.pauseBtn.addEventListener("click", function () {
                         if (timer.running) {
@@ -1938,7 +1961,9 @@
                         if (event.key !== "Escape") {
                             return;
                         }
-                        if (!els.sheetBackdrop.hidden) {
+                        if (!els.identityBackdrop.hidden) {
+                            closeIdentityModal(true);
+                        } else if (!els.sheetBackdrop.hidden) {
                             closeSheet();
                         } else if (!els.confirmBackdrop.hidden) {
                             closeConfirm(true);
@@ -1976,6 +2001,7 @@
                 }
 
                 function showSetup() {
+                    closeIdentityModal(false);
                     stopTimer();
                     resetTimer();
                     state.round = 1;
@@ -1983,7 +2009,6 @@
                     state.lastLocationIndex = null;
                     state.assignments = [];
                     state.location = null;
-                    state.viewed = false;
                     setScreen(els.setupScreen);
                 }
 
@@ -2016,7 +2041,6 @@
                     }
 
                     state.dealIndex = 0;
-                    state.viewed = false;
                     resetTimer();
                     renderDeal();
                     setScreen(els.dealScreen);
@@ -2029,146 +2053,83 @@
 
                 function renderDeal() {
                     var playerNumber = state.dealIndex + 1;
-                    var isLast = state.dealIndex === state.playerCount - 1;
 
                     els.dealRoundLabel.textContent = "第 " + state.round + " 局";
                     els.dealProgress.textContent = playerNumber + " / " + state.playerCount;
                     els.dealProgressFill.style.width =
                         ((playerNumber / state.playerCount) * 100).toFixed(2) + "%";
                     els.dealPlayerName.textContent = "玩家 " + playerNumber;
-                    els.nextBtn.textContent = isLast
-                        ? "我记住了，开始讨论"
-                        : "我记住了，下一位";
-                    els.nextBtn.disabled = true;
-                    state.viewed = false;
-                    reveal.active = false;
-                    reveal.pointerId = null;
-                    clearIdentity();
+                    clearIdentityDialog();
                 }
 
-                function nextPlayer() {
-                    if (!state.viewed) {
-                        return;
-                    }
-
-                    if (state.dealIndex < state.playerCount - 1) {
-                        state.dealIndex += 1;
-                        state.viewed = false;
-                        renderDeal();
-                        return;
-                    }
-
-                    startDiscussion();
-                }
-
-                function handleRevealStart(event) {
-                    if (event.pointerType === "mouse" && event.button !== 0) {
-                        return;
-                    }
-                    reveal.active = true;
-                    reveal.pointerId = event.pointerId;
-
-                    try {
-                        els.identityCard.setPointerCapture(event.pointerId);
-                    } catch (error) {
-                        // 某些浏览器不支持指针捕获，window 上的 pointerup 仍可兜底
-                    }
-
-                    showIdentity();
-                    event.preventDefault();
-                }
-
-                function handleRevealEnd() {
-                    if (reveal.active) {
-                        finishReveal();
-                    }
-                }
-
-                function handleRevealKeyDown(event) {
-                    if (event.key !== " " && event.key !== "Enter") {
-                        return;
-                    }
-                    event.preventDefault();
-                    if (!event.repeat) {
-                        showIdentity();
-                    }
-                }
-
-                function handleRevealKeyUp(event) {
-                    if (event.key !== " " && event.key !== "Enter") {
-                        return;
-                    }
-                    event.preventDefault();
-                    if (reveal.active) {
-                        finishReveal();
-                    }
-                }
-
-                function showIdentity() {
+                function openIdentityModal() {
                     var assignment = state.assignments[state.dealIndex];
-
                     if (!assignment) {
                         return;
                     }
 
-                    reveal.active = true;
-                    els.cardLock.hidden = true;
-                    els.cardReveal.hidden = false;
-                    els.identityCard.classList.toggle("is-spy", assignment.spy);
+                    var isLast = state.dealIndex === state.playerCount - 1;
+                    els.identityDialogTitle.textContent =
+                        "玩家 " + (state.dealIndex + 1) + " 的身份";
+                    els.identityDialog.classList.toggle("is-spy", assignment.spy);
 
                     if (assignment.spy) {
-                        els.revealKicker.textContent = "你的身份";
-                        els.revealTitle.textContent = "间谍";
-                        els.revealRole.textContent =
+                        els.identityKicker.textContent = "你的身份";
+                        els.identityTitle.textContent = "间谍";
+                        els.identityRole.textContent =
                             "你知道自己是间谍，但不知道地点。观察大家，别暴露。";
-                        els.identityCard.setAttribute(
-                            "aria-label",
-                            "你的身份是间谍。你知道自己是间谍，但不知道地点。"
-                        );
                     } else {
-                        els.revealKicker.textContent = "你的地点";
-                        els.revealTitle.textContent = state.location.name;
-                        els.revealRole.textContent = "你的身份：" + assignment.role;
-                        els.identityCard.setAttribute(
-                            "aria-label",
-                            "你的地点是" +
-                                state.location.name +
-                                "，你的身份是" +
-                                assignment.role +
-                                "。"
-                        );
+                        els.identityKicker.textContent = "你的地点";
+                        els.identityTitle.textContent = state.location.name;
+                        els.identityRole.textContent = "你的身份：" + assignment.role;
+                    }
+
+                    els.identityConfirmBtn.textContent = isLast
+                        ? "我记住了，开始讨论"
+                        : "我记住了，下一位";
+                    els.identityDialogNote.textContent = isLast
+                        ? "确认后开始讨论"
+                        : "确认后自动进入下一位";
+                    els.identityBackdrop.hidden = false;
+                    document.body.classList.add("modal-open");
+                    els.app.inert = true;
+                    els.identityConfirmBtn.focus();
+                }
+
+                function closeIdentityModal(restoreFocus) {
+                    if (els.identityBackdrop.hidden) {
+                        return;
+                    }
+                    els.identityBackdrop.hidden = true;
+                    document.body.classList.remove("modal-open");
+                    els.app.inert = false;
+                    clearIdentityDialog();
+                    if (restoreFocus) {
+                        els.identityCard.focus();
                     }
                 }
 
-                function finishReveal() {
-                    var wasActive = reveal.active;
-                    reveal.active = false;
-                    reveal.pointerId = null;
-                    clearIdentity();
+                function clearIdentityDialog() {
+                    els.identityDialog.classList.remove("is-spy");
+                    els.identityDialogTitle.textContent = "";
+                    els.identityKicker.textContent = "";
+                    els.identityTitle.textContent = "";
+                    els.identityRole.textContent = "";
+                    els.identityConfirmBtn.textContent = "我记住了，下一位";
+                    els.identityDialogNote.textContent = "";
+                }
 
-                    if (wasActive) {
-                        state.viewed = true;
-                        els.nextBtn.disabled = false;
+                function confirmIdentity() {
+                    closeIdentityModal(false);
+
+                    if (state.dealIndex < state.playerCount - 1) {
+                        state.dealIndex += 1;
+                        renderDeal();
+                        els.identityCard.focus();
+                        return;
                     }
-                }
 
-                function forceHideIdentity() {
-                    reveal.active = false;
-                    reveal.pointerId = null;
-                    clearIdentity();
-                }
-
-                function clearIdentity() {
-                    els.cardReveal.hidden = true;
-                    els.cardLock.hidden = false;
-                    els.identityCard.classList.remove("is-spy");
-                    els.identityCard.setAttribute(
-                        "aria-label",
-                        "按住查看身份，松手隐藏"
-                    );
-                    els.revealKicker.textContent = "";
-                    els.revealTitle.textContent = "";
-                    els.revealRole.textContent = "";
+                    startDiscussion();
                 }
 
                 function startDiscussion() {
