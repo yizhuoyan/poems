@@ -1361,24 +1361,6 @@
                 </button>
             </section>
 
-            <!-- 看词准备 -->
-            <section class="screen" id="screen-wordIntro" hidden>
-                <div class="stage">
-                    <p class="kicker">准备猜词</p>
-                    <div class="orb" aria-hidden="true"></div>
-                    <h1 class="headline">请把手机放在中间</h1>
-                    <p class="lead">
-                        本轮皇帝：<b id="wordIntroDreamer">玩家 1</b>
-                    </p>
-                    <p class="lead">
-                        大臣轮流给一个词的提示，不能直接说出梦词；梦词隐藏，判定后揭晓。
-                    </p>
-                </div>
-                <button class="btn btn-primary" id="showWordBtn" type="button">
-                    开始猜词
-                </button>
-            </section>
-
             <!-- 梦境词与判定 -->
             <section class="screen" id="screen-word" hidden>
                 <div class="word-top">
@@ -1630,7 +1612,6 @@
                     "hudBad", "screen-setup", "startBtn", "minusBtn",
                     "plusBtn", "countValue", "compLine",
                     "screen-seer", "seerProgress", "seerPlayer", "seerBtn",
-                    "screen-wordIntro", "wordIntroDreamer", "showWordBtn",
                     "screen-word", "wordProgress", "wordStatus", "wordText",
                     "wordPlaceholder", "judgePanel",
                     "correctBtn", "wrongBtn", "resultPanel", "resultTitle",
@@ -1654,7 +1635,6 @@
                 var screens = {
                     setup: ui["screen-setup"],
                     seer: ui["screen-seer"],
-                    wordIntro: ui["screen-wordIntro"],
                     word: ui["screen-word"],
                     summary: ui["screen-summary"],
                     end: ui["screen-end"]
@@ -1918,7 +1898,8 @@
 
                 function renderSeer() {
                     if (state.revealCursor >= state.revealOrder.length) {
-                        renderWordIntro();
+                        state.wordIndex = 0;
+                        renderWord();
                         return;
                     }
 
@@ -1934,15 +1915,6 @@
                         "玩家 " + (playerIndex + 1);
                     updateHud();
                     showScreen("seer");
-                }
-
-                function renderWordIntro() {
-                    state.wordIndex = 0;
-                    ui.wordIntroDreamer.textContent =
-                        "玩家 " + (state.dreamer + 1) + "";
-                    ui.showWordBtn.textContent = "开始猜词";
-                    updateHud();
-                    showScreen("wordIntro");
                 }
 
                 function renderWord() {
@@ -2263,10 +2235,6 @@
                 ui.startBtn.addEventListener("click", startGame);
 
                 ui.seerBtn.addEventListener("click", openRoleModal);
-
-                ui.showWordBtn.addEventListener("click", function () {
-                    renderWord();
-                });
 
                 ui.correctBtn.addEventListener("click", function () {
                     judge(true);
