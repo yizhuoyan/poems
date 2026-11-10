@@ -113,7 +113,6 @@
 
             .title:focus,
             .display:focus,
-            .answer:focus,
             .end-rounds:focus,
             .hero-title:focus {
                 outline: none;
@@ -557,12 +556,6 @@
                 font-size: clamp(38px, 12vw, 52px);
             }
 
-            .answer-xl {
-                font-size: clamp(56px, 18vw, 88px);
-                text-align: center;
-                text-shadow: 0 0 42px rgba(239, 196, 122, 0.3);
-            }
-
             .hint-form {
                 display: flex;
                 flex-direction: column;
@@ -606,8 +599,7 @@
                 box-shadow: 0 0 0 3px rgba(239, 196, 122, 0.12);
             }
 
-            .guess-panel,
-            .reveal-panel {
+            .guess-panel {
                 display: flex;
                 flex-direction: column;
                 gap: 18px;
@@ -687,28 +679,6 @@
                 color: var(--muted-2);
                 font-size: 13px;
                 line-height: 1.6;
-            }
-
-            .reveal-panel {
-                padding: 30px 22px;
-                text-align: center;
-            }
-
-            .summary {
-                display: flex;
-                align-items: baseline;
-                justify-content: center;
-                gap: 6px;
-                margin: 0;
-                color: var(--muted);
-                font-size: 13px;
-                line-height: 1.6;
-            }
-
-            .summary strong {
-                color: var(--gold);
-                font-size: 18px;
-                font-weight: 800;
             }
 
             .actions {
@@ -896,10 +866,6 @@
 
                 .display {
                     font-size: clamp(24px, 4.5vw, 32px);
-                }
-
-                .answer-xl {
-                    font-size: clamp(44px, 11vw, 64px);
                 }
 
                 .setup-view {
@@ -1457,8 +1423,6 @@
                             return guesserHandoffView();
                         case "guess":
                             return guessView();
-                        case "reveal":
-                            return revealView();
                         default:
                             return el("div", "panel");
                     }
@@ -1695,6 +1659,7 @@
                         "primary block",
                         () => {
                             computeValidHints();
+                            state.completedRounds += 1;
                             state.screen = "guess";
                             render();
                         },
@@ -1707,6 +1672,13 @@
                 function guessView() {
                     const panel = el("section", "panel guess-panel");
                     const head = el("div", "view-head");
+                    head.append(
+                        el(
+                            "p",
+                            "eyebrow",
+                            "有效提示 " + state.validHints.length + " 条",
+                        ),
+                    );
                     const title = el("h1", "title", "根据提示，猜出谜底");
                     title.tabIndex = -1;
                     title.dataset.autofocus = "true";
@@ -1737,33 +1709,9 @@
                         panel.append(empty);
                     }
 
-                    panel.append(el("p", "note", "先口头说出答案，再查看谜底。"));
-                    const reveal = button("查看答案", "primary block", () => {
-                        state.completedRounds += 1;
-                        state.screen = "reveal";
-                        render();
-                    });
-                    panel.append(reveal);
-                    return panel;
-                }
-
-                function revealView() {
-                    const panel = el("section", "panel reveal-panel");
-                    panel.append(el("p", "eyebrow", "本轮谜底"));
-
-                    const answer = el("div", "answer answer-xl", state.answer);
-                    answer.tabIndex = -1;
-                    answer.dataset.autofocus = "true";
-                    panel.append(answer);
-
-                    const summary = el("p", "summary");
-                    summary.append(
-                        "本轮有效提示 ",
-                        el("strong", "", String(state.validHints.length)),
-                        " 条",
+                    panel.append(
+                        el("p", "note", "猜完后由其他玩家直接告知答案。"),
                     );
-                    panel.append(summary);
-
                     const actions = el("div", "actions");
                     append(
                         actions,
@@ -1902,7 +1850,7 @@
                             "每轮一名猜词人，其他玩家依次传阅手机，各写一个词作为提示。",
                             "提示不能为空，最多 12 字；不能与谜底相同，也不能出现谜底中的字。",
                             "相同的提示全部作废；猜词人只看到没有重复的提示。",
-                            "猜词人口头猜答案，再点击查看谜底；顶部「结束」可随时结束本局。",
+                            "猜词人口头猜答案，由其他玩家直接告知谜底；顶部「结束」可随时结束本局。",
                         ],
                         actions: [{ label: "知道了", variant: "primary" }],
                     });
