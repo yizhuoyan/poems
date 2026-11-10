@@ -508,6 +508,72 @@
                 letter-spacing: 0.08em;
             }
 
+            .link-btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 44px;
+                padding: 4px 14px;
+                border: 0;
+                background: none;
+                color: var(--muted);
+                font-family: inherit;
+                font-size: 13px;
+                letter-spacing: 0.04em;
+                text-decoration: underline;
+                text-decoration-color: rgba(255, 255, 255, 0.25);
+                text-underline-offset: 4px;
+                cursor: pointer;
+            }
+
+            .link-btn:active {
+                color: var(--text);
+            }
+
+            .link-btn:focus-visible {
+                outline: 2px solid #fff;
+                outline-offset: 2px;
+                border-radius: 8px;
+            }
+
+            .rules-list {
+                display: flex;
+                flex-direction: column;
+                gap: 13px;
+                margin: 0;
+                padding: 0;
+                list-style: none;
+            }
+
+            .rules-list li {
+                display: grid;
+                grid-template-columns: 24px 1fr;
+                gap: 10px;
+                font-size: 13px;
+                line-height: 1.7;
+                color: var(--muted);
+            }
+
+            .rules-list b {
+                color: var(--text);
+                font-weight: 600;
+            }
+
+            .rules-num {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 24px;
+                height: 24px;
+                margin-top: 1px;
+                border: 1px solid var(--line-strong);
+                border-radius: 50%;
+                color: var(--muted);
+                font-size: 11px;
+                font-weight: 700;
+                font-variant-numeric: tabular-nums;
+            }
+
             .screen .btn {
                 width: 100%;
                 min-height: 54px;
@@ -918,6 +984,9 @@
                 <button class="btn btn-primary" id="startMapBtn" type="button">
                     查看地图
                 </button>
+                <button class="link-btn" id="rulesBtn" type="button">
+                    游戏说明
+                </button>
             </div>
         </section>
 
@@ -1077,6 +1146,71 @@
             </div>
         </div>
 
+        <div class="overlay" id="rulesOverlay" hidden>
+            <div
+                class="modal"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="rulesTitle"
+                tabindex="-1"
+            >
+                <div class="modal-head">
+                    <div class="modal-head-text">
+                        <h2 class="modal-title" id="rulesTitle">游戏说明</h2>
+                    </div>
+                    <button
+                        class="icon-btn"
+                        id="rulesCloseBtn"
+                        type="button"
+                        aria-label="关闭游戏说明"
+                    >
+                        ×
+                    </button>
+                </div>
+                <ol class="rules-list">
+                    <li>
+                        <span class="rules-num" aria-hidden="true">1</span>
+                        <span>
+                            <b>目标</b>
+                            红蓝两队各自寻找己方特工，己方词全部被翻开的一队获胜。
+                        </span>
+                    </li>
+                    <li>
+                        <span class="rules-num" aria-hidden="true">2</span>
+                        <span>
+                            <b>词阵</b>
+                            场上 25 个词：先手队 9 张、后手队 8 张、中立
+                            7 张、刺客 1 张。
+                        </span>
+                    </li>
+                    <li>
+                        <span class="rules-num" aria-hidden="true">3</span>
+                        <span>
+                            <b>看地图</b>
+                            点「查看地图」，把手机交给当前队的间谍头目，其他人回避；记住颜色后点「我记住了，隐藏地图」。
+                        </span>
+                    </li>
+                    <li>
+                        <span class="rules-num" aria-hidden="true">4</span>
+                        <span>
+                            <b>回合</b>
+                            头目口头给线索，特工点词卡并确认翻开。翻到己方词可继续；翻到对方或中立词，回合立即结束；翻到刺客，本队立即失败。
+                        </span>
+                    </li>
+                    <li>
+                        <span class="rules-num" aria-hidden="true">5</span>
+                        <span>
+                            <b>切换</b>
+                            点「结束回合」并确认后换队；新队伍可以重新查看地图。
+                        </span>
+                    </li>
+                </ol>
+                <button class="btn" id="rulesCloseBtnBottom" type="button">
+                    知道了
+                </button>
+            </div>
+        </div>
+
         <script>
             (function () {
                 "use strict";
@@ -1181,6 +1315,12 @@
                     finalCloseBtn: document.getElementById("finalCloseBtn"),
                     finalCloseBtnBottom: document.getElementById(
                         "finalCloseBtnBottom"
+                    ),
+                    rulesBtn: document.getElementById("rulesBtn"),
+                    rulesOverlay: document.getElementById("rulesOverlay"),
+                    rulesCloseBtn: document.getElementById("rulesCloseBtn"),
+                    rulesCloseBtnBottom: document.getElementById(
+                        "rulesCloseBtnBottom"
                     ),
                 };
 
@@ -1634,6 +1774,17 @@
 
                 el.endTurnBtn.addEventListener("click", askEndTurn);
 
+                el.rulesBtn.addEventListener("click", function () {
+                    openModal(el.rulesOverlay);
+                });
+                el.rulesCloseBtn.addEventListener("click", closeModal);
+                el.rulesCloseBtnBottom.addEventListener("click", closeModal);
+                el.rulesOverlay.addEventListener("click", function (event) {
+                    if (event.target === el.rulesOverlay) {
+                        closeModal();
+                    }
+                });
+
                 el.againBtn.addEventListener("click", newGame);
 
                 document.addEventListener("keydown", function (event) {
@@ -1654,6 +1805,8 @@
                             cancelEndTurn();
                         } else if (activeOverlay === el.finalOverlay) {
                             closeFinalMap();
+                        } else if (activeOverlay === el.rulesOverlay) {
+                            closeModal();
                         }
                         return;
                     }
