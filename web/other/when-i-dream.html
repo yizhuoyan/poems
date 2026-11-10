@@ -1283,7 +1283,7 @@
                 <header class="brand">
                     <p class="brand-en">When I Dream</p>
                     <h1 class="brand-title">朝堂说梦</h1>
-                    <p class="brand-sub">三个梦境词，忠奸两阵营</p>
+                    <p class="brand-sub">每轮一个梦境词，忠奸两阵营</p>
                 </header>
 
                 <section class="card">
@@ -1291,7 +1291,7 @@
                         <li class="rule">
                             <span class="rule-dot" aria-hidden="true"></span>
                             <span
-                                >每轮随机抽出 <b>3 个梦境词</b>，皇帝根据提示猜词。</span
+                                >每轮随机抽出 <b>1 个梦境词</b>，皇帝根据提示猜词。</span
                             >
                         </li>
                         <li class="rule">
@@ -1364,7 +1364,7 @@
             <!-- 梦境词与判定 -->
             <section class="screen" id="screen-word" hidden>
                 <div class="word-top">
-                    <span class="kicker" id="wordProgress">第 1 / 3 个梦境词</span>
+                    <span class="kicker" id="wordProgress">本轮梦境词</span>
                     <span class="pill" id="wordStatus">判定后揭晓</span>
                 </div>
                 <div class="word-card">
@@ -1382,13 +1382,6 @@
                     <button class="btn btn-bad" id="wrongBtn" type="button">
                         猜错了
                         <span class="btn-sub">奸臣阵营 +1</span>
-                    </button>
-                </div>
-                <div class="result" id="resultPanel" hidden>
-                    <p class="result-title" id="resultTitle"></p>
-                    <p class="result-score" id="resultScore"></p>
-                    <button class="btn btn-primary" id="nextWordBtn" type="button">
-                        下一个词
                     </button>
                 </div>
             </section>
@@ -1415,7 +1408,7 @@
                 </div>
 
                 <section class="card">
-                    <h2 class="card-title">三个梦境词</h2>
+                    <h2 class="card-title">本轮梦境词</h2>
                     <ul class="rows" id="wordResults"></ul>
                 </section>
 
@@ -1481,7 +1474,7 @@
                 <p class="role-name" id="roleName"></p>
                 <p class="role-hint" id="roleHint"></p>
                 <div class="modal-words">
-                    <p class="modal-words-label">本轮三个梦境词</p>
+                    <p class="modal-words-label">本轮梦境词</p>
                     <ol class="modal-word-list" id="modalWordList"></ol>
                 </div>
                 <p class="modal-note" id="modalNote"></p>
@@ -1508,13 +1501,13 @@
                 >
                     ×
                 </button>
-                <p class="modal-kicker">4–10 人 · 每轮 3 个梦境词</p>
+                <p class="modal-kicker">4–10 人 · 每轮 1 个梦境词</p>
                 <h2 class="rules-title" id="rulesTitle">怎么玩</h2>
                 <div class="rules-body">
                     <div class="rules-roles">
                         <div class="rules-role">
                             <span class="badge badge-dreamer">皇帝</span>
-                            <span>根据提示猜 3 个梦境词。</span>
+                            <span>根据提示猜本轮梦境词。</span>
                         </div>
                         <div class="rules-role">
                             <span class="badge badge-good">忠臣</span>
@@ -1529,14 +1522,14 @@
                     <ol class="rules-steps">
                         <li>手机只交给大臣，皇帝不拿手机。</li>
                         <li>
-                            大臣按玩家顺序逐个查看自己的身份和本轮 3 个梦境词，看完确认交给下一位。
+                            大臣按玩家顺序逐个查看自己的身份和本轮梦境词，看完确认交给下一位。
                         </li>
                         <li>全部看完，手机放中间，开始猜词。</li>
                         <li>
                             大臣轮流给一个词的提示，不能直接说出梦词；皇帝猜。
                         </li>
                         <li>
-                            每猜完一个词，由大臣点“猜对了”或“猜错了”，揭晓答案；3 个词后结算。
+                            由大臣点“猜对了”或“猜错了”，直接进入本轮结算。
                         </li>
                     </ol>
                     <p class="rules-note">
@@ -1614,8 +1607,7 @@
                     "screen-seer", "seerProgress", "seerPlayer", "seerBtn",
                     "screen-word", "wordProgress", "wordStatus", "wordText",
                     "wordPlaceholder", "judgePanel",
-                    "correctBtn", "wrongBtn", "resultPanel", "resultTitle",
-                    "resultScore", "nextWordBtn", "screen-summary",
+                    "correctBtn", "wrongBtn", "screen-summary",
                     "summaryKicker", "wordResults", "roundGood", "roundBad",
                     "totalLine", "roleList", "nextRoundBtn", "quitBtn",
                     "screen-end", "endTitle", "endRounds", "finalGood",
@@ -1648,7 +1640,6 @@
                     bad: 0,
                     roles: [],
                     words: [],
-                    wordIndex: 0,
                     results: [],
                     roundGood: 0,
                     roundBad: 0,
@@ -1824,11 +1815,10 @@
                     state.roundGood = 0;
                     state.roundBad = 0;
                     state.results = [];
-                    state.wordIndex = 0;
                     state.revealCursor = 0;
 
                     buildRoles();
-                    state.words = drawWords(3);
+                    state.words = drawWords(1);
                     state.lastWords = state.words.slice();
 
                     clearWordDom();
@@ -1853,7 +1843,6 @@
                     state.roles = [];
                     state.words = [];
                     state.results = [];
-                    state.wordIndex = 0;
                     state.revealOrder = [];
                     state.revealCursor = 0;
                     state.lastWords = [];
@@ -1898,7 +1887,6 @@
 
                 function renderSeer() {
                     if (state.revealCursor >= state.revealOrder.length) {
-                        state.wordIndex = 0;
                         renderWord();
                         return;
                     }
@@ -1918,35 +1906,25 @@
                 }
 
                 function renderWord() {
-                    ui.wordProgress.textContent =
-                        "第 " +
-                        (state.wordIndex + 1) +
-                        " / 3 个梦境词";
+                    ui.wordProgress.textContent = "本轮梦境词";
                     ui.wordText.textContent = "";
                     ui.wordText.hidden = true;
                     ui.wordPlaceholder.hidden = false;
                     ui.wordStatus.textContent = "判定后揭晓";
                     ui.judgePanel.hidden = false;
-                    ui.resultPanel.hidden = true;
-                    ui.resultTitle.textContent = "";
-                    ui.resultTitle.className = "result-title";
-                    ui.resultScore.textContent = "";
-                    ui.nextWordBtn.textContent =
-                        state.wordIndex === 2 ? "查看本轮结算" : "下一个词";
                     updateHud();
                     showScreen("word");
                 }
 
                 function judge(correct) {
-                    if (ui.judgePanel.hidden) {
-                        return;
-                    }
-                    if (state.wordIndex >= state.words.length) {
+                    if (state.results.length >= state.words.length) {
                         return;
                     }
 
-                    var word = state.words[state.wordIndex];
-                    state.results.push({ word: word, correct: correct });
+                    state.results.push({
+                        word: state.words[0],
+                        correct: correct
+                    });
 
                     if (correct) {
                         state.roundGood += 1;
@@ -1956,19 +1934,8 @@
                         state.bad += 1;
                     }
 
-                    ui.wordText.hidden = false;
-                    ui.wordText.textContent = word;
-                    ui.wordPlaceholder.hidden = true;
-                    ui.wordStatus.textContent = "已揭晓";
-                    ui.resultTitle.textContent = correct ? "猜对了" : "猜错了";
-                    ui.resultTitle.className =
-                        "result-title " + (correct ? "is-good" : "is-bad");
-                    ui.resultScore.textContent = correct
-                        ? "忠臣阵营 +1"
-                        : "奸臣阵营 +1";
-                    ui.judgePanel.hidden = true;
-                    ui.resultPanel.hidden = false;
                     updateHud();
+                    renderSummary();
                 }
 
                 function renderSummary() {
@@ -2057,12 +2024,7 @@
                     ui.wordPlaceholder.hidden = true;
                     ui.wordStatus.textContent = "判定后揭晓";
                     ui.wordProgress.textContent = "";
-                    ui.resultTitle.textContent = "";
-                    ui.resultTitle.className = "result-title";
-                    ui.resultScore.textContent = "";
                     ui.judgePanel.hidden = false;
-                    ui.resultPanel.hidden = true;
-                    ui.nextWordBtn.textContent = "下一个词";
                 }
 
                 function clearSummaryDom() {
@@ -2242,18 +2204,6 @@
 
                 ui.wrongBtn.addEventListener("click", function () {
                     judge(false);
-                });
-
-                ui.nextWordBtn.addEventListener("click", function () {
-                    if (ui.resultPanel.hidden) {
-                        return;
-                    }
-                    if (state.wordIndex < 2) {
-                        state.wordIndex += 1;
-                        renderWord();
-                        return;
-                    }
-                    renderSummary();
                 });
 
                 ui.nextRoundBtn.addEventListener("click", nextRound);
