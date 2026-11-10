@@ -1347,24 +1347,6 @@
                 </button>
             </section>
 
-            <!-- 皇帝准备 -->
-            <section class="screen" id="screen-handoff" hidden>
-                <div class="stage">
-                    <p class="kicker" id="handoffKicker">第 1 轮</p>
-                    <div class="orb" aria-hidden="true"></div>
-                    <h1 class="headline" id="handoffTitle">
-                        请皇帝闭眼或背对屏幕
-                    </h1>
-                    <p class="player-tag" id="handoffPlayer">玩家 1</p>
-                    <p class="lead" id="handoffNote">
-                        把手机交给大臣，等叫到名字再睁眼
-                    </p>
-                </div>
-                <button class="btn btn-primary" id="handoffBtn" type="button">
-                    大臣开始查看
-                </button>
-            </section>
-
             <!-- 大臣查看身份 -->
             <section class="screen" id="screen-seer" hidden>
                 <div class="stage">
@@ -1372,7 +1354,7 @@
                     <div class="orb" aria-hidden="true"></div>
                     <h1 class="headline">请把手机交给</h1>
                     <p class="player-tag" id="seerPlayer">玩家 1</p>
-                    <p class="lead">看完确认，再交给下一位。</p>
+                    <p class="lead">看完点确认，按顺序传阅。</p>
                 </div>
                 <button class="btn btn-primary" id="seerBtn" type="button">
                     查看身份和梦词
@@ -1386,10 +1368,10 @@
                     <div class="orb" aria-hidden="true"></div>
                     <h1 class="headline">请把手机放在中间</h1>
                     <p class="lead">
-                        皇帝 <b id="wordIntroDreamer">玩家 1</b> 可以睁眼。
+                        本轮皇帝：<b id="wordIntroDreamer">玩家 1</b>
                     </p>
                     <p class="lead">
-                        每个词由大臣轮流给一个词的提示，不能直接说出梦词；判定后才揭晓。
+                        大臣轮流给一个词的提示，不能直接说出梦词；梦词隐藏，判定后揭晓。
                     </p>
                 </div>
                 <button class="btn btn-primary" id="showWordBtn" type="button">
@@ -1563,11 +1545,11 @@
                     </div>
                     <h3 class="rules-subtitle">每轮流程</h3>
                     <ol class="rules-steps">
-                        <li>皇帝闭眼，手机交给大臣。</li>
+                        <li>手机只交给大臣，皇帝不拿手机。</li>
                         <li>
                             大臣按玩家顺序逐个查看自己的身份和本轮 3 个梦境词，看完确认交给下一位。
                         </li>
-                        <li>全部看完，手机放中间，皇帝睁眼。</li>
+                        <li>全部看完，手机放中间，开始猜词。</li>
                         <li>
                             大臣轮流给一个词的提示，不能直接说出梦词；皇帝猜。
                         </li>
@@ -1582,7 +1564,7 @@
                         猜词时梦词隐藏，判定后才揭晓。
                     </p>
                     <p class="rules-note">
-                        皇帝不能看身份和梦词；提示不能直接说出梦词本身。
+                        大臣看手机时不要让皇帝看到身份和梦词；提示不能直接说出梦词本身。
                     </p>
                     <p class="rules-note">
                         不用投票或指认忠奸；本轮结束公布所有身份。
@@ -1647,8 +1629,6 @@
                     "app", "hud", "hudRound", "hudDreamer", "hudGood",
                     "hudBad", "screen-setup", "startBtn", "minusBtn",
                     "plusBtn", "countValue", "compLine",
-                    "screen-handoff", "handoffKicker", "handoffTitle",
-                    "handoffPlayer", "handoffNote", "handoffBtn",
                     "screen-seer", "seerProgress", "seerPlayer", "seerBtn",
                     "screen-wordIntro", "wordIntroDreamer", "showWordBtn",
                     "screen-word", "wordProgress", "wordStatus", "wordText",
@@ -1673,7 +1653,6 @@
 
                 var screens = {
                     setup: ui["screen-setup"],
-                    handoff: ui["screen-handoff"],
                     seer: ui["screen-seer"],
                     wordIntro: ui["screen-wordIntro"],
                     word: ui["screen-word"],
@@ -1874,9 +1853,7 @@
 
                     clearWordDom();
                     clearSummaryDom();
-                    renderHandoff();
-                    updateHud();
-                    showScreen("handoff");
+                    renderSeer();
                 }
 
                 function startGame() {
@@ -1937,16 +1914,6 @@
                             "奸臣 " + bad
                         )
                     );
-                }
-
-                function renderHandoff() {
-                    ui.handoffKicker.textContent = "第 " + state.round + " 轮";
-                    ui.handoffPlayer.textContent =
-                        "玩家 " + (state.dreamer + 1);
-                    ui.handoffTitle.textContent = "请皇帝闭眼或背对屏幕";
-                    ui.handoffNote.textContent =
-                        "把手机交给大臣，等叫到名字再睁眼";
-                    ui.handoffBtn.textContent = "大臣开始查看";
                 }
 
                 function renderSeer() {
@@ -2177,7 +2144,7 @@
                         })
                     );
                     ui.modalNote.textContent = isLast
-                        ? "确认后把手机放中间，皇帝再睁眼。"
+                        ? "确认后把手机放中间，开始猜词。"
                         : "看完点确认，再交给下一位。";
                     ui.modalConfirm.textContent = isLast
                         ? "确认，开始猜词"
@@ -2294,8 +2261,6 @@
                 });
 
                 ui.startBtn.addEventListener("click", startGame);
-
-                ui.handoffBtn.addEventListener("click", renderSeer);
 
                 ui.seerBtn.addEventListener("click", openRoleModal);
 
