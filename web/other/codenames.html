@@ -1,0 +1,1697 @@
+<!doctype html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+        />
+        <meta name="color-scheme" content="dark" />
+        <meta name="theme-color" content="#070a11" />
+        <title>机密代号 · Codenames</title>
+        <style>
+            :root {
+                color-scheme: dark;
+                --bg: #070a11;
+                --surface: #121827;
+                --line: rgba(255, 255, 255, 0.09);
+                --line-strong: rgba(255, 255, 255, 0.17);
+                --text: #f4f7ff;
+                --muted: #93a0b8;
+                --red: #ff4d6d;
+                --red-deep: #b9203d;
+                --blue: #7c9cff;
+                --blue-deep: #2b48b8;
+                --radius-lg: 24px;
+                --radius-md: 16px;
+                --shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
+                --font:
+                    system-ui, -apple-system, "Segoe UI", "PingFang SC",
+                    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            [hidden] {
+                display: none !important;
+            }
+
+            html {
+                min-height: 100%;
+                background: var(--bg);
+            }
+
+            body {
+                margin: 0;
+                min-height: 100vh;
+                min-height: 100dvh;
+                background: var(--bg);
+                color: var(--text);
+                font-family: var(--font);
+                -webkit-font-smoothing: antialiased;
+                -webkit-text-size-adjust: 100%;
+                text-size-adjust: 100%;
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
+            }
+
+            body::before {
+                content: "";
+                position: fixed;
+                inset: 0;
+                z-index: -1;
+                pointer-events: none;
+                background:
+                    radial-gradient(
+                        620px 420px at 10% -6%,
+                        rgba(255, 77, 109, 0.18),
+                        transparent 68%
+                    ),
+                    radial-gradient(
+                        560px 400px at 104% 8%,
+                        rgba(124, 156, 255, 0.16),
+                        transparent 68%
+                    ),
+                    radial-gradient(
+                        520px 380px at 50% 110%,
+                        rgba(230, 220, 198, 0.07),
+                        transparent 70%
+                    );
+            }
+
+            body.modal-open {
+                overflow: hidden;
+            }
+
+            button {
+                font-family: inherit;
+            }
+
+            .game {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                width: min(100%, 560px);
+                min-height: 100vh;
+                min-height: 100dvh;
+                margin: 0 auto;
+                padding-top: max(14px, env(safe-area-inset-top, 0px));
+                padding-right: max(14px, env(safe-area-inset-right, 0px));
+                padding-bottom: max(14px, env(safe-area-inset-bottom, 0px));
+                padding-left: max(14px, env(safe-area-inset-left, 0px));
+                user-select: none;
+                -webkit-user-select: none;
+            }
+
+            .hud {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .hud-top {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                min-height: 28px;
+            }
+
+            .brand {
+                margin: 0;
+                font-size: 17px;
+                font-weight: 700;
+                letter-spacing: 0.18em;
+            }
+
+            .round {
+                padding: 4px 11px;
+                border: 1px solid var(--line);
+                border-radius: 999px;
+                color: var(--muted);
+                font-size: 11px;
+                letter-spacing: 0.08em;
+                white-space: nowrap;
+            }
+
+            .teams {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .team {
+                display: grid;
+                grid-template-columns: auto 1fr auto;
+                align-items: center;
+                gap: 9px;
+                min-height: 56px;
+                padding: 8px 12px;
+                border: 1px solid var(--line);
+                border-radius: var(--radius-md);
+                background: var(--surface);
+                transition:
+                    border-color 0.2s ease,
+                    box-shadow 0.2s ease,
+                    background 0.2s ease;
+            }
+
+            .team.red {
+                color: var(--red);
+            }
+
+            .team.blue {
+                color: var(--blue);
+            }
+
+            .team-dot {
+                width: 9px;
+                height: 9px;
+                border-radius: 50%;
+                background: currentColor;
+                box-shadow: 0 0 10px currentColor;
+            }
+
+            .team-text {
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+                min-width: 0;
+            }
+
+            .team-name {
+                color: var(--text);
+                font-size: 13px;
+                font-weight: 600;
+            }
+
+            .team-meta {
+                color: currentColor;
+                font-size: 9px;
+                letter-spacing: 0.08em;
+                opacity: 0.9;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .team-count {
+                font-size: 25px;
+                font-weight: 800;
+                line-height: 1;
+                font-variant-numeric: tabular-nums;
+            }
+
+            .team.is-current {
+                border-color: currentColor;
+                background: linear-gradient(
+                    150deg,
+                    rgba(255, 255, 255, 0.09),
+                    var(--surface)
+                );
+                box-shadow:
+                    0 0 0 1px currentColor,
+                    0 12px 28px rgba(0, 0, 0, 0.35);
+            }
+
+            .status {
+                min-height: 19px;
+                margin: -2px 0 0;
+                padding: 0 4px;
+                color: var(--muted);
+                font-size: 12px;
+                line-height: 1.5;
+                text-align: center;
+            }
+
+            .status[data-tone="good"] {
+                color: #63dfb6;
+            }
+
+            .status[data-tone="bad"] {
+                color: #ff9db0;
+            }
+
+            .board {
+                display: grid;
+                flex: 1 1 auto;
+                grid-template-columns: repeat(5, minmax(0, 1fr));
+                grid-auto-rows: minmax(58px, 1fr);
+                gap: clamp(6px, 1.8vw, 10px);
+                min-height: 0;
+            }
+
+            .card {
+                position: relative;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+                padding: 7px 4px;
+                border: 1px solid var(--line);
+                border-radius: 14px;
+                background: linear-gradient(165deg, #1c2537, #111826);
+                color: var(--text);
+                font-size: clamp(12px, 3.4vw, 16px);
+                font-weight: 600;
+                line-height: 1.2;
+                letter-spacing: 0.02em;
+                text-align: center;
+                cursor: pointer;
+                box-shadow:
+                    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+                    0 10px 20px rgba(0, 0, 0, 0.22);
+                transition:
+                    transform 0.12s ease,
+                    background 0.2s ease,
+                    border-color 0.2s ease,
+                    box-shadow 0.2s ease;
+            }
+
+            .card.long {
+                font-size: clamp(11px, 2.9vw, 14px);
+            }
+
+            .card.xlong {
+                font-size: clamp(10px, 2.6vw, 13px);
+            }
+
+            .card-word {
+                display: block;
+                max-width: 100%;
+                overflow-wrap: anywhere;
+            }
+
+            .card-tag {
+                position: absolute;
+                top: 4px;
+                left: 5px;
+                font-size: 8px;
+                font-weight: 700;
+                letter-spacing: 0.04em;
+                opacity: 0;
+            }
+
+            .card:active:not(:disabled) {
+                transform: scale(0.965);
+            }
+
+            .card:focus-visible {
+                outline: 2px solid #fff;
+                outline-offset: 2px;
+            }
+
+            .card.revealed {
+                cursor: default;
+            }
+
+            .card.revealed .card-tag {
+                opacity: 0.85;
+            }
+
+            .card.revealed .card-word {
+                transform: translateY(4px);
+            }
+
+            .card.c-red {
+                border-color: rgba(255, 255, 255, 0.28);
+                background: linear-gradient(160deg, #e3405c, #a81c36);
+                color: #fff;
+            }
+
+            .card.c-blue {
+                border-color: rgba(255, 255, 255, 0.28);
+                background: linear-gradient(160deg, #5b7cf5, #2743ae);
+                color: #fff;
+            }
+
+            .card.c-neutral {
+                border-color: rgba(0, 0, 0, 0.22);
+                background: linear-gradient(160deg, #efe6d2, #cfc2a6);
+                color: #241f16;
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            }
+
+            .card.c-neutral .card-tag {
+                color: #6b5c3e;
+            }
+
+            .card.c-assassin {
+                border-color: rgba(255, 92, 120, 0.75);
+                background: radial-gradient(
+                    circle at 50% 26%,
+                    #3d0f19,
+                    #0a0a0d 72%
+                );
+                color: #ffc9d3;
+                box-shadow:
+                    inset 0 0 22px rgba(255, 60, 90, 0.35),
+                    0 0 0 1px rgba(255, 92, 120, 0.3);
+            }
+
+            .card.c-assassin .card-tag {
+                color: #ff8ba0;
+            }
+
+            .actions {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                min-height: 50px;
+                padding: 12px 16px;
+                border: 1px solid var(--line-strong);
+                border-radius: 15px;
+                background: rgba(255, 255, 255, 0.05);
+                color: var(--text);
+                font-size: 15px;
+                font-weight: 700;
+                letter-spacing: 0.04em;
+                cursor: pointer;
+                transition:
+                    transform 0.12s ease,
+                    filter 0.2s ease,
+                    background 0.2s ease;
+            }
+
+            .btn:active {
+                transform: scale(0.98);
+            }
+
+            .btn:focus-visible {
+                outline: 2px solid #fff;
+                outline-offset: 2px;
+            }
+
+            .btn-primary {
+                border-color: transparent;
+                background: linear-gradient(140deg, var(--turn, #ff4d6d), var(--turn-deep, #b9203d));
+                color: #fff;
+                box-shadow: 0 12px 26px rgba(0, 0, 0, 0.35);
+            }
+
+            .btn-primary:active {
+                filter: brightness(0.94);
+            }
+
+            .btn-map {
+                border-color: transparent;
+                background: linear-gradient(140deg, var(--turn, #ff4d6d), var(--turn-deep, #b9203d));
+                color: #fff;
+                box-shadow: 0 12px 26px rgba(0, 0, 0, 0.35);
+            }
+
+            .btn-map:active {
+                filter: brightness(0.94);
+            }
+
+            .screen {
+                position: fixed;
+                z-index: 5;
+                inset: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                overflow: auto;
+                padding-top: max(24px, env(safe-area-inset-top, 0px));
+                padding-right: max(20px, env(safe-area-inset-right, 0px));
+                padding-bottom: max(24px, env(safe-area-inset-bottom, 0px));
+                padding-left: max(20px, env(safe-area-inset-left, 0px));
+                background:
+                    radial-gradient(
+                        420px 300px at 50% 8%,
+                        rgba(255, 77, 109, 0.14),
+                        transparent 70%
+                    ),
+                    radial-gradient(
+                        420px 300px at 50% 100%,
+                        rgba(124, 156, 255, 0.14),
+                        transparent 70%
+                    ),
+                    var(--bg);
+                text-align: center;
+            }
+
+            .screen-inner {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 14px;
+                width: min(100%, 360px);
+                margin: auto;
+            }
+
+            .kicker {
+                margin: 0;
+                color: var(--muted);
+                font-size: 11px;
+                font-weight: 600;
+                letter-spacing: 0.4em;
+                text-indent: 0.4em;
+            }
+
+            .start-team {
+                margin: 6px 0 0;
+                font-size: clamp(38px, 12vw, 54px);
+                font-weight: 800;
+                line-height: 1.05;
+                letter-spacing: 0.02em;
+            }
+
+            .start-team:focus,
+            .end-title:focus {
+                outline: none;
+            }
+
+            .start-team[data-team="red"],
+            .end-title[data-team="red"] {
+                color: var(--red);
+                text-shadow: 0 0 36px rgba(255, 77, 109, 0.4);
+            }
+
+            .start-team[data-team="blue"],
+            .end-title[data-team="blue"] {
+                color: var(--blue);
+                text-shadow: 0 0 36px rgba(124, 156, 255, 0.4);
+            }
+
+            .start-prompt {
+                margin: 0;
+                font-size: 17px;
+                font-weight: 600;
+                line-height: 1.6;
+            }
+
+            .start-hint,
+            .modal-hint {
+                margin: 0;
+                color: var(--muted);
+                font-size: 12px;
+                line-height: 1.6;
+            }
+
+            .start-rules {
+                margin: 0;
+                padding: 5px 13px;
+                border: 1px solid var(--line);
+                border-radius: 999px;
+                color: var(--muted);
+                font-size: 11px;
+                letter-spacing: 0.08em;
+            }
+
+            .screen .btn {
+                width: 100%;
+                min-height: 54px;
+                margin-top: 10px;
+                font-size: 16px;
+            }
+
+            .screen-actions {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                width: 100%;
+                margin-top: 10px;
+            }
+
+            .screen-actions .btn {
+                margin-top: 0;
+            }
+
+            .end-title {
+                margin: 0;
+                font-size: clamp(36px, 11vw, 50px);
+                font-weight: 800;
+                line-height: 1.1;
+            }
+
+            .end-reason {
+                margin: 0;
+                color: var(--muted);
+                font-size: 14px;
+                line-height: 1.6;
+            }
+
+            .end-score {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                width: 100%;
+                margin-top: 6px;
+            }
+
+            .score {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                padding: 12px;
+                border: 1px solid var(--line);
+                border-radius: 14px;
+                background: var(--surface);
+            }
+
+            .score span {
+                color: var(--muted);
+                font-size: 11px;
+                letter-spacing: 0.06em;
+            }
+
+            .score b {
+                font-size: 26px;
+                font-weight: 800;
+                line-height: 1;
+                font-variant-numeric: tabular-nums;
+            }
+
+            .score.red b {
+                color: var(--red);
+            }
+
+            .score.blue b {
+                color: var(--blue);
+            }
+
+            .overlay {
+                position: fixed;
+                z-index: 30;
+                inset: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding-top: max(14px, env(safe-area-inset-top, 0px));
+                padding-right: max(14px, env(safe-area-inset-right, 0px));
+                padding-bottom: max(14px, env(safe-area-inset-bottom, 0px));
+                padding-left: max(14px, env(safe-area-inset-left, 0px));
+                background: rgba(3, 5, 10, 0.78);
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+                animation: overlay-in 0.16s ease-out;
+            }
+
+            .modal {
+                display: flex;
+                flex-direction: column;
+                gap: 14px;
+                width: min(100%, 430px);
+                max-height: calc(100dvh - 28px);
+                overflow: auto;
+                padding: 18px;
+                border: 1px solid var(--line-strong);
+                border-radius: var(--radius-lg);
+                background: linear-gradient(170deg, #161e2f, #0c1220);
+                box-shadow: var(--shadow);
+                animation: modal-in 0.18s ease-out;
+                outline: none;
+            }
+
+            .modal-head {
+                display: flex;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .modal-title {
+                margin: 0;
+                font-size: 19px;
+                font-weight: 700;
+                letter-spacing: 0.03em;
+            }
+
+            .modal-title[data-team="red"] {
+                color: var(--red);
+            }
+
+            .modal-title[data-team="blue"] {
+                color: var(--blue);
+            }
+
+            .modal-head-text {
+                display: flex;
+                flex: 1;
+                flex-direction: column;
+                gap: 5px;
+                min-width: 0;
+            }
+
+            .icon-btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 44px;
+                height: 44px;
+                margin: -6px -6px 0 0;
+                border: 1px solid var(--line);
+                border-radius: 12px;
+                background: rgba(255, 255, 255, 0.04);
+                color: var(--muted);
+                font-size: 22px;
+                line-height: 1;
+                cursor: pointer;
+            }
+
+            .icon-btn:focus-visible {
+                outline: 2px solid #fff;
+                outline-offset: 2px;
+            }
+
+            .map-grid {
+                display: grid;
+                grid-template-columns: repeat(5, minmax(0, 1fr));
+                gap: 5px;
+            }
+
+            .map-cell {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                aspect-ratio: 1;
+                overflow: hidden;
+                padding: 3px;
+                border-radius: 8px;
+                font-size: 10px;
+                font-weight: 600;
+                line-height: 1.1;
+                text-align: center;
+            }
+
+            .map-cell.c-red {
+                background: #c93450;
+                color: #fff;
+            }
+
+            .map-cell.c-blue {
+                background: #3f5dc9;
+                color: #fff;
+            }
+
+            .map-cell.c-neutral {
+                background: #d9cdb3;
+                color: #241f16;
+            }
+
+            .map-cell.c-assassin {
+                border: 1px solid rgba(255, 92, 120, 0.8);
+                background: #0a0a0d;
+                color: #ffb3c0;
+            }
+
+            .map-word {
+                max-width: 100%;
+                overflow-wrap: anywhere;
+            }
+
+            .map-cell.is-revealed {
+                outline: 2px solid rgba(255, 255, 255, 0.9);
+                outline-offset: -2px;
+                filter: saturate(0.82);
+            }
+
+            .legend {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 6px 14px;
+                margin: 0;
+                padding: 0;
+                list-style: none;
+                color: var(--muted);
+                font-size: 11px;
+            }
+
+            .legend li {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+            .legend-dot {
+                width: 9px;
+                height: 9px;
+                border-radius: 3px;
+            }
+
+            .legend-dot.red {
+                background: #c93450;
+            }
+
+            .legend-dot.blue {
+                background: #3f5dc9;
+            }
+
+            .legend-dot.neutral {
+                background: #d9cdb3;
+            }
+
+            .legend-dot.assassin {
+                border: 1px solid rgba(255, 92, 120, 0.8);
+                background: #0a0a0d;
+            }
+
+            .legend-dot.revealed {
+                border: 2px solid rgba(255, 255, 255, 0.9);
+                background: transparent;
+            }
+
+            .modal-actions {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .modal-actions .btn {
+                min-height: 50px;
+            }
+
+            .confirm-word {
+                margin: 2px 0;
+                font-size: clamp(30px, 9vw, 42px);
+                font-weight: 800;
+                line-height: 1.2;
+                text-align: center;
+                overflow-wrap: anywhere;
+            }
+
+            .confirm-copy {
+                text-align: center;
+            }
+
+            @keyframes overlay-in {
+                from {
+                    opacity: 0;
+                }
+            }
+
+            @keyframes modal-in {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px) scale(0.98);
+                }
+            }
+
+            @media (max-height: 520px) and (orientation: landscape) {
+                .game {
+                    gap: 8px;
+                    width: min(100%, 760px);
+                    padding-top: max(8px, env(safe-area-inset-top, 0px));
+                    padding-bottom: max(8px, env(safe-area-inset-bottom, 0px));
+                }
+
+                .hud {
+                    gap: 6px;
+                }
+
+                .hud-top {
+                    min-height: 20px;
+                }
+
+                .brand {
+                    font-size: 13px;
+                }
+
+                .teams {
+                    gap: 8px;
+                }
+
+                .team {
+                    min-height: 42px;
+                    padding: 5px 10px;
+                }
+
+                .team-count {
+                    font-size: 19px;
+                }
+
+                .team-meta {
+                    display: none;
+                }
+
+                .status {
+                    min-height: 16px;
+                    font-size: 11px;
+                }
+
+                .board {
+                    grid-auto-rows: minmax(38px, 1fr);
+                    gap: 5px;
+                }
+
+                .card {
+                    border-radius: 10px;
+                    font-size: 12px;
+                }
+
+                .actions .btn {
+                    min-height: 44px;
+                    font-size: 13px;
+                }
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                *,
+                *::before,
+                *::after {
+                    animation-duration: 0.001ms !important;
+                    animation-iteration-count: 1 !important;
+                    transition-duration: 0.001ms !important;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="game" id="game">
+            <header class="hud">
+                <div class="hud-top">
+                    <h1 class="brand">机密代号</h1>
+                    <span class="round" id="roundLabel">第 1 回合</span>
+                </div>
+                <div class="teams">
+                    <div class="team red" id="teamRed" data-team="red">
+                        <span class="team-dot" aria-hidden="true"></span>
+                        <span class="team-text">
+                            <span class="team-name">红队</span>
+                            <span class="team-meta" id="redMeta"></span>
+                        </span>
+                        <b class="team-count" id="redCount">9</b>
+                    </div>
+                    <div class="team blue" id="teamBlue" data-team="blue">
+                        <span class="team-dot" aria-hidden="true"></span>
+                        <span class="team-text">
+                            <span class="team-name">蓝队</span>
+                            <span class="team-meta" id="blueMeta"></span>
+                        </span>
+                        <b class="team-count" id="blueCount">8</b>
+                    </div>
+                </div>
+            </header>
+
+            <p class="status" id="status" role="status" aria-live="polite"></p>
+
+            <div class="board" id="board" role="group" aria-label="词阵"></div>
+
+            <div class="actions">
+                <button class="btn btn-map" id="mapBtn" type="button">
+                    查看地图
+                </button>
+                <button class="btn btn-end" id="endTurnBtn" type="button">
+                    结束回合
+                </button>
+            </div>
+        </div>
+
+        <section class="screen" id="startScreen">
+            <div class="screen-inner">
+                <p class="kicker">机密代号</p>
+                <h2 class="start-team" id="startTeam" tabindex="-1">红队先手</h2>
+                <p class="start-prompt" id="startPrompt">
+                    请把手机交给红队间谍头目
+                </p>
+                <p class="start-rules">先手 9 张 · 后手 8 张</p>
+                <p class="start-hint">确认周围没有人偷看，再打开地图。</p>
+                <button class="btn btn-primary" id="startMapBtn" type="button">
+                    查看地图
+                </button>
+            </div>
+        </section>
+
+        <section class="screen" id="endScreen" hidden>
+            <div class="screen-inner">
+                <p class="kicker">本局结束</p>
+                <h2 class="end-title" id="endTitle" tabindex="-1">红队胜利</h2>
+                <p class="end-reason" id="endReason"></p>
+                <div class="end-score">
+                    <div class="score red">
+                        <span>红队剩余</span>
+                        <b id="endRed">0</b>
+                    </div>
+                    <div class="score blue">
+                        <span>蓝队剩余</span>
+                        <b id="endBlue">0</b>
+                    </div>
+                </div>
+                <div class="screen-actions">
+                    <button class="btn" id="endMapBtn" type="button">
+                        查看终局地图
+                    </button>
+                    <button class="btn btn-primary" id="againBtn" type="button">
+                        再来一局
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <div class="overlay" id="mapOverlay" hidden>
+            <div
+                class="modal"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="mapTitle"
+                aria-describedby="mapHint"
+                tabindex="-1"
+            >
+                <div class="modal-head">
+                    <div class="modal-head-text">
+                        <h2 class="modal-title" id="mapTitle">红队地图</h2>
+                        <p class="modal-hint" id="mapHint"></p>
+                    </div>
+                    <button
+                        class="icon-btn"
+                        id="mapCloseBtn"
+                        type="button"
+                        aria-label="取消查看"
+                    >
+                        ×
+                    </button>
+                </div>
+                <div class="map-grid" id="mapGrid"></div>
+                <ul class="legend">
+                    <li><span class="legend-dot red"></span>红队</li>
+                    <li><span class="legend-dot blue"></span>蓝队</li>
+                    <li><span class="legend-dot neutral"></span>中立</li>
+                    <li><span class="legend-dot assassin"></span>刺客</li>
+                    <li><span class="legend-dot revealed"></span>已翻开</li>
+                </ul>
+                <button class="btn btn-primary" id="hideMapBtn" type="button">
+                    我记住了，隐藏地图
+                </button>
+            </div>
+        </div>
+
+        <div class="overlay" id="confirmOverlay" hidden>
+            <div
+                class="modal"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="confirmTitle"
+                tabindex="-1"
+            >
+                <h2 class="modal-title confirm-copy" id="confirmTitle">
+                    翻开这张牌？
+                </h2>
+                <p class="confirm-word" id="confirmWord"></p>
+                <p class="modal-hint confirm-copy">确认后不能撤销。</p>
+                <div class="modal-actions">
+                    <button class="btn" id="cancelFlipBtn" type="button">
+                        取消
+                    </button>
+                    <button
+                        class="btn btn-primary"
+                        id="confirmFlipBtn"
+                        type="button"
+                    >
+                        确认翻开
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="overlay" id="endTurnOverlay" hidden>
+            <div
+                class="modal"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="endTurnTitle"
+                aria-describedby="endTurnHint"
+                tabindex="-1"
+            >
+                <h2 class="modal-title" id="endTurnTitle">结束回合？</h2>
+                <p class="modal-hint" id="endTurnHint"></p>
+                <div class="modal-actions">
+                    <button class="btn" id="cancelEndTurnBtn" type="button">
+                        取消
+                    </button>
+                    <button
+                        class="btn btn-primary"
+                        id="confirmEndTurnBtn"
+                        type="button"
+                    >
+                        确认结束
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="overlay" id="finalOverlay" hidden>
+            <div
+                class="modal"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="finalTitle"
+                aria-describedby="finalHint"
+                tabindex="-1"
+            >
+                <div class="modal-head">
+                    <div class="modal-head-text">
+                        <h2 class="modal-title" id="finalTitle">终局地图</h2>
+                        <p class="modal-hint" id="finalHint">
+                            颜色为本局答案，已翻开的牌有描边。
+                        </p>
+                    </div>
+                    <button
+                        class="icon-btn"
+                        id="finalCloseBtn"
+                        type="button"
+                        aria-label="关闭终局地图"
+                    >
+                        ×
+                    </button>
+                </div>
+                <div class="map-grid" id="finalGrid"></div>
+                <ul class="legend">
+                    <li><span class="legend-dot red"></span>红队</li>
+                    <li><span class="legend-dot blue"></span>蓝队</li>
+                    <li><span class="legend-dot neutral"></span>中立</li>
+                    <li><span class="legend-dot assassin"></span>刺客</li>
+                    <li><span class="legend-dot revealed"></span>已翻开</li>
+                </ul>
+                <button class="btn" id="finalCloseBtnBottom" type="button">
+                    关闭
+                </button>
+            </div>
+        </div>
+
+        <script>
+            (function () {
+                "use strict";
+
+                var WORD_SOURCE = `
+                    长江 黄河 沙漠 森林 草原 雪山 火山 瀑布 峡谷 岛屿
+                    海滩 港口 码头 池塘 湖泊 河流 田野 稻田 果园 山洞
+                    悬崖 沼泽 冰川 绿洲 平原 丘陵 星空 银河 彩虹 台风
+                    闪电 暴雪 车站 机场 地铁 广场 公园 花园 超市 医院
+                    学校 图书馆 博物馆 电影院 剧院 体育馆 游泳池 加油站 银行 邮局
+                    法院 教堂 寺庙 宫殿 城堡 塔楼 桥梁 隧道 胡同 村庄
+                    钟楼 灯塔 水井 烟囱 篱笆 屋顶 地下室 阳台 走廊 电梯
+                    车库 仓库 雨伞 眼镜 手套 围巾 帽子 皮鞋 背包 钱包 钥匙
+                    手表 手机 耳机 相机 电脑 键盘 鼠标 打印机 电视 冰箱
+                    洗衣机 空调 风扇 台灯 蜡烛 火柴 剪刀 针线 锤子 螺丝刀
+                    扳手 梯子 水桶 扫帚 拖把 垃圾桶 沙发 椅子 桌子 书架
+                    衣柜 枕头 被子 毛毯 镜子 相框 花瓶 茶杯 咖啡杯 筷子
+                    勺子 叉子 菜刀 砧板 平底锅 电饭锅 煤气灶 微波炉 烤箱 水壶
+                    保温杯 饭盒 面包 蛋糕 巧克力 冰淇淋 棒棒糖 爆米花 西瓜 苹果
+                    香蕉 葡萄 橘子 草莓 柠檬 蘑菇 土豆 番茄 玉米 辣椒
+                    大蒜 生姜 面条 饺子 包子 米饭 火锅 烧烤 寿司 汉堡
+                    薯条 酸奶 蜂蜜 茶叶 牛奶 鸡蛋 豆腐 医生 护士 教师
+                    律师 警察 消防员 司机 厨师 服务员 快递员 邮递员 程序员 设计师
+                    画家 歌手 演员 导演 作家 记者 主播 裁判 教练 飞行员
+                    空姐 船长 水手 农夫 渔夫 木匠 电工 水管工 理发师 裁缝
+                    保安 收银员 会计 翻译 导游 侦探 军人 牙医 兽医 建筑师
+                    魔术师 小丑 鼓手 老虎 大象 长颈鹿 熊猫 猴子 松鼠 兔子
+                    狐狸 骆驼 企鹅 海豚 鲸鱼 鲨鱼 章鱼 蝴蝶 蜜蜂 蚂蚁
+                    蜘蛛 乌龟 青蛙 孔雀 猫头鹰 公鸡 鸭子 鲤鱼 金鱼 蜗牛
+                    萤火虫 足球 篮球 排球 乒乓球 羽毛球 棒球 马拉松 跳绳 象棋
+                    围棋 扑克 魔方 风筝 秋千 滑梯 蹦床 自行车 摩托车 公交车
+                    出租车 火车 高铁 轮船 帆船 潜艇 直升机 热气球 火箭 卫星
+                    坦克 宝剑 弓箭 盾牌 头盔 望远镜 显微镜 指南针 日历 闹钟
+                    沙漏 风车 十字路口 高速公路 海底隧道 旋转木马 生日蛋糕 万里长城 自由女神像 珠穆朗玛峰
+                `;
+
+                var POOL = (function () {
+                    var seen = new Set();
+                    return WORD_SOURCE.split(/\s+/).filter(function (word) {
+                        if (!word) {
+                            return false;
+                        }
+                        var length = Array.from(word).length;
+                        if (length < 2 || length > 5 || seen.has(word)) {
+                            return false;
+                        }
+                        seen.add(word);
+                        return true;
+                    });
+                })();
+
+                var COLOR_NAME = {
+                    red: "红队",
+                    blue: "蓝队",
+                    neutral: "中立",
+                    assassin: "刺客",
+                };
+
+                var el = {
+                    game: document.getElementById("game"),
+                    board: document.getElementById("board"),
+                    status: document.getElementById("status"),
+                    roundLabel: document.getElementById("roundLabel"),
+                    teamRed: document.getElementById("teamRed"),
+                    teamBlue: document.getElementById("teamBlue"),
+                    redCount: document.getElementById("redCount"),
+                    blueCount: document.getElementById("blueCount"),
+                    redMeta: document.getElementById("redMeta"),
+                    blueMeta: document.getElementById("blueMeta"),
+                    mapBtn: document.getElementById("mapBtn"),
+                    endTurnBtn: document.getElementById("endTurnBtn"),
+                    startScreen: document.getElementById("startScreen"),
+                    startTeam: document.getElementById("startTeam"),
+                    startPrompt: document.getElementById("startPrompt"),
+                    startMapBtn: document.getElementById("startMapBtn"),
+                    endScreen: document.getElementById("endScreen"),
+                    endTitle: document.getElementById("endTitle"),
+                    endReason: document.getElementById("endReason"),
+                    endRed: document.getElementById("endRed"),
+                    endBlue: document.getElementById("endBlue"),
+                    endMapBtn: document.getElementById("endMapBtn"),
+                    againBtn: document.getElementById("againBtn"),
+                    mapOverlay: document.getElementById("mapOverlay"),
+                    mapTitle: document.getElementById("mapTitle"),
+                    mapHint: document.getElementById("mapHint"),
+                    mapGrid: document.getElementById("mapGrid"),
+                    mapCloseBtn: document.getElementById("mapCloseBtn"),
+                    hideMapBtn: document.getElementById("hideMapBtn"),
+                    confirmOverlay: document.getElementById("confirmOverlay"),
+                    confirmWord: document.getElementById("confirmWord"),
+                    confirmFlipBtn: document.getElementById("confirmFlipBtn"),
+                    cancelFlipBtn: document.getElementById("cancelFlipBtn"),
+                    endTurnOverlay: document.getElementById("endTurnOverlay"),
+                    endTurnTitle: document.getElementById("endTurnTitle"),
+                    endTurnHint: document.getElementById("endTurnHint"),
+                    cancelEndTurnBtn: document.getElementById("cancelEndTurnBtn"),
+                    confirmEndTurnBtn: document.getElementById(
+                        "confirmEndTurnBtn"
+                    ),
+                    finalOverlay: document.getElementById("finalOverlay"),
+                    finalGrid: document.getElementById("finalGrid"),
+                    finalCloseBtn: document.getElementById("finalCloseBtn"),
+                    finalCloseBtnBottom: document.getElementById(
+                        "finalCloseBtnBottom"
+                    ),
+                };
+
+                var state = null;
+                var pendingIndex = -1;
+                var intro = false;
+                var activeOverlay = null;
+                var restoreFocus = null;
+
+                function shuffle(list) {
+                    var copy = list.slice();
+                    for (var i = copy.length - 1; i > 0; i -= 1) {
+                        var j = Math.floor(Math.random() * (i + 1));
+                        var temp = copy[i];
+                        copy[i] = copy[j];
+                        copy[j] = temp;
+                    }
+                    return copy;
+                }
+
+                function otherTeam(team) {
+                    return team === "red" ? "blue" : "red";
+                }
+
+                function teamName(team) {
+                    return team === "red" ? "红队" : "蓝队";
+                }
+
+                function setStatus(text, tone) {
+                    el.status.textContent = text;
+                    if (tone) {
+                        el.status.dataset.tone = tone;
+                    } else {
+                        delete el.status.dataset.tone;
+                    }
+                }
+
+                function showScreen(name) {
+                    el.startScreen.hidden = name !== "start";
+                    el.game.hidden = name !== "game";
+                    el.endScreen.hidden = name !== "end";
+                }
+
+                function setTurnColor(team) {
+                    document.documentElement.style.setProperty(
+                        "--turn",
+                        team === "red" ? "#ff4d6d" : "#7c9cff"
+                    );
+                    document.documentElement.style.setProperty(
+                        "--turn-deep",
+                        team === "red" ? "#b9203d" : "#2b48b8"
+                    );
+                }
+
+                function createBoard(words) {
+                    var fragment = document.createDocumentFragment();
+                    words.forEach(function (word, index) {
+                        var card = document.createElement("button");
+                        card.type = "button";
+                        card.className = "card";
+                        card.dataset.index = String(index);
+                        var length = Array.from(word).length;
+                        if (length >= 5) {
+                            card.classList.add("xlong");
+                        } else if (length === 4) {
+                            card.classList.add("long");
+                        }
+                        var wordNode = document.createElement("span");
+                        wordNode.className = "card-word";
+                        wordNode.textContent = word;
+                        var tagNode = document.createElement("span");
+                        tagNode.className = "card-tag";
+                        tagNode.setAttribute("aria-hidden", "true");
+                        card.append(wordNode, tagNode);
+                        fragment.append(card);
+                    });
+                    el.board.replaceChildren(fragment);
+                }
+
+                function renderBoard() {
+                    var cards = el.board.children;
+                    for (var i = 0; i < cards.length; i += 1) {
+                        var card = cards[i];
+                        var color = state.colors[i];
+                        var revealed = state.revealed[i];
+                        card.classList.toggle("revealed", revealed);
+                        card.classList.toggle(
+                            "c-red",
+                            revealed && color === "red"
+                        );
+                        card.classList.toggle(
+                            "c-blue",
+                            revealed && color === "blue"
+                        );
+                        card.classList.toggle(
+                            "c-neutral",
+                            revealed && color === "neutral"
+                        );
+                        card.classList.toggle(
+                            "c-assassin",
+                            revealed && color === "assassin"
+                        );
+                        card.querySelector(".card-tag").textContent = revealed
+                            ? COLOR_NAME[color]
+                            : "";
+                        card.setAttribute(
+                            "aria-label",
+                            revealed
+                                ? state.words[i] +
+                                      "，" +
+                                      COLOR_NAME[color] +
+                                      "，已翻开"
+                                : state.words[i] + "，未翻开"
+                        );
+                        card.disabled = revealed || state.over;
+                    }
+                }
+
+                function renderTeams() {
+                    var meta = {
+                        red: el.redMeta,
+                        blue: el.blueMeta,
+                    };
+                    [el.teamRed, el.teamBlue].forEach(function (node) {
+                        var team = node.dataset.team;
+                        node.classList.toggle(
+                            "is-current",
+                            !state.over && state.turn === team
+                        );
+                        var metaText = "";
+                        if (state.first === team) {
+                            metaText = "先手";
+                        }
+                        if (!state.over && state.turn === team) {
+                            metaText = metaText ? "先手 · 当前" : "当前";
+                        }
+                        meta[team].textContent = metaText;
+                    });
+                    el.redCount.textContent = String(state.remaining.red);
+                    el.blueCount.textContent = String(state.remaining.blue);
+                    el.roundLabel.textContent = "第 " + state.round + " 回合";
+                    setTurnColor(state.turn);
+                    el.endTurnBtn.disabled = state.over;
+                }
+
+                function openModal(overlay) {
+                    if (activeOverlay) {
+                        closeModal();
+                    }
+                    activeOverlay = overlay;
+                    restoreFocus = document.activeElement;
+                    overlay.hidden = false;
+                    document.body.classList.add("modal-open");
+                    el.game.inert = true;
+                    el.startScreen.inert = true;
+                    el.endScreen.inert = true;
+                    var dialog = overlay.querySelector(".modal");
+                    dialog.focus();
+                }
+
+                function closeModal() {
+                    if (!activeOverlay) {
+                        return;
+                    }
+                    activeOverlay.hidden = true;
+                    activeOverlay = null;
+                    document.body.classList.remove("modal-open");
+                    el.game.inert = false;
+                    el.startScreen.inert = false;
+                    el.endScreen.inert = false;
+                    var target = restoreFocus;
+                    restoreFocus = null;
+                    if (
+                        target &&
+                        typeof target.focus === "function" &&
+                        document.contains(target) &&
+                        !target.disabled
+                    ) {
+                        target.focus();
+                    }
+                }
+
+                function renderMapInto(grid) {
+                    var fragment = document.createDocumentFragment();
+                    state.words.forEach(function (word, index) {
+                        var cell = document.createElement("div");
+                        cell.className =
+                            "map-cell c-" +
+                            state.colors[index] +
+                            (state.revealed[index] ? " is-revealed" : "");
+                        var wordNode = document.createElement("span");
+                        wordNode.className = "map-word";
+                        wordNode.textContent = word;
+                        cell.append(wordNode);
+                        fragment.append(cell);
+                    });
+                    grid.replaceChildren(fragment);
+                }
+
+                function openMap() {
+                    if (!state || state.over) {
+                        return;
+                    }
+                    var team = state.turn;
+                    el.mapTitle.textContent = teamName(team) + "地图";
+                    el.mapTitle.dataset.team = team;
+                    el.mapHint.textContent =
+                        "请把手机交给" + teamName(team) + "间谍头目，其他人请回避。";
+                    renderMapInto(el.mapGrid);
+                    openModal(el.mapOverlay);
+                }
+
+                function closeMap() {
+                    if (!state) {
+                        return;
+                    }
+                    el.mapGrid.replaceChildren();
+                    closeModal();
+                    if (intro) {
+                        intro = false;
+                        showScreen("game");
+                        setStatus(teamName(state.turn) + "回合，请开始猜词。", "");
+                        el.mapBtn.focus();
+                    }
+                }
+
+                function openFinalMap() {
+                    if (!state || !state.over) {
+                        return;
+                    }
+                    renderMapInto(el.finalGrid);
+                    openModal(el.finalOverlay);
+                }
+
+                function closeFinalMap() {
+                    el.finalGrid.replaceChildren();
+                    closeModal();
+                }
+
+                function askEndTurn() {
+                    if (!state || state.over || intro) {
+                        return;
+                    }
+                    el.endTurnTitle.textContent =
+                        "结束" + teamName(state.turn) + "回合？";
+                    el.endTurnHint.textContent =
+                        "确认后轮到" + teamName(otherTeam(state.turn)) + "。";
+                    openModal(el.endTurnOverlay);
+                }
+
+                function cancelEndTurn() {
+                    closeModal();
+                }
+
+                function confirmEndTurn() {
+                    var current = state ? state.turn : null;
+                    closeModal();
+                    if (!state || state.over || !current || state.turn !== current) {
+                        return;
+                    }
+                    switchTurn(teamName(current) + "结束回合。");
+                }
+
+                function askFlip(index) {
+                    if (!state || state.over || intro || state.revealed[index]) {
+                        return;
+                    }
+                    pendingIndex = index;
+                    el.confirmWord.textContent = state.words[index];
+                    openModal(el.confirmOverlay);
+                }
+
+                function cancelFlip() {
+                    pendingIndex = -1;
+                    el.confirmWord.textContent = "";
+                    closeModal();
+                }
+
+                function switchTurn(prefix) {
+                    state.turn = otherTeam(state.turn);
+                    state.round += 1;
+                    renderTeams();
+                    setStatus(prefix + "轮到" + teamName(state.turn) + "。", "");
+                }
+
+                function finishGame(winner, reason) {
+                    state.over = true;
+                    state.winner = winner;
+                    state.reason = reason;
+                    renderTeams();
+                    renderBoard();
+                    setTurnColor(winner);
+                    el.endTitle.textContent = teamName(winner) + "胜利";
+                    el.endTitle.dataset.team = winner;
+                    el.endReason.textContent =
+                        reason === "刺客"
+                            ? "对手翻到了刺客。"
+                            : "己方特工已被全部翻开。";
+                    el.endRed.textContent = String(state.remaining.red);
+                    el.endBlue.textContent = String(state.remaining.blue);
+                    showScreen("end");
+                    el.endTitle.focus();
+                }
+
+                function revealCard(index) {
+                    var color = state.colors[index];
+                    state.revealed[index] = true;
+                    if (color !== "assassin") {
+                        state.remaining[color] -= 1;
+                    }
+                    renderBoard();
+                    renderTeams();
+
+                    if (color === "assassin") {
+                        finishGame(otherTeam(state.turn), "刺客");
+                        return;
+                    }
+                    if (state.remaining[color] === 0) {
+                        finishGame(color, "全部特工");
+                        return;
+                    }
+                    if (color === state.turn) {
+                        setStatus(
+                            "猜中" +
+                                teamName(color) +
+                                "词，可以继续猜或结束回合。",
+                            "good"
+                        );
+                        return;
+                    }
+                    var label =
+                        color === "neutral"
+                            ? "中立词"
+                            : teamName(color) + "词";
+                    switchTurn(
+                        "翻到" +
+                            label +
+                            "，" +
+                            teamName(state.turn) +
+                            "回合结束。"
+                    );
+                }
+
+                function confirmFlip() {
+                    var index = pendingIndex;
+                    pendingIndex = -1;
+                    el.confirmWord.textContent = "";
+                    closeModal();
+                    if (
+                        index < 0 ||
+                        !state ||
+                        state.over ||
+                        state.revealed[index]
+                    ) {
+                        return;
+                    }
+                    revealCard(index);
+                }
+
+                function newGame() {
+                    pendingIndex = -1;
+                    closeModal();
+                    el.mapGrid.replaceChildren();
+                    el.finalGrid.replaceChildren();
+                    intro = true;
+
+                    var first = Math.random() < 0.5 ? "red" : "blue";
+                    var second = otherTeam(first);
+                    var colors = shuffle(
+                        Array(9)
+                            .fill(first)
+                            .concat(Array(8).fill(second))
+                            .concat(Array(7).fill("neutral"))
+                            .concat(["assassin"])
+                    );
+                    var words = shuffle(POOL).slice(0, 25);
+
+                    state = {
+                        words: words,
+                        colors: colors,
+                        revealed: Array(25).fill(false),
+                        turn: first,
+                        first: first,
+                        remaining: { red: 0, blue: 0 },
+                        round: 1,
+                        over: false,
+                        winner: null,
+                        reason: "",
+                    };
+                    state.remaining[first] = 9;
+                    state.remaining[second] = 8;
+
+                    createBoard(words);
+                    renderBoard();
+                    renderTeams();
+                    setStatus("", "");
+
+                    el.startTeam.textContent = teamName(first) + "先手";
+                    el.startTeam.dataset.team = first;
+                    el.startPrompt.textContent =
+                        "请把手机交给" + teamName(first) + "间谍头目";
+                    showScreen("start");
+                    el.startTeam.focus();
+                }
+
+                el.board.addEventListener("click", function (event) {
+                    var card = event.target.closest(".card");
+                    if (!card || !el.board.contains(card)) {
+                        return;
+                    }
+                    askFlip(Number(card.dataset.index));
+                });
+
+                el.mapBtn.addEventListener("click", openMap);
+                el.startMapBtn.addEventListener("click", openMap);
+                el.hideMapBtn.addEventListener("click", closeMap);
+                el.mapCloseBtn.addEventListener("click", closeMap);
+                el.mapOverlay.addEventListener("click", function (event) {
+                    if (event.target === el.mapOverlay) {
+                        closeMap();
+                    }
+                });
+
+                el.confirmFlipBtn.addEventListener("click", confirmFlip);
+                el.cancelFlipBtn.addEventListener("click", cancelFlip);
+                el.confirmOverlay.addEventListener("click", function (event) {
+                    if (event.target === el.confirmOverlay) {
+                        cancelFlip();
+                    }
+                });
+
+                el.endMapBtn.addEventListener("click", openFinalMap);
+                el.finalCloseBtn.addEventListener("click", closeFinalMap);
+                el.finalCloseBtnBottom.addEventListener(
+                    "click",
+                    closeFinalMap
+                );
+                el.finalOverlay.addEventListener("click", function (event) {
+                    if (event.target === el.finalOverlay) {
+                        closeFinalMap();
+                    }
+                });
+
+                el.cancelEndTurnBtn.addEventListener("click", cancelEndTurn);
+                el.confirmEndTurnBtn.addEventListener("click", confirmEndTurn);
+                el.endTurnOverlay.addEventListener("click", function (event) {
+                    if (event.target === el.endTurnOverlay) {
+                        cancelEndTurn();
+                    }
+                });
+
+                el.endTurnBtn.addEventListener("click", askEndTurn);
+
+                el.againBtn.addEventListener("click", newGame);
+
+                document.addEventListener("keydown", function (event) {
+                    if (!activeOverlay) {
+                        return;
+                    }
+                    if (event.key === "Escape") {
+                        event.preventDefault();
+                        if (activeOverlay === el.mapOverlay) {
+                            closeMap();
+                        } else if (
+                            activeOverlay === el.confirmOverlay
+                        ) {
+                            cancelFlip();
+                        } else if (
+                            activeOverlay === el.endTurnOverlay
+                        ) {
+                            cancelEndTurn();
+                        } else if (activeOverlay === el.finalOverlay) {
+                            closeFinalMap();
+                        }
+                        return;
+                    }
+                    if (event.key !== "Tab") {
+                        return;
+                    }
+                    var dialog = activeOverlay.querySelector(".modal");
+                    var focusables = Array.from(
+                        activeOverlay.querySelectorAll(
+                            "button:not([disabled])"
+                        )
+                    );
+                    if (focusables.length === 0) {
+                        return;
+                    }
+                    var first = focusables[0];
+                    var last = focusables[focusables.length - 1];
+                    var current = document.activeElement;
+                    if (current === dialog) {
+                        event.preventDefault();
+                        (event.shiftKey ? last : first).focus();
+                        return;
+                    }
+                    var inside = activeOverlay.contains(current);
+                    if (event.shiftKey && (current === first || !inside)) {
+                        event.preventDefault();
+                        last.focus();
+                    } else if (
+                        !event.shiftKey &&
+                        (current === last || !inside)
+                    ) {
+                        event.preventDefault();
+                        first.focus();
+                    }
+                });
+
+                newGame();
+            })();
+        </script>
+    </body>
+</html>
