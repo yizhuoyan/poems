@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+		  <meta name="applicable-device" content="pc,mobile" />
+		<title>WHO IS MOLE</title>
+		<style>
+			.player{
+				display: block;
+				border: 1px solid black;
+				border-radius: 5px;
+				font-size: 15px;
+				font-weight: bold;
+				float: left;
+				width: 100px;
+				height: 50px;
+				text-align: center;
+				margin-left: 10px;
+				margin-top: 20px;
+				padding-top: 30px;
+				
+				cursor: pointer;
+			}
+			/*等待中的玩家：不可点击*/
+			.player.waiting{
+				background-color: #f5f5f5;
+				color: #aaa;
+				border-color: #ddd;
+				cursor: not-allowed;
+			}
+			/*当前可以查看题目的玩家*/
+			.player.active{
+				background-color: #fff8e1;
+				outline: 2px solid #c0392b;
+				outline-offset: 1px;
+			}
+			/*已查看过题目的玩家*/
+			.player.viewed{
+				background-color: #888;
+				color: #fff;
+				border-color: #888;
+				cursor: default;
+			}
+			.topic-field{
+				display: inline-block;
+				white-space: nowrap;
+			}
+			.topic-sub-label{
+				font-size: 13px;
+				color: #666;
+			}
+			.topic-divider{
+				margin: 0 6px;
+				color: #999;
+			}
+			
+			
+			#topicManageEL{
+				position:fixed;
+				top:50px;
+				bottom:50px;
+				left:1em;
+				right:1em;
+				margin: auto;
+				border: 1px solid black;
+				text-align: center;
+				background-color: #fff;
+				z-index: 1;
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<header>
+			<h1>who is Mole? <button onclick="topicManageBtnClick(this)">题目管理</button></h1>
+			<div>
+				<p>
+				<label>游戏人数：</label><input id="playerCountInput"  style="width: 4em;"  type="number" value="4" min="3" max="10" step="1" />
+				</p>
+				<p>
+				<label>卧底数量：</label><input id="moleCountInput" type="number" style="width: 4em;" value="1" min="1" max="3" step="1" />
+				</p>
+				<p>
+				<label>本轮题目：</label>
+				<span class="topic-field">
+					<label class="topic-sub-label" for="personTopicInput">好人题目</label>
+					<input id="personTopicInput" style="width: 8em;" type="text" maxlength="8" />
+					<button id="randomTopicBtn1" onclick="handleRandomTopicBtnClick(this)">随机选取</button>
+				</span>
+				<span class="topic-divider">/</span>
+				<span class="topic-field">
+					<label class="topic-sub-label" for="moleTopicInput">卧底题目</label>
+					<input id="moleTopicInput" type="text" style="width: 8em;" maxlength="8" />
+					<button id="randomTopicBtn2" onclick="handleRandomTopicBtnClick(this)">随机选取</button>
+				</span>
+				</p>
+				<p>
+				<button onclick="handleGameBtnClick(this)">开始游戏</button>
+				</p>
+			</div>
+			
+		</header>
+		<main id="gameTableEL"></main>
+		<aside id="topicManageEL">
+			<p>可复制外部题目，程序会自动识别题目。一行一组。</p>
+			<textarea id="gameTopicEL" style="width: 80%;height: 300px;" >
+				金庸 古龙
+				铁观音 碧螺春
+				葡萄 提子
+				蝴蝶 蜜蜂
+				麻雀 乌鸦
+				鸭舌帽 遮阳帽
+				美人心计 倾世皇妃
+				壁纸 贴画
+				动物 植物
+				杭州 苏州
+				橙子 橘子
+				神雕侠侣 天龙八部
+				麦克风 扩音器
+				节节高升 票房大卖
+				口香糖 木糖醇
+				降龙十八掌 九阴白骨爪
+				水盆 水桶
+				童话 神话
+				情人节 光棍节
+				薰衣草 满天星
+				天天向上 非诚勿扰
+				泡泡糖 棒棒糖
+				语无伦次 词不达意
+				白菜 生菜
+				被子 床单
+				晨光 真彩
+				甄嬛传 红楼梦
+				新年 跨年
+				酸菜鱼 水煮鱼
+				太阳伞 雨伞
+				奖牌 金牌
+				郭德纲 周立波
+				蜘蛛侠 蝙蝠侠
+				土豆粉 酸辣粉
+				那英 韩红
+				风扇 空调
+				唇膏 口红
+				果粒橙 鲜橙多
+				结婚 订婚
+				生活费 零花钱
+				刘诗诗 刘亦菲
+				包子 饺子
+				何炅 维嘉
+				小品 话剧
+				丑小鸭 灰姑娘
+				老佛爷 老天爷
+				手机 座机
+				首尔 东京
+				枕头 抱枕
+				小沈阳 宋小宝
+				辣椒 芥末
+				王菲 那英
+				鼠目寸光 井底之蛙
+				烤肉 涮肉
+				饭桶 饭碗
+				十面埋伏 四面楚歌
+				男朋友 前男友
+				婚纱 喜服
+				谢娜 李湘
+				牛奶 豆浆
+				脚踏车 自行车
+				洗发露 护发素
+				洗衣粉 皂角粉
+				油条 麻花
+				张韶涵 王心凌
+				剩女 御姐
+				面包 蛋糕
+				过山车 碰碰车
+				龙凤呈祥 鸳鸯戏水
+				公交 地铁
+				警察 捕快
+				两小无猜 青梅竹马
+				红烧牛肉面 香辣牛肉面
+				吉他 琵琶
+				勇往直前 全力以赴
+				沐浴露 沐浴盐
+				鱼香肉丝 四喜丸子
+				图书馆 图书店
+				包青天 狄仁杰
+				菠萝蜜 榴莲
+				搭讪 勾搭
+				丝袜 秋裤
+				海豚 海狮
+				端午节 中秋节
+				作文 论文
+				福尔摩斯 工藤新一
+				胡子 眉毛
+				孟飞 乐嘉
+				同学 同桌
+				饼干 薯片
+				汉堡包 肉夹馍
+				谢娜张杰 邓超孙俪
+				甄子丹 李连杰
+				状元 冠军
+				自行车 电动车
+				包子 水饺
+				赵敏 黄蓉
+				贵妃醉酒 黛玉葬花
+				孟非 乐嘉
+				妈妈 娘
+				太监 人妖
+				楼梯 电梯
+				盒子 箱子
+				摩托车 电动车
+				作家 编剧
+				成吉思汗 努尔哈赤
+				魔术师 魔法师
+				纸巾 手帕
+				班主任 辅导员
+				董永 许仙
+				高跟鞋 增高鞋
+				眉毛 胡须
+				卷发 直发
+				绿茶 苦茶
+				宫锁心玉 宫锁珠帘
+				流星花园 花样男子
+				大白兔 金丝猴
+				纸巾 湿巾
+				若曦 晴川
+				福尔摩斯 工藤新
+				福尔摩斯 柯南
+				鹅毛 鸡毛
+				脸盆 水桶
+				玫瑰 月季
+				双胞胎 龙凤胎
+				近视眼镜 隐形眼镜
+				胖子 肥肉
+				何炅 李维嘉
+				反弹琵琶 乱弹棉花
+				小笼包 灌汤包
+				梁山伯与祝英台 罗密欧与朱丽叶
+				麻婆豆腐 皮蛋豆腐
+				保安 保镖
+				牛肉干 猪肉脯
+				蝴蝶 飞蛾
+				傻子相机 佳能
+				玻璃 镜子
+				北魏 南朝
+				打印机 扫描机
+				气泡 水泡
+				汤圆 丸子
+				步步惊心 宫锁心玉
+				森马 以纯
+				熏衣草 满天星
+				奶茶 果茶
+				汉堡 肉夹馍
+				火锅 串串香
+				可乐 雪碧
+				披萨 馅饼
+				寿司 紫菜包饭
+				麻辣烫 冒菜
+				炸鸡 烤鸡
+				冰淇淋 冰棒
+				包子 馒头
+				油条 麻团
+				蛋挞 老婆饼
+				薯片 薯条
+				月饼 饼干
+				螺蛳粉 桂林米粉
+				汤圆 元宵
+				牛排 猪排
+				果冻 布丁
+				辣条 豆干
+				煎饼果子 手抓饼
+				酸奶 纯牛奶
+				烤鸭 烧鸭
+				粽子 八宝饭
+				泡面 挂面
+				芒果 菠萝
+				巧克力 可可豆
+				麻辣烫 关东煮
+				包子 烧麦
+				手机 平板
+				毛巾 浴巾
+				牙膏 牙刷
+				洗发水 护发素
+				拖鞋 皮鞋
+				雨伞 遮阳伞
+				笔记本 练习册
+				钢笔 铅笔
+				台灯 吊灯
+				枕头 靠垫
+				保温杯 玻璃杯
+				梳子 卷发棒
+				洗衣粉 洗洁精
+				闹钟 手表
+				书包 手提包
+				镜子 相框
+				拖鞋 运动鞋
+				电池 充电宝
+				筷子 勺子
+				衣架 衣撑
+				肥皂 香皂
+				面霜 乳液
+				口红 唇釉
+				眼镜 墨镜
+				帽子 围巾
+				手套 袜子
+				牛仔裤 运动裤
+				运动鞋 帆布鞋
+				苹果 安卓
+				微信 QQ
+				抖音 快手
+				微博 小红书
+				淘宝 京东
+				美团 饿了么
+				王者荣耀 英雄联盟
+				和平精英 绝地求生
+				西游记 封神榜
+				红楼梦 三国演义
+				甄嬛传 如懿传
+				延禧攻略 还珠格格
+				超人 钢铁侠
+				哈利波特 指环王
+				复仇者联盟 正义联盟
+				猫和老鼠 熊出没
+				喜羊羊 灰太狼
+				海绵宝宝 派大星
+				小猪佩奇 汪汪队
+				数学 语文
+				英语 物理
+				历史 地理
+				政治 生物
+				音乐 美术
+				体育 劳技
+				大学 高中
+				老师 学生
+				图书馆 阅览室
+				黑板 白板
+				粉笔 马克笔
+				课本 辅导书
+				考试 测验
+				作业 试卷
+				篮球 足球
+				排球 羽毛球
+				乒乓球 网球
+				跑步 游泳
+				跳远 跳高
+				举重 体操
+				拳击 摔跤
+				围棋 象棋
+				扑克 麻将
+				跳绳 踢毽子
+				汽车 火车
+				飞机 高铁
+				轮船 潜艇
+				公交车 地铁
+				出租车 网约车
+				自行车 摩托车
+				步行 跑步
+				春天 夏天
+				秋天 冬天
+				晴天 阴天
+				雨天 雪天
+				风 雨
+				雷 电
+				山 水
+				花 草
+				树 木
+				鸟 鱼
+				猫 狗
+				鸡 鸭
+				牛 羊
+				猪 马
+				兔 鼠
+				龙 蛇
+				虎 狮
+				狼 豹
+				苹果 香蕉
+				草莓 蓝莓
+				西瓜 哈密瓜
+				荔枝 龙眼
+				樱桃 杨梅
+				梨 桃
+				杏 李
+				枣 栗
+				梅 橘
+				松 柏
+				竹 菊
+				牡丹 玫瑰
+				月季 蔷薇
+				桂花 茉莉
+				水仙 百合
+				太阳 月亮
+				星星 云朵
+				白天 黑夜
+				早晨 傍晚
+				春天 秋天
+				夏天 冬天
+				城市 乡村
+				公园 花园
+				学校 医院
+				超市 商场
+				车站 机场
+				酒店 宾馆
+				厨房 餐厅
+				卧室 客厅
+				卫生间 浴室
+				书房 阳台
+				沙发 椅子
+				桌子 柜子
+				被子 褥子
+				枕头 枕套
+				窗帘 门帘
+				窗户 门
+				墙壁 地板
+				天花板 屋顶
+				汽车 卡车
+				火车 高铁
+				飞机 直升机
+				轮船 游艇
+				自行车 三轮车
+				公交车 出租车
+				地铁 轻轨
+				火箭 卫星
+				宇宙飞船 航天飞机
+				篮球 排球
+				足球 网球
+				乒乓球 羽毛球
+				跑步 跳远
+				跳高 举重
+				游泳 跳水
+				体操 拳击
+				摔跤 柔道
+				跆拳道 空手道
+				跳棋 军棋
+				书法 绘画
+				音乐 舞蹈
+				唱歌 跳舞
+				弹琴 吹笛
+				读书 写字
+				看报 杂志
+				电影 电视剧
+				动画 漫画
+				小说 散文
+				诗歌 戏剧
+				拿铁 卡布奇诺
+				馄饨 饺子
+				蛋挞 葡挞
+				面包 吐司
+				饼干 曲奇
+				果冻 凉粉
+				果脯 蜜饯
+				麻花 馓子
+				锅巴 薯片
+				粽子 青团
+				汤圆 艾糍
+				月饼 米糕
+				蛋糕 慕斯
+				布丁 双皮奶
+				酸奶 老酸奶
+				牛奶 羊奶
+				果汁 果泥
+				汽水 气泡水
+				咖啡 可可
+				茶包 茶叶
+				绿茶 红茶
+				乌龙茶 普洱茶
+				奶茶 奶绿
+				烧仙草 龟苓膏
+				冰淇淋 雪媚娘
+				炸鸡 炸薯条
+				烤肠 火腿肠
+				牛排 羊排
+				烤肉 烤串
+				烤鱼 蒸鱼
+				炒菜 炖菜
+				凉拌菜 沙拉
+				寿司 手卷
+				刺身 生鱼片
+				汉堡 三明治
+				薯条 薯格
+				披萨 薄饼
+				意面 米粉
+				咖喱饭 盖浇饭
+				炒饭 炒面
+				粥 米糊
+				豆浆 豆汁
+				油条 油饼
+				包子 汤包
+				馒头 花卷
+				烧麦 蒸饺
+				春卷 麻球
+				馄饨 云吞
+				面条 米线
+				米粉 河粉
+				粉丝 粉条
+				腐竹 豆泡
+				豆腐 豆干
+				千张 豆皮
+				蔬菜 野菜
+				白菜 青菜
+				萝卜 胡萝卜
+				土豆 红薯
+				番茄 圣女果
+				黄瓜 丝瓜
+				茄子 青椒
+				苹果 雪梨
+				香蕉 芭蕉
+				柚子 柠檬
+				草莓 树莓
+				蓝莓 蔓越莓
+				芒果 木瓜
+				菠萝 凤梨
+				荔枝 桂圆
+				樱桃 车厘子
+				榴莲 山竹
+				椰子 椰青
+				山竹 莲雾
+				火龙果 猕猴桃
+				草莓 杨梅
+				橙子 柚子
+				手机壳 手机膜
+				耳机 音箱
+				充电器 充电线
+				充电宝 充电器
+				鼠标 键盘
+				显示器 电视机
+				打印机 复印机
+				扫描仪 传真机
+				路由器 交换机
+				摄像头 监控器
+				投影仪 幻灯机
+				耳机 耳麦
+				手表 手环
+				眼镜 隐形眼镜
+				帽子 发带
+				围巾 丝巾
+				手套 袖套
+				袜子 袜套
+				鞋子 靴子
+				裤子 裙子
+				上衣 外套
+				毛衣 线衣
+				衬衫 衬衣
+				牛仔裤 休闲裤
+				运动服 校服
+				睡衣 家居服
+				泳衣 沙滩裤
+				羽绒服 棉服
+				皮衣 皮草
+				风衣 大衣
+				夹克 马甲
+				帽子 头盔
+				口罩 面罩
+				围巾 围脖
+				手套 护手霜
+				袜子 鞋垫
+				鞋子 鞋油
+				包包 钱包
+				行李箱 背包
+				雨伞 雨披
+				太阳镜 老花镜
+				手表 怀表
+				项链 手链
+				耳环 耳钉
+				戒指 手镯
+				发夹 头绳
+				梳子 篦子
+				镜子 放大镜
+				牙膏 牙粉
+				牙刷 牙线
+				毛巾 面巾纸
+				浴巾 浴球
+				洗发水 洗发露
+				护发素 发膜
+				沐浴露 香皂
+				洗面奶 洁面乳
+				面霜 精华液
+				乳液 啫喱
+				爽肤水 柔肤水
+				面膜 眼膜
+				唇釉 唇彩
+				眼影 腮红
+				眉笔 眉粉
+				眼线笔 眼线液
+				睫毛膏 睫毛夹
+				卸妆水 卸妆油
+				香水 香薰
+				护手霜 润唇膏
+				身体乳 润肤露
+				洗衣液 洗衣皂
+				洗洁精 洗碗布
+				消毒液 酒精
+				拖把 扫帚
+				抹布 百洁布
+				垃圾桶 垃圾袋
+				马桶刷 洁厕灵
+				洗发水 沐浴露
+				牙膏 漱口水
+				台灯 落地灯
+				加湿器 除湿机
+				电暖器 电热毯
+				显示器 曲面屏
+				移动硬盘 固态硬盘
+			</textarea>
+			<p style="text-align: center;">
+				<button onclick="closeTopicManageWindowBtnClick(this)">关闭</button>
+			</p>
+		</aside>
+		<script>
+			//游戏对象
+			var game={
+				"gameTopics":parseGameTopicELValue(),
+				"currentPersonTopic":"好人题目",
+				"currentMoleTopic":"卧底题目",
+				//当前轮到查看题目的玩家下标（从0开始）
+				"currentViewIndex":0
+			}
+			//游戏按钮
+			function handleGameBtnClick(btn){
+				if(btn.innerHTML=="开始游戏"){
+					startGame(btn);
+				}else{
+					showWhoIsMole(btn);
+				}
+			}
+			//开始游戏
+			function startGame(btn){
+				try{
+					//确定题目
+					var topic=determineTopic();
+					//生成玩家
+					var players=generatePlayers();
+					//分配卧底
+					allocateMole(players,topic);
+					//从1号玩家开始，依次查看题目
+					game.currentViewIndex=0;
+					refreshPlayerViewState();
+					btn.innerHTML="查看谁是卧底";
+					//禁用按钮
+					randomTopicBtn1.disabled=true
+					randomTopicBtn2.disabled=true
+				}catch(e){
+					console.error(e);
+					alert(e.message);
+				}
+			}
+			//查看游戏结果
+			var showWhoIsMole=function(btn){
+				btn.innerHTML="开始游戏";
+				//显示题目
+				personTopicInput.value=personTopicInput.gameValue;
+				moleTopicInput.value=moleTopicInput.gameValue;
+				//按钮恢复
+				randomTopicBtn1.disabled=false
+				randomTopicBtn2.disabled=false
+				
+				var players=gameTableEL.children;
+				//已公布结果，玩家不再可以查看题目
+				game.currentViewIndex=players.length;
+				for (var i = 0; i < players.length; i++) {
+					var p=players[i];
+					p.className="player";
+					var topic=p.getAttribute("data-topic");
+					if(topic==game.currentMoleTopic){
+						p.style.backgroundColor="red"
+					}else{
+						
+					}
+					p.innerHTML=(i+1)+"<br>"+topic	
+							
+				}
+			
+			}
+			//点击玩家
+			function handlePlayerClick(el){
+				var players=gameTableEL.children;
+				//题目已全部查看或已公布结果
+				if(game.currentViewIndex>=players.length){
+					return;
+				}
+				//只有当前轮到序号的玩家可以查看题目
+				var playerIndex=parseInt(el.getAttribute("data-player-index"));
+				if(playerIndex!=game.currentViewIndex+1){
+					alert("请先让 "+(game.currentViewIndex+1)+" 号玩家查看题目");
+					return;
+				}
+				var topic=el.getAttribute("data-topic")
+				alert("你的题目是："+topic)
+				game.currentViewIndex++;
+				refreshPlayerViewState();
+			}
+			//刷新玩家状态：仅当前玩家可以点击查看题目
+			function refreshPlayerViewState(){
+				var players=gameTableEL.children;
+				for (var i = 0; i < players.length; i++) {
+					var p=players[i];
+					p.className="player";
+					if(i<game.currentViewIndex){
+						p.classList.add("viewed");
+						p.innerHTML=p.getAttribute("data-player-index")+"<br>已查看";
+					}else if(i==game.currentViewIndex){
+						p.classList.add("active");
+						p.innerHTML=p.getAttribute("data-player-index")+"<br>点击查看题目";
+					}else{
+						p.classList.add("waiting");
+						p.innerHTML=p.getAttribute("data-player-index")+"<br>等待中";
+					}
+				}
+			}
+			//确定题目
+			function determineTopic(){
+				var rst=[];
+				rst[0]=personTopicInput.value;
+				if(rst[0].trim()==""){
+					throw new Error("请填写好人题目")
+				}
+				
+				rst[1]=moleTopicInput.value;
+				if(rst[1].trim()==""){
+					throw new Error("请填写卧底题目")
+				}
+				//和上次一样，自动随机
+				if(rst[0]==game.currentPersonTopic){
+					rst=randomTopic()
+					if(!rst){
+						throw new Error("已无更多游戏题目，请添加")
+					}
+				}
+				
+				personTopicInput.gameValue=rst[0]
+				personTopicInput.value="***"
+				moleTopicInput.value="***"
+				moleTopicInput.gameValue=rst[1]
+				return rst;
+			}
+			//生成玩家
+			function generatePlayers(){
+				var rst="";
+				var playerCount=parseInt(playerCountInput.value);
+				for (var i = 1; i <= playerCount; i++) {
+					rst+=createPlayerHtml(i);
+				}
+				gameTableEL.innerHTML=rst;
+				
+				return gameTableEL.children;
+			
+			}
+			//生成玩家html
+			function createPlayerHtml(seq){
+				var rst='<div class="player" data-player-index="'+seq+'" onclick="handlePlayerClick(this)">';
+				rst+=seq;
+				rst+="<br>点击查看题目"
+				rst+="</div>";
+				return rst;
+			}
+			//分配卧底
+			function allocateMole(players,topic){
+				game.currentPersonTopic=topic[0]
+				game.currentMoleTopic=topic[1]
+				//卧底数量
+				var moleCount=parseInt(moleCountInput.value)
+				var moleIndexArray=[];
+				for (var i = 0; i < moleCount; i++) {
+					var moleIndex=randomNextInt(0,players.length,moleIndexArray)
+					moleIndexArray.push(moleIndex);
+				}
+								
+				for (var i = 0; i < players.length; i++) {
+					var p=players[i]
+					if(moleIndexArray.indexOf(i)>=0){
+						//is mole
+						p.setAttribute("data-topic",game.currentMoleTopic)
+					}else{
+						p.setAttribute("data-topic",game.currentPersonTopic)
+					}		
+				}
+				//删除已选题目，避免再次选中
+				var gameTopics=game.gameTopics
+				var currentTopicIndex=indexOfTopic(gameTopics,topic);
+				if(currentTopicIndex>=0){
+					gameTopics.splice(currentTopicIndex,1)	
+				}
+			}
+		
+			//随机生成题目
+			function handleRandomTopicBtnClick(btn){
+				
+				var currentTopic=randomTopic()
+				if(!currentTopic){
+					alert("已无更多游戏题目，请添加")
+					return;
+				}
+				personTopicInput.value=currentTopic[0];
+				moleTopicInput.value=currentTopic[1];
+				
+			
+			}
+			//随机生成题目
+			function randomTopic(){
+				var gameTopics=game.gameTopics
+				if(gameTopics.length==0){
+					return;
+				}
+				
+				var randomTopicIndex=Math.floor(Math.random()*100)%gameTopics.length;
+				//和上次一样，直接+1
+				if(game.randomTopicIndex==gameTopics[randomTopicIndex]){
+					randomTopicIndex=(randomTopicIndex+1)%gameTopics.length;
+				}
+				game.randomTopicIndex=randomTopicIndex
+				var currentTopic=gameTopics[randomTopicIndex];
+				if(Math.random()>0.5){
+					return [currentTopic[1],currentTopic[0]]	
+				}
+				return [currentTopic[0],currentTopic[1]]
+			}
+			
+			//题目管理按钮
+			function topicManageBtnClick(){
+				//写入剩余题目
+				var gameTopics=game.gameTopics
+				var topicHtml="";
+				for (var i = 0; i < gameTopics.length; i++) {
+					topicHtml+=gameTopics[i].join(" ");
+					topicHtml+="\n";
+				}
+				gameTopicEL.value=topicHtml;
+				topicManageEL.style.display="block";
+			}
+		
+			//题目管理关闭按钮
+			function closeTopicManageWindowBtnClick(){
+				topicManageEL.style.display="none";
+				
+				game.gameTopics=parseGameTopicELValue()
+			}
+			
+			function parseGameTopicELValue(){
+				var topicStr=gameTopicEL.value.trim()
+				if(topicStr==""){
+					return [];
+				}
+				var lines=topicStr.split(/(?:\r?\n)+/g);
+				
+				var rst=[];
+				for(var i=0;i<lines.length;i++){
+					var line=lines[i];
+					
+					line=line.replaceAll(/[^\u4e00-\u9fa5a-zA-Z·]+/g," ").trim()
+					if(line.length==0){
+						continue;
+					}
+					var tokens=line.split(/\s+/g);
+					if(tokens.length>1){
+						rst.push([tokens[0],tokens[1]]);
+					}
+				}
+				var rst2=[];
+				//去重
+				for (var i = 0; i < rst.length;i++) {
+					if(indexOfTopic(rst2,rst[i])==-1){
+						rst2.push(rst[i])
+					}
+				}
+				return rst2;
+			}
+			function indexOfTopic(arr,e){
+				for (var i = 0; i < arr.length;i++) {
+					var x=arr[i];
+					if(x[0]==e[0]&&x[1]==e[1]){
+						return i;
+					}
+					if(x[0]==e[1]&&x[1]==e[0]){
+						return i;
+					}
+				}
+				return -1;
+			}
+			
+		</script>
+		<script>
+		
+			function randomNextInt(a,b,arr){
+				var tryMax=10;
+				while(tryMax--){
+					var x=Math.floor(Math.random()*Math.abs(a-b))+Math.min(a,b);
+					if(arr.indexOf(x)==-1){
+						return x;
+					}
+	
+				}
+				throw new Error("无法生成随机数，请检测a,b")
+			}
+		</script>
+	</body>
+</html>
