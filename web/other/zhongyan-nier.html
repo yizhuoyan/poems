@@ -1,0 +1,2126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta name="theme-color" content="#f6efe2" />
+<title>忠言逆耳 · 宫廷推理助手</title>
+<style>
+:root{
+  --paper:#f6efe2;
+  --paper-2:#fffaf1;
+  --ink:#2b2118;
+  --muted:#7a6a58;
+  --line:rgba(43,33,24,.12);
+  --crimson:#8c1c13;
+  --crimson-dark:#5c120c;
+  --gold:#c9a227;
+  --gold-light:#f0d98c;
+  --jade:#2f6f5e;
+  --slate:#4a5568;
+  --shadow:0 18px 50px rgba(43,33,24,.12);
+  --radius:18px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{
+  min-height:100vh;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(900px 520px at 8% -10%,rgba(201,162,39,.16),rgba(201,162,39,0) 60%),
+    radial-gradient(820px 480px at 100% 0%,rgba(140,28,19,.10),rgba(140,28,19,0) 55%),
+    var(--paper);
+  -webkit-font-smoothing:antialiased;
+}
+button,input,textarea,select{font-family:inherit}
+button{cursor:pointer}
+h1,h2,h3{font-family:"Songti SC","SimSun","Noto Serif SC",serif}
+.muted{color:var(--muted)}
+.danger-text{color:#b42318;font-weight:700}
+.error-text{min-height:1.2em;margin:4px 0 0;color:#b42318;font-size:13px}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  min-height:42px;padding:9px 16px;border-radius:12px;border:1px solid var(--line);
+  background:#fff;color:#4a3a2a;font-size:14px;font-weight:700;
+  transition:transform .1s,border-color .15s,background .15s,color .15s;
+}
+.btn:hover{border-color:var(--gold);color:var(--crimson)}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.42;cursor:not-allowed;transform:none}
+.btn-primary{background:linear-gradient(135deg,var(--crimson),var(--crimson-dark));border:0;color:#fff;box-shadow:0 8px 20px rgba(140,28,19,.24)}
+.btn-primary:hover{color:#fff;background:linear-gradient(135deg,#a32318,var(--crimson-dark))}
+.btn-ghost{background:rgba(255,255,255,.7);color:#5c4b3a}
+.btn-danger{background:#b42318;border-color:#b42318;color:#fff}
+.btn-danger:hover{color:#fff;background:#961b12}
+.btn-small{min-height:36px;padding:7px 12px;font-size:13px;border-radius:10px}
+.text-input,.number-input,textarea{
+  width:100%;padding:10px 12px;border:1px solid #d8cbb8;border-radius:12px;
+  background:#fff;color:var(--ink);font-size:16px;outline:none;
+}
+.text-input:focus,.number-input:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,162,39,.16)}
+
+/* ===== 设置页 ===== */
+#appHeader{max-width:1080px;margin:0 auto;padding:28px 18px 0}
+.header-top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:14px;min-width:0}
+.seal{
+  width:58px;height:58px;flex:none;display:grid;place-items:center;border-radius:14px;
+  background:linear-gradient(145deg,#a32318,var(--crimson-dark));color:#fff;
+  font-family:"Songti SC","SimSun",serif;font-size:32px;font-weight:800;
+  box-shadow:0 10px 24px rgba(140,28,19,.28),inset 0 0 0 2px rgba(255,255,255,.18);
+}
+.brand h1{margin:0;font-size:34px;letter-spacing:.08em;line-height:1.1}
+.brand p{margin:5px 0 0;color:var(--muted);font-size:14px;letter-spacing:.05em}
+.header-actions{display:flex;gap:8px;flex-wrap:wrap}
+.setup-panel{
+  margin-top:22px;padding:22px;border:1px solid var(--line);border-radius:24px;
+  background:rgba(255,250,241,.9);box-shadow:var(--shadow);
+}
+.setup-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
+.setup-grid label{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:700;color:#5c4b3a}
+.setup-grid input{margin-top:0}
+.check-label{flex-direction:row !important;align-items:center;gap:8px !important;cursor:pointer}
+.check-label input[type="checkbox"]{width:18px;height:18px;accent-color:var(--crimson);flex:none}
+.composition-preview{
+  margin-top:16px;padding:12px 14px;border:1px dashed rgba(201,162,39,.55);border-radius:12px;
+  background:#fff7e8;font-size:14px;line-height:1.6;
+}
+.custom-words{margin-top:14px}
+.custom-words summary{cursor:pointer;font-weight:700;color:var(--crimson);font-size:14px}
+.custom-words textarea{min-height:96px;margin-top:10px;resize:vertical;font-size:14px}
+.custom-words-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:13px}
+.btn-start{width:100%;margin-top:16px;padding:14px;font-size:18px;letter-spacing:.06em}
+
+/* ===== 游戏桌 ===== */
+#gameTableEL{display:none}
+body.game-fullscreen{overflow:hidden;background:#0c0907}
+body.game-fullscreen #appHeader{display:none}
+body.game-fullscreen #gameTableEL{
+  display:block;position:fixed;inset:0;z-index:20;overflow-y:auto;
+  padding:82px 16px 24px;
+  background:
+    radial-gradient(900px 520px at 50% -8%,rgba(201,162,39,.14),rgba(201,162,39,0) 62%),
+    radial-gradient(720px 480px at 0% 100%,rgba(140,28,19,.18),rgba(140,28,19,0) 60%),
+    #0c0907;
+  color:#f8f1e3;
+}
+.table-hint{max-width:920px;margin:0 auto 16px;text-align:center;font-size:15px;line-height:1.7;color:#d9c9a3}
+.table-hint strong{color:#f0d98c}
+.composition-line{max-width:920px;margin:0 auto 12px;text-align:center;font-size:13px;color:#a9987d;letter-spacing:.04em}
+.player-grid{
+  max-width:980px;margin:0 auto;display:grid;gap:12px;
+  grid-template-columns:repeat(auto-fit,minmax(112px,1fr));
+  align-content:start;justify-content:center;
+}
+.player{
+  min-height:96px;padding:16px 8px;border-radius:16px;border:1px solid #3a2c1e;
+  background:#1a120c;color:#f4ead6;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  cursor:pointer;user-select:none;touch-action:manipulation;
+  transition:transform .15s,border-color .15s,background .2s,box-shadow .2s,opacity .2s;
+}
+.player:hover{transform:translateY(-2px);border-color:#6b5436}
+.player-seat{font-size:18px;font-weight:800;line-height:1.2}
+.player-sub{font-size:12px;color:#a9987d}
+.player.is-emperor{
+  border-color:var(--gold);cursor:default;
+  background:linear-gradient(135deg,#3a2a10,#1c1408);
+  box-shadow:0 0 0 2px rgba(201,162,39,.24);
+}
+.player.is-active{
+  border-color:var(--gold-light);
+  background:linear-gradient(135deg,#4a3512,#241808);
+  box-shadow:0 0 0 3px rgba(240,217,140,.28),0 12px 26px rgba(0,0,0,.3);
+}
+.player.is-done{opacity:.55;border-style:dashed;cursor:default}
+.player.is-waiting{opacity:.7;cursor:default}
+.player.is-speaking{
+  border-color:var(--gold-light);
+  background:linear-gradient(135deg,#6b4b13,#2b1c07);
+  box-shadow:0 0 0 3px rgba(240,217,140,.35),0 14px 30px rgba(0,0,0,.35);
+  transform:translateY(-2px);
+}
+.player.is-skipped{opacity:.4;text-decoration:line-through}
+.player.is-idle{opacity:.82}
+.player.role-emperor{background:linear-gradient(135deg,#f0d98c,#c9a227);color:#2b1c07;border-color:transparent}
+.player.role-loyal{background:linear-gradient(135deg,#bfe8d7,#4f9d82);color:#08281e;border-color:transparent}
+.player.role-traitor{background:linear-gradient(135deg,#ffb3b3,#c92a2a);color:#fff;border-color:transparent}
+.player.role-eunuch{background:linear-gradient(135deg,#dbe4f0,#7b8fa8);color:#1d2a3a;border-color:transparent}
+.table-actions{max-width:980px;margin:20px auto 0;display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+
+/* ===== 游戏顶栏 ===== */
+#gameBarEL{display:none}
+body.game-fullscreen #gameBarEL{
+  display:flex;position:fixed;top:0;left:0;right:0;z-index:30;height:64px;
+  align-items:center;justify-content:space-between;gap:12px;padding:0 16px;
+  background:rgba(12,9,7,.92);border-bottom:1px solid rgba(240,217,140,.18);
+  color:#f8f1e3;backdrop-filter:blur(10px);
+}
+.game-bar-left,.game-bar-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.game-bar-center{display:flex;align-items:center;gap:10px;min-width:0}
+.game-bar-left span{font-size:13px;color:#d9c9a3;white-space:nowrap}
+#barTimerEL{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;color:#f0d98c;white-space:nowrap}
+#barPhaseEL{font-size:12px;color:#a9987d;white-space:nowrap}
+#gameBarEL .btn{min-height:38px;padding:8px 14px;font-size:13px}
+#gameBarEL .btn-primary{background:linear-gradient(135deg,#f0d98c,#c9a227);border:0;color:#2b1c07;box-shadow:none}
+#gameBarEL .btn-ghost{background:transparent;border-color:rgba(240,217,140,.35);color:#f0d98c}
+.sound-btn{width:34px;min-width:34px;padding:0;font-size:12px;font-weight:800}
+.sound-btn.is-off{opacity:.55;color:#a9987d;border-color:rgba(240,217,140,.18)}
+
+/* ===== 弹窗 ===== */
+.modal-mask{
+  position:fixed;inset:0;z-index:40;display:none;align-items:center;justify-content:center;padding:16px;
+  background:rgba(18,12,8,.64);backdrop-filter:blur(3px);
+}
+.modal-mask.show{display:flex}
+#infoMaskEL{z-index:50}
+.modal-box{
+  width:100%;max-width:680px;max-height:calc(100vh - 32px);
+  display:flex;flex-direction:column;overflow:hidden;
+  border:1px solid rgba(201,162,39,.36);border-radius:22px;
+  background:var(--paper-2);color:var(--ink);
+  box-shadow:0 30px 90px rgba(0,0,0,.48);
+}
+#infoMaskEL .modal-box{max-width:880px}
+.modal-box h2{
+  margin:0;padding:20px 22px 12px;font-size:22px;color:var(--crimson);
+  border-bottom:1px solid var(--line);
+}
+.modal-body{flex:1;min-height:0;padding:18px 22px;overflow-y:auto;font-size:14px;line-height:1.7}
+.modal-footer{
+  padding:14px 22px 18px;display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;
+  border-top:1px solid var(--line);
+}
+.privacy-note{
+  padding:12px 14px;border:1px solid #f0d98c;border-radius:12px;
+  background:#fff3cd;color:#7a5a00;font-size:13px;line-height:1.65;
+}
+.role-badge{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:8px 18px;border-radius:999px;font-size:18px;font-weight:800;margin-bottom:12px;
+}
+.role-badge.role-emperor{background:linear-gradient(135deg,#f0d98c,#c9a227);color:#2b1c07}
+.role-badge.role-loyal{background:linear-gradient(135deg,#bfe8d7,#4f9d82);color:#08281e}
+.role-badge.role-traitor{background:linear-gradient(135deg,#ffb3b3,#c92a2a);color:#fff}
+.role-badge.role-eunuch{background:linear-gradient(135deg,#dbe4f0,#7b8fa8);color:#1d2a3a}
+.role-goal{margin:0 0 16px;color:#5c4b3a;line-height:1.75}
+.word-card{
+  margin:16px 0;padding:18px 16px;border:1px dashed rgba(201,162,39,.65);border-radius:16px;
+  background:#fff7e8;text-align:center;
+}
+.word-label{display:block;font-size:12px;color:var(--muted);letter-spacing:.22em}
+.word-text{display:block;margin:8px 0;font-family:"Songti SC","SimSun",serif;font-size:34px;line-height:1.25;color:var(--crimson);letter-spacing:.08em;word-break:break-all}
+.word-cat{font-size:12px;color:var(--muted)}
+.word-card.no-word{background:#f1f5f9;border-color:#cbd5e1;color:#64748b;font-size:18px;font-weight:700}
+.camp-knowledge{
+  margin:14px 0;padding:12px 14px;border:1px solid #c9d8e8;border-radius:12px;
+  background:#f3f8fd;color:#29435c;font-size:13px;line-height:1.7;
+}
+.camp-title{font-size:14px;margin-bottom:4px}
+.camp-knowledge strong{color:#1f5a4a}
+.bet-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.bet-btn{
+  min-height:74px;padding:18px 12px;border-radius:16px;border:2px solid var(--line);
+  background:#fff;color:var(--ink);font-size:18px;font-weight:800;
+}
+.bet-btn[data-bet="win"]{border-color:#2f6f5e;color:#1f5a4a}
+.bet-btn[data-bet="lose"]{border-color:#b42318;color:#b42318}
+.bet-btn:hover{background:#fff7e8}
+.bet-selected{padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:16px;text-align:center}
+.guess-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:8px;font-size:13px;color:var(--muted)}
+#guessTimerEL{font-weight:800;color:var(--crimson);font-variant-numeric:tabular-nums}
+.identity-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.identity-counts{display:flex;gap:8px;flex-wrap:wrap;font-size:13px;font-weight:700}
+.count-pill{padding:4px 9px;border-radius:999px;background:#f1eadb;color:#5c4b3a}
+.count-pill.over{background:#ffe3e3;color:#b42318}
+.identity-list{display:flex;flex-direction:column;gap:8px}
+.identity-row{
+  display:flex;align-items:center;gap:10px;padding:8px 10px;
+  border:1px solid var(--line);border-radius:12px;background:#fff;
+}
+.identity-seat{width:54px;flex:none;font-weight:800;color:#5c4b3a}
+.identity-buttons{display:flex;gap:6px;flex-wrap:wrap}
+.role-btn{
+  min-width:48px;min-height:38px;padding:7px 10px;border:1px solid var(--line);border-radius:10px;
+  background:#f8f3e9;color:#5c4b3a;font-weight:800;
+}
+.role-btn.active.role-loyal{background:#4f9d82;border-color:#4f9d82;color:#fff}
+.role-btn.active.role-traitor{background:#c92a2a;border-color:#c92a2a;color:#fff}
+.role-btn.active.role-eunuch{background:#7b8fa8;border-color:#7b8fa8;color:#fff}
+.role-btn:disabled{opacity:.3;cursor:not-allowed}
+.result-banner{
+  margin-bottom:16px;padding:18px;border-radius:16px;text-align:center;
+  font-family:"Songti SC","SimSun",serif;font-size:30px;font-weight:800;letter-spacing:.12em;
+}
+.result-banner.win{background:linear-gradient(135deg,#f0d98c,#c9a227);color:#2b1c07}
+.result-banner.lose{background:linear-gradient(135deg,#ffb3b3,#c92a2a);color:#fff}
+.settlement-summary{display:grid;gap:6px;margin-bottom:14px;font-size:14px}
+.settlement-section{margin-top:16px}
+.settlement-section h3{margin:0 0 8px;font-size:15px;color:var(--crimson)}
+.settlement-roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:8px}
+.settlement-role{padding:10px 12px;border-radius:12px;font-size:13px;font-weight:800;line-height:1.45}
+.settlement-role small{display:block;font-size:12px;font-weight:500;opacity:.82;margin-top:2px}
+.role-chip{
+  display:inline-flex;align-items:center;gap:4px;margin:0 6px 6px 0;padding:4px 9px;
+  border-radius:999px;font-size:12px;font-weight:800;
+}
+.role-chip.role-emperor{background:#f0d98c;color:#2b1c07}
+.role-chip.role-loyal{background:#bfe8d7;color:#08281e}
+.role-chip.role-traitor{background:#ffb3b3;color:#5c120c}
+.role-chip.role-eunuch{background:#dbe4f0;color:#1d2a3a}
+.history-summary{
+  display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px;padding:12px 14px;
+  border-radius:12px;background:#f8f3e9;font-size:13px;
+}
+.history-card{border:1px solid var(--line);border-radius:14px;margin-bottom:10px;background:#fff;overflow:hidden}
+.history-card summary{padding:12px 14px;cursor:pointer;font-weight:800;color:#5c4b3a}
+.history-card[open] summary{border-bottom:1px solid var(--line)}
+.history-body{padding:12px 14px;font-size:13px;line-height:1.75}
+.turn-list{margin:8px 0 0;padding-left:18px}
+.turn-list li{margin-bottom:4px}
+.identity-summary{margin-top:4px;font-size:12px;color:var(--muted)}
+.rules-section{margin-bottom:16px}
+.rules-section h3{margin:0 0 6px;font-size:16px;color:var(--crimson)}
+.rules-section p,.rules-section li{font-size:14px;line-height:1.75}
+.rules-section ul{padding-left:20px;margin:6px 0}
+.rules-section .tag{display:inline-block;padding:2px 8px;border-radius:999px;background:#f1eadb;font-size:12px;font-weight:800;color:#5c4b3a;margin-right:4px}
+
+/* ===== 提示层 ===== */
+#tipsMaskEL{
+  position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;padding:16px;
+  background:rgba(18,12,8,.45);
+}
+#tipsMaskEL.show{display:flex}
+.tips-box{
+  width:100%;max-width:360px;padding:22px 20px 18px;border-radius:18px;
+  background:var(--paper-2);box-shadow:0 24px 70px rgba(0,0,0,.4);text-align:center;
+}
+.tips-message{margin-bottom:16px;font-size:15px;line-height:1.7;color:#4a3a2a;word-break:break-word}
+.tips-box .btn{min-width:96px}
+
+@media (max-width:640px){
+  #appHeader{padding:18px 14px 0}
+  .brand h1{font-size:26px}
+  .seal{width:48px;height:48px;font-size:26px;border-radius:12px}
+  .brand p{font-size:12px}
+  .setup-panel{padding:16px;border-radius:18px}
+  .setup-grid{grid-template-columns:1fr 1fr;gap:10px}
+  .setup-grid label{font-size:12px}
+  .setup-grid input{font-size:16px}
+  .composition-preview{font-size:13px}
+  body.game-fullscreen #gameTableEL{padding:72px 10px 18px}
+  #gameBarEL{height:58px;padding:0 10px;gap:8px}
+  #barTimerEL{font-size:18px}
+  #barPhaseEL{display:none}
+  .game-bar-left span{font-size:12px}
+  .player-grid{grid-template-columns:repeat(auto-fit,minmax(92px,1fr));gap:8px}
+  .player{min-height:84px;padding:12px 6px;border-radius:14px}
+  .player-seat{font-size:16px}
+  .modal-box{border-radius:18px;max-height:calc(100vh - 20px)}
+  .modal-box h2{padding:16px 16px 10px;font-size:19px}
+  .modal-body{padding:14px 16px;font-size:13px}
+  .modal-footer{padding:12px 16px 14px}
+  .identity-row{align-items:flex-start;flex-direction:column;gap:6px}
+  .identity-seat{width:auto}
+  .bet-options{grid-template-columns:1fr}
+  .word-text{font-size:28px}
+  .result-banner{font-size:24px}
+  .modal-footer .btn{flex:1 1 auto}
+}
+</style>
+</head>
+<body>
+<header id="appHeader">
+  <div class="header-top">
+    <div class="brand">
+      <span class="seal">忠</span>
+      <div>
+        <h1>忠言逆耳</h1>
+        <p>宫廷推理 · 忠奸难辨</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-ghost" data-action="show-rules">玩法</button>
+      <button class="btn btn-ghost" data-action="show-history">游戏记录</button>
+    </div>
+  </div>
+
+  <section class="setup-panel">
+    <div class="setup-grid">
+      <label>玩家人数
+        <input id="playerCountInput" class="number-input" type="number" min="4" max="10" step="1" value="4" />
+      </label>
+      <label>每轮回合数
+        <input id="turnsInput" class="number-input" type="number" min="3" max="6" step="1" value="3" />
+      </label>
+      <label>每回合时限（秒）
+        <input id="secondsInput" class="number-input" type="number" min="60" max="600" step="30" value="180" />
+      </label>
+      <label>太监看词概率（%）
+        <input id="eunuchProbInput" class="number-input" type="number" min="0" max="100" step="5" value="50" />
+      </label>
+      <label class="check-label"><input id="soundEnabledInput" type="checkbox" checked /> <span>最后 10 秒滴答音效</span></label>
+    </div>
+    <div id="compositionPreview" class="composition-preview"></div>
+    <details class="custom-words">
+      <summary>自定义词库</summary>
+      <textarea id="customWordsInput" placeholder="一行一个词，例如：&#10;苹果&#10;长城&#10;孙悟空"></textarea>
+      <div class="custom-words-actions">
+        <button class="btn btn-ghost btn-small" data-action="save-words">保存自定义词</button>
+        <span id="wordStatsEL" class="muted"></span>
+      </div>
+    </details>
+    <button class="btn btn-primary btn-start" data-action="start-game">开始第 1 轮</button>
+  </section>
+</header>
+
+<main id="gameTableEL">
+  <div id="tableHintEL" class="table-hint"></div>
+  <div id="playerGridEL" class="player-grid"></div>
+  <div id="tableActionsEL" class="table-actions"></div>
+</main>
+
+<div id="gameBarEL">
+  <div class="game-bar-left">
+    <span id="barRoundEL">第 1 轮</span>
+    <span id="barTurnEL">第 1 / 3 回合</span>
+  </div>
+  <div class="game-bar-center">
+    <span id="barTimerEL">03:00</span>
+    <span id="barPhaseEL">准备</span>
+  </div>
+  <div class="game-bar-right">
+    <button id="soundBtn" class="btn btn-ghost btn-small sound-btn" data-action="toggle-sound" title="音效开关">音</button>
+    <button id="guessBtn" class="btn btn-primary btn-small" data-action="guess">猜词</button>
+    <button id="exitGameBtn" class="btn btn-ghost btn-small" data-action="end-game">结束</button>
+  </div>
+</div>
+
+<div id="flowMaskEL" class="modal-mask">
+  <div class="modal-box">
+    <h2 id="flowTitleEL"></h2>
+    <div id="flowBodyEL" class="modal-body"></div>
+    <div id="flowFooterEL" class="modal-footer"></div>
+  </div>
+</div>
+
+<div id="infoMaskEL" class="modal-mask">
+  <div class="modal-box">
+    <h2 id="infoTitleEL"></h2>
+    <div id="infoBodyEL" class="modal-body"></div>
+    <div id="infoFooterEL" class="modal-footer"></div>
+  </div>
+</div>
+
+<div id="tipsMaskEL">
+  <div class="tips-box">
+    <div id="tipsMessageEL" class="tips-message"></div>
+    <button class="btn btn-primary" data-action="tips-ok">确定</button>
+  </div>
+</div>
+
+<script>
+var WORD_LIBRARY = [];
+function addWords(category, words){
+  for(var i=0;i<words.length;i++) WORD_LIBRARY.push({category:category, word:words[i]});
+}
+addWords('食物', ['苹果','香蕉','西瓜','葡萄','草莓','榴莲','火锅','烧烤','饺子','包子','汉堡','披萨','寿司','冰淇淋','巧克力','奶茶','咖啡','辣椒','柠檬','月饼','粽子','汤圆','烤鸭','小龙虾','麻辣烫']);
+addWords('动物', ['熊猫','老虎','狮子','大象','长颈鹿','猴子','兔子','猫','狗','企鹅','海豚','鲸鱼','孔雀','乌龟','蝴蝶','蜜蜂','蚂蚁','恐龙','猫头鹰','青蛙']);
+addWords('植物', ['玫瑰','牡丹','荷花','菊花','梅花','兰花','竹子','松树','柳树','枫树','仙人掌','向日葵','蒲公英','含羞草','银杏','梧桐','水稻','小麦','玉米']);
+addWords('物品', ['手机','电脑','电视','冰箱','洗衣机','空调','台灯','雨伞','眼镜','手表','书包','钥匙','钱包','镜子','梳子','牙刷','毛巾','枕头','杯子','筷子','剪刀','自行车','汽车','飞机','火车','火箭','电梯']);
+addWords('人物', ['医生','老师','警察','消防员','律师','厨师','司机','飞行员','宇航员','科学家','作家','画家','歌手','演员','导演','记者','农民','程序员','快递员','保安']);
+addWords('地点', ['北京','上海','广州','深圳','杭州','苏州','成都','重庆','西安','南京','长城','故宫','西湖','黄山','泰山','沙漠','海洋','森林','草原','瀑布','火山','机场','车站','医院','学校','超市','公园','图书馆','博物馆']);
+addWords('动作', ['跑步','游泳','睡觉','吃饭','喝水','唱歌','跳舞','画画','读书','写字','微笑','哭泣','打喷嚏','打哈欠','握手','拥抱','鼓掌','跺脚','伸懒腰']);
+addWords('成语', ['画蛇添足','守株待兔','掩耳盗铃','亡羊补牢','井底之蛙','狐假虎威','对牛弹琴','杯弓蛇影','刻舟求剑','拔苗助长','三心二意','五颜六色','七上八下','九牛一毛','十全十美','一心一意','百发百中','千军万马','万紫千红','雪中送炭']);
+addWords('影视', ['孙悟空','猪八戒','唐僧','哪吒','诸葛亮','曹操','刘备','关羽','张飞','林黛玉','贾宝玉','武松','白雪公主','灰姑娘','美人鱼','哈利波特','蜘蛛侠','蝙蝠侠','超人','奥特曼','皮卡丘','哆啦A梦','蜡笔小新','海绵宝宝','喜羊羊','灰太狼','葫芦娃']);
+addWords('生活', ['微信','支付宝','抖音','淘宝','京东','外卖','快递','直播','短视频','表情包','二维码','充电宝','共享单车','无人机','机器人','人工智能','内卷','躺平','社恐','社牛','打工人','摸鱼','加班','熬夜','减肥','健身','旅游','露营','剧本杀','密室逃脱']);
+addWords('自然', ['太阳','月亮','星星','彩虹','闪电','打雷','下雨','下雪','刮风','台风','地震','洪水','极光','流星','日食','月食','潮汐','绿洲']);
+addWords('情感', ['幸福','悲伤','愤怒','恐惧','惊喜','尴尬','孤独','思念','嫉妒','后悔','勇气','希望','梦想','自由','爱情','友情','亲情','时间','记忆','秘密']);
+</script>
+
+<script>
+/* ============================================================
+ * 忠言逆耳 · 单机传阅式游戏助手
+ * 说明：描述、提问、讨论均在线下进行；本工具只负责
+ * 随机角色/词语、私密查看、计时、身份表、判定与记录。
+ * ============================================================ */
+
+var STORAGE = {
+  settings: 'zhongyanNierSettings',
+  words: 'zhongyanNierCustomWords',
+  history: 'zhongyanNierHistory'
+};
+
+var ROLE_NAMES = {emperor:'皇帝', loyal:'忠臣', traitor:'奸臣', eunuch:'太监'};
+var ROLE_SHORT = {loyal:'忠', traitor:'奸', eunuch:'监', emperor:'皇'};
+var ROLE_GOALS = {
+  emperor: '你看不到目标词。听描述、猜词，并判断谁是忠臣、谁是奸臣。',
+  loyal: '你看到目标词。用正向描述帮皇帝猜中，不要直接说出词。',
+  traitor: '你看到目标词。用非正向或误导性描述让皇帝猜错，同时争取皇帝信任。',
+  eunuch: '你是中立。押宝命中下轮可任选角色。你知道你所押阵营的成员；不要直接点破身份。'
+};
+
+var game = {
+  phase: 'setup',
+  settings: {playerCount:4, turnsPerRound:3, turnSeconds:180, eunuchProbability:50, soundEnabled:true},
+  players: [],
+  composition: {loyal:0, traitor:0, eunuch:0},
+  emperorSeat: 1,
+  emperorWinStreak: 0,
+  round: 1,
+  turn: 1,
+  turnWord: null,
+  turnCategory: null,
+  turnStartedAt: null,
+  timerEnd: null,
+  timerInterval: null,
+  turnResults: [],
+  wrongCount: 0,
+  correctCount: 0,
+  eunuchBets: {},
+  eunuchKnownCamp: {},
+  eunuchBetResults: {},
+  turnEunuchSees: {},
+  identityTables: [],
+  lastIdentityTable: null,
+  identityDraft: null,
+  identityEditing: null,
+  debateTable: null,
+  debateSuccess: null,
+  prepareQueue: [],
+  prepareIndex: 0,
+  preparePendingBet: null,
+  wordQueue: [],
+  wordIndex: 0,
+  speakerOrder: [],
+  speakerIndex: 0,
+  speakerCycle: 1,
+  skippedSeats: [],
+  guessModalOpen: false,
+  guessForced: false,
+  guessFlowForced: false,
+  currentTurnSeconds: 0,
+  lastTickSecond: null,
+  pendingGuess: '',
+  pendingGaveUp: false,
+  pendingEunuchRewards: [],
+  nextEmperorSeat: null,
+  nextEmperorReason: null,
+  prevRoundResult: null,
+  roundResult: null,
+  rewardQueue: [],
+  rewardIndex: 0,
+  rewardChoices: {},
+  rewardSlots: null,
+  rewardComposition: null,
+  history: [],
+  customWords: [],
+  wordPool: [],
+  lastWord: null,
+  currentRoundRecord: null,
+  flowDismissible: false
+};
+
+/* ---------- 基础工具 ---------- */
+function $(id){ return document.getElementById(id); }
+function escapeHtml(s){
+  return String(s == null ? '' : s).replace(/[&<>"']/g, function(ch){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];
+  });
+}
+function clone(obj){ return JSON.parse(JSON.stringify(obj)); }
+function formatTime(sec){
+  sec = Math.max(0, Math.floor(sec));
+  var m = Math.floor(sec/60), s = sec%60;
+  return (m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+}
+function seatList(seats){
+  return seats && seats.length ? seats.map(function(s){return s+'号';}).join('、') : '无';
+}
+function shuffle(arr){
+  for(var i=arr.length-1;i>0;i--){
+    var j = Math.floor(Math.random()*(i+1));
+    var t = arr[i]; arr[i]=arr[j]; arr[j]=t;
+  }
+  return arr;
+}
+function allSeats(){
+  var a=[];
+  for(var i=1;i<=game.settings.playerCount;i++) a.push(i);
+  return a;
+}
+function playerBySeat(seat){
+  for(var i=0;i<game.players.length;i++) if(game.players[i].seat===seat) return game.players[i];
+  return null;
+}
+function roleName(role){ return ROLE_NAMES[role] || role; }
+function roleClass(role){ return 'role-'+role; }
+function randomSeat(){ return Math.floor(Math.random()*game.settings.playerCount)+1; }
+function normalizeWord(s){
+  return String(s == null ? '' : s)
+    .replace(/[\s\.,;:!?'"“”‘’、，。；：！？（）()《》〈〉【】\[\]{}<>·…—\-_\/\\|]/g,'')
+    .toLowerCase();
+}
+function compositionText(c){
+  var parts = ['1 皇帝'];
+  if(c.loyal) parts.push(c.loyal+' 忠臣');
+  if(c.traitor) parts.push(c.traitor+' 奸臣');
+  if(c.eunuch) parts.push(c.eunuch+' 太监');
+  return parts.join(' · ');
+}
+
+/* ---------- 音效 ---------- */
+var audioCtx = null;
+function ensureAudio(){
+  if(!game.settings.soundEnabled) return;
+  try{
+    if(!audioCtx){
+      var Ctx = window.AudioContext || window.webkitAudioContext;
+      if(!Ctx) return;
+      audioCtx = new Ctx();
+    }
+    if(audioCtx.state === 'suspended') audioCtx.resume();
+  }catch(e){ console.error(e); }
+}
+function playTick(urgent){
+  if(!game.settings.soundEnabled) return;
+  ensureAudio();
+  if(!audioCtx) return;
+  try{
+    var t = audioCtx.currentTime;
+    var osc = audioCtx.createOscillator();
+    var gain = audioCtx.createGain();
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(urgent ? 1400 : 950, t);
+    gain.gain.setValueAtTime(0.0001, t);
+    gain.gain.exponentialRampToValueAtTime(urgent ? 0.10 : 0.065, t + 0.004);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.055);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(t);
+    osc.stop(t + 0.06);
+  }catch(e){ console.error(e); }
+}
+function playTimeUp(){
+  if(!game.settings.soundEnabled) return;
+  ensureAudio();
+  if(!audioCtx) return;
+  try{
+    var base = audioCtx.currentTime;
+    var notes = [880, 660];
+    for(var i=0;i<notes.length;i++){
+      var t = base + i*0.16;
+      var osc = audioCtx.createOscillator();
+      var gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(notes[i], t);
+      gain.gain.setValueAtTime(0.0001, t);
+      gain.gain.exponentialRampToValueAtTime(0.14, t + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.15);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(t);
+      osc.stop(t + 0.16);
+    }
+  }catch(e){ console.error(e); }
+}
+function renderSoundButton(){
+  var btn = $('soundBtn');
+  if(!btn) return;
+  btn.textContent = game.settings.soundEnabled ? '音' : '静';
+  btn.title = game.settings.soundEnabled ? '关闭倒计时音效' : '开启倒计时音效';
+  if(game.settings.soundEnabled) btn.classList.remove('is-off');
+  else btn.classList.add('is-off');
+}
+function toggleSound(){
+  game.settings.soundEnabled = !game.settings.soundEnabled;
+  saveSettings();
+  if(game.settings.soundEnabled){
+    ensureAudio();
+    playTick(false);
+  }
+  renderSoundButton();
+}
+
+/* ---------- 本地存储 ---------- */
+function loadStorage(){
+  try{
+    var rawSettings = JSON.parse(localStorage.getItem(STORAGE.settings) || 'null');
+    if(rawSettings && typeof rawSettings === 'object'){
+      var n = parseInt(rawSettings.playerCount,10);
+      var t = parseInt(rawSettings.turnsPerRound,10);
+      var s = parseInt(rawSettings.turnSeconds,10);
+      var p = parseInt(rawSettings.eunuchProbability,10);
+      if(n>=4 && n<=10) game.settings.playerCount = n;
+      if(t>=3 && t<=6) game.settings.turnsPerRound = t;
+      if(s>=60 && s<=600) game.settings.turnSeconds = s;
+      if(p>=0 && p<=100) game.settings.eunuchProbability = p;
+      if(typeof rawSettings.soundEnabled === 'boolean') game.settings.soundEnabled = rawSettings.soundEnabled;
+    }
+  }catch(e){ console.error(e); }
+
+  try{
+    var words = JSON.parse(localStorage.getItem(STORAGE.words) || '[]');
+    if(Array.isArray(words)){
+      game.customWords = words.filter(function(w){
+        return typeof w === 'string' && w.trim() !== '' && w.trim().length <= 20;
+      }).map(function(w){ return w.trim(); });
+      game.customWords = uniqueWords(game.customWords);
+    }
+  }catch(e){ console.error(e); }
+
+  try{
+    var history = JSON.parse(localStorage.getItem(STORAGE.history) || '[]');
+    if(Array.isArray(history)) game.history = history.slice(-100);
+  }catch(e){ console.error(e); }
+}
+function saveSettings(){
+  try{ localStorage.setItem(STORAGE.settings, JSON.stringify(game.settings)); }catch(e){ console.error(e); }
+}
+function saveCustomWords(){
+  try{ localStorage.setItem(STORAGE.words, JSON.stringify(game.customWords)); }catch(e){ console.error(e); }
+}
+function saveHistory(){
+  try{ localStorage.setItem(STORAGE.history, JSON.stringify(game.history.slice(-100))); }catch(e){ console.error(e); }
+}
+function uniqueWords(arr){
+  var seen = {}, out = [];
+  for(var i=0;i<arr.length;i++){
+    var key = normalizeWord(arr[i]);
+    if(!key || seen[key]) continue;
+    seen[key] = true;
+    out.push(arr[i]);
+  }
+  return out;
+}
+
+/* ---------- 词库 ---------- */
+function buildWordPool(){
+  var all = WORD_LIBRARY.slice();
+  for(var i=0;i<game.customWords.length;i++){
+    all.push({category:'自定义', word:game.customWords[i]});
+  }
+  var seen = {}, out = [];
+  for(var j=0;j<all.length;j++){
+    var key = normalizeWord(all[j].word);
+    if(!key || seen[key]) continue;
+    seen[key] = true;
+    out.push({category:all[j].category, word:all[j].word});
+  }
+  game.wordPool = out;
+  game.lastWord = null;
+}
+function pickWord(){
+  if(game.wordPool.length === 0){
+    buildWordPool();
+    if(game.lastWord && game.wordPool.length > 1){
+      game.wordPool = game.wordPool.filter(function(entry){ return entry.word !== game.lastWord; });
+    }
+  }
+  if(game.wordPool.length === 0){
+    return {category:'自定义', word:'苹果'};
+  }
+  var idx = Math.floor(Math.random()*game.wordPool.length);
+  var entry = game.wordPool.splice(idx,1)[0];
+  game.lastWord = entry.word;
+  return entry;
+}
+
+/* ---------- 角色配置与分配 ---------- */
+function getComposition(n, prevResult){
+  if(n === 4){
+    if(prevResult === 'emperorWin') return {loyal:1, traitor:2, eunuch:0};
+    if(prevResult === 'traitorWin') return {loyal:1, traitor:1, eunuch:1};
+    return Math.random() < 0.5 ? {loyal:1, traitor:1, eunuch:1} : {loyal:1, traitor:2, eunuch:0};
+  }
+  var table = {
+    5: {loyal:1, traitor:2, eunuch:1},
+    6: {loyal:2, traitor:2, eunuch:1},
+    7: {loyal:2, traitor:3, eunuch:1},
+    8: {loyal:2, traitor:3, eunuch:2},
+    9: {loyal:3, traitor:3, eunuch:2},
+    10:{loyal:3, traitor:4, eunuch:2}
+  };
+  var c = table[n] || table[10];
+  return {loyal:c.loyal, traitor:c.traitor, eunuch:c.eunuch};
+}
+function getSpeakerOrder(){
+  var n = game.settings.playerCount;
+  var order = [];
+  for(var i=1;i<=n;i++){
+    var seat = ((game.emperorSeat + i - 1) % n) + 1;
+    if(seat !== game.emperorSeat) order.push(seat);
+  }
+  return order;
+}
+function getEunuchKnownSeats(seat){
+  var bet = game.eunuchBets[seat];
+  if(!bet) return [];
+  var targetRole = bet === 'win' ? 'loyal' : 'traitor';
+  var out = [];
+  for(var i=0;i<game.players.length;i++){
+    if(game.players[i].role === targetRole) out.push(game.players[i].seat);
+  }
+  return out;
+}
+function assignRoles(composition, fixedChoices){
+  var seats = allSeats();
+  var emperorSeat = game.nextEmperorSeat || randomSeat();
+  var fixed = {};
+  fixed[emperorSeat] = 'emperor';
+  var counts = {loyal:0, traitor:0, eunuch:0};
+  var keys = Object.keys(fixedChoices || {});
+  for(var i=0;i<keys.length;i++){
+    var seat = parseInt(keys[i],10);
+    var role = fixedChoices[keys[i]];
+    if(!role || seat === emperorSeat || !counts.hasOwnProperty(role)) continue;
+    if(counts[role] < composition[role]){
+      fixed[seat] = role;
+      counts[role]++;
+    }
+  }
+  var remaining = [];
+  for(var j=0;j<seats.length;j++){
+    if(!fixed[seats[j]]) remaining.push(seats[j]);
+  }
+  var slots = [];
+  ['loyal','traitor','eunuch'].forEach(function(role){
+    var need = composition[role] - counts[role];
+    for(var k=0;k<need;k++) slots.push(role);
+  });
+  shuffle(slots);
+  for(var m=0;m<remaining.length;m++){
+    fixed[remaining[m]] = slots[m] || 'eunuch';
+  }
+  game.players = seats.map(function(s){
+    return {seat:s, role:fixed[s], ready:false, viewed:false};
+  });
+  game.emperorSeat = emperorSeat;
+  game.composition = composition;
+}
+
+/* ---------- 角色/词弹窗 ---------- */
+function roleBadgeHtml(role){
+  return '<div class="role-badge '+roleClass(role)+'">'+roleName(role)+'</div>';
+}
+function wordCardHtml(word, category){
+  return '<div class="word-card">'+
+    '<span class="word-label">本回合目标词</span>'+
+    '<strong class="word-text">'+escapeHtml(word)+'</strong>'+
+    '<span class="word-cat">'+escapeHtml(category)+'</span>'+
+    '</div>';
+}
+function noWordCardHtml(){
+  return '<div class="word-card no-word">本轮未获得词</div>'+
+    '<p class="muted">请根据他人描述伪装，不要暴露身份。</p>';
+}
+function campKnowledgeHtml(seat){
+  var bet = game.eunuchBets[seat];
+  if(!bet) return '';
+  var campName = bet === 'win' ? '忠臣' : '奸臣';
+  var seats = game.eunuchKnownCamp[seat] || [];
+  return '<div class="camp-knowledge">'+
+    '<div class="camp-title">你已暗中投靠：<strong>'+campName+'阵营</strong></div>'+
+    '<div>你知道：'+escapeHtml(seatList(seats))+'</div>'+
+    '<div class="muted">不得直接点破身份，只能用描述和态度配合。</div>'+
+    '</div>';
+}
+
+function openPreparePrivacy(seat){
+  game.preparePendingBet = null;
+  var body = '<div class="privacy-note">请确认只有你一人查看屏幕。看完身份后，下一位玩家再接过设备。</div>'+
+    '<p class="role-goal" style="margin-top:14px;">即将查看：<strong>'+seat+'号玩家</strong>的身份与第一个词。</p>';
+  var footer = '<button class="btn btn-primary" data-action="prepare-show" data-seat="'+seat+'">显示身份</button>'+
+    '<button class="btn btn-ghost" data-action="flow-close">取消</button>';
+  openFlowModal(seat+'号玩家 · 查看身份', body, footer, false);
+}
+function showPrepareRole(seat){
+  var p = playerBySeat(seat);
+  if(!p) return;
+  if(p.role === 'eunuch'){
+    showBetStep(seat);
+    return;
+  }
+  var body = roleBadgeHtml(p.role)+
+    '<p class="role-goal">'+ROLE_GOALS[p.role]+'</p>'+
+    wordCardHtml(game.turnWord, game.turnCategory)+
+    '<div class="privacy-note">不要直接说出目标词；确认周围没有人偷看。</div>';
+  var footer = '<button class="btn btn-primary" data-action="prepare-done" data-seat="'+seat+'">我记住了</button>';
+  openFlowModal(seat+'号玩家 · 身份与第一个词', body, footer, false);
+}
+function showBetStep(seat){
+  var body = roleBadgeHtml('eunuch')+
+    '<p class="role-goal">'+ROLE_GOALS.eunuch+'</p>'+
+    '<div class="privacy-note">本轮押宝：<strong>皇帝能否胜利？</strong> 押宝后再看第一个词。确认后不可更改。</div>'+
+    '<div class="bet-options">'+
+    '<button type="button" class="bet-btn" data-action="bet-select" data-seat="'+seat+'" data-bet="win">押皇帝胜</button>'+
+    '<button type="button" class="bet-btn" data-action="bet-select" data-seat="'+seat+'" data-bet="lose">押皇帝负</button>'+
+    '</div>';
+  openFlowModal(seat+'号玩家 · 太监押宝', body, '', false);
+}
+function onBetSelect(seat, bet){
+  game.preparePendingBet = bet;
+  var body = roleBadgeHtml('eunuch')+
+    '<p class="role-goal">'+ROLE_GOALS.eunuch+'</p>'+
+    '<div class="bet-selected">你选择了：<strong>皇帝'+(bet === 'win' ? '胜' : '负')+'</strong><br><span class="muted">确认后不可更改</span></div>';
+  var footer = '<button class="btn btn-primary" data-action="bet-confirm" data-seat="'+seat+'">确认押注</button>'+
+    '<button class="btn btn-ghost" data-action="bet-reset" data-seat="'+seat+'">重选</button>';
+  openFlowModal(seat+'号玩家 · 确认押宝', body, footer, false);
+}
+function onBetReset(seat){
+  game.preparePendingBet = null;
+  showBetStep(seat);
+}
+function onBetConfirm(seat){
+  if(!game.preparePendingBet) return;
+  game.eunuchBets[seat] = game.preparePendingBet;
+  game.eunuchKnownCamp[seat] = getEunuchKnownSeats(seat);
+  if(game.turnEunuchSees[seat] === undefined){
+    game.turnEunuchSees[seat] = Math.random()*100 < game.settings.eunuchProbability;
+  }
+  showEunuchInfoStep(seat);
+}
+function showEunuchInfoStep(seat){
+  var bet = game.eunuchBets[seat];
+  var body = roleBadgeHtml('eunuch')+
+    '<p class="role-goal">'+ROLE_GOALS.eunuch+'</p>'+
+    '<div class="bet-selected">你的押注：<strong>皇帝'+(bet === 'win' ? '胜' : '负')+'</strong></div>'+
+    campKnowledgeHtml(seat)+
+    (game.turnEunuchSees[seat] ? wordCardHtml(game.turnWord, game.turnCategory) : noWordCardHtml())+
+    '<div class="privacy-note">不要直接说出目标词或身份；确认周围没有人偷看。</div>';
+  var footer = '<button class="btn btn-primary" data-action="prepare-done" data-seat="'+seat+'">我记住了</button>';
+  openFlowModal(seat+'号玩家 · 太监情报与第一个词', body, footer, false);
+}
+function finishPrepare(seat){
+  var p = playerBySeat(seat);
+  if(p) p.ready = true;
+  game.prepareIndex++;
+  game.preparePendingBet = null;
+  closeFlowModal();
+  renderGame();
+}
+function openWordPrivacy(seat){
+  var body = '<div class="privacy-note">请确认只有你一人查看屏幕。看完词后，下一位玩家再接过设备。</div>'+
+    '<p class="role-goal" style="margin-top:14px;">即将查看：<strong>'+seat+'号玩家</strong>的目标词。</p>';
+  var footer = '<button class="btn btn-primary" data-action="word-show" data-seat="'+seat+'">显示词语</button>'+
+    '<button class="btn btn-ghost" data-action="flow-close">取消</button>';
+  openFlowModal(seat+'号玩家 · 看词', body, footer, false);
+}
+function showWordModal(seat){
+  var p = playerBySeat(seat);
+  if(!p) return;
+  if(p.role === 'eunuch' && game.turnEunuchSees[seat] === undefined){
+    game.turnEunuchSees[seat] = Math.random()*100 < game.settings.eunuchProbability;
+  }
+  var body = roleBadgeHtml(p.role)+
+    '<p class="role-goal">'+ROLE_GOALS[p.role]+'</p>';
+  if(p.role === 'eunuch'){
+    var bet = game.eunuchBets[seat];
+    body += '<div class="bet-selected">你的押注：<strong>皇帝'+(bet === 'win' ? '胜' : '负')+'</strong></div>';
+    body += campKnowledgeHtml(seat);
+    body += game.turnEunuchSees[seat] ? wordCardHtml(game.turnWord, game.turnCategory) : noWordCardHtml();
+  }else{
+    body += wordCardHtml(game.turnWord, game.turnCategory);
+  }
+  body += '<div class="privacy-note">不要直接说出目标词或身份；确认周围没有人偷看。</div>';
+  var footer = '<button class="btn btn-primary" data-action="word-done" data-seat="'+seat+'">我记住了</button>';
+  openFlowModal(seat+'号玩家 · 看词', body, footer, false);
+}
+function finishWordView(seat){
+  var p = playerBySeat(seat);
+  if(p) p.viewed = true;
+  game.wordIndex++;
+  closeFlowModal();
+  renderGame();
+}
+
+/* ---------- 轮次流程 ---------- */
+function startRound(){
+  stopTimer();
+  closeFlowModal();
+  closeInfoModal();
+
+  game.turnResults = [];
+  game.wrongCount = 0;
+  game.correctCount = 0;
+  game.eunuchBets = {};
+  game.eunuchKnownCamp = {};
+  game.eunuchBetResults = {};
+  game.turnEunuchSees = {};
+  game.identityTables = [];
+  game.lastIdentityTable = null;
+  game.identityDraft = null;
+  game.identityEditing = null;
+  game.debateTable = null;
+  game.debateSuccess = null;
+  game.roundResult = null;
+  game.nextEmperorReason = null;
+  game.turn = 1;
+
+  var composition = getComposition(game.settings.playerCount, game.prevRoundResult);
+  game.composition = composition;
+
+  var rewards = (game.pendingEunuchRewards || []).filter(function(s){ return s !== game.nextEmperorSeat; });
+  if(rewards.length){
+    startEunuchRewards(rewards, composition);
+  }else{
+    assignRoles(composition, {});
+    showEmperorConfirm();
+  }
+}
+function showEmperorConfirm(){
+  game.phase = 'emperorConfirm';
+  renderGame();
+  var body = '<div class="privacy-note">请将手机交给 <strong>'+game.emperorSeat+'号皇帝</strong>。其他玩家先不要操作。</div>'+
+    '<div class="settlement-summary" style="margin-top:14px;">'+
+    '<div>第 <strong>'+game.round+'</strong> 轮 · 第 <strong>1 / '+game.settings.turnsPerRound+'</strong> 回合</div>'+
+    '<div>本局配置：'+escapeHtml(compositionText(game.composition))+'</div>'+
+    '<div>每回合时限：<strong>'+formatTime(game.settings.turnSeconds)+'</strong></div>'+
+    '</div>'+
+    '<p class="role-goal">你是 <strong>'+game.emperorSeat+'号皇帝</strong>。你看不到目标词。流程：你确认 → 手机传给下家，非皇帝玩家逐个查看身份和第一个词 → 手机回到你手中，点击“开始计时” → 第一个看身份的玩家开始描述。</p>';
+  var footer = '<button class="btn btn-primary" data-action="emperor-confirm">确认，开始传阅</button>';
+  openFlowModal('皇帝确认 · 第 '+game.round+' 轮', body, footer, false);
+}
+function onEmperorConfirm(){
+  closeFlowModal();
+  beginPrepare();
+}
+function beginPrepare(){
+  game.phase = 'prepare';
+  game.prepareQueue = getSpeakerOrder();
+  game.prepareIndex = 0;
+  game.preparePendingBet = null;
+  for(var i=0;i<game.players.length;i++){
+    game.players[i].ready = false;
+    game.players[i].viewed = false;
+  }
+  var entry = pickWord();
+  game.turnWord = entry.word;
+  game.turnCategory = entry.category;
+  game.turnEunuchSees = {};
+  game.pendingGuess = '';
+  game.pendingGaveUp = false;
+  game.currentTurnSeconds = 0;
+  game.guessFlowForced = false;
+  renderGame();
+  window.scrollTo(0,0);
+}
+function startTurnViewing(){
+  game.phase = 'wordReveal';
+  game.wordQueue = getSpeakerOrder();
+  game.wordIndex = 0;
+  game.turnEunuchSees = {};
+  game.pendingGuess = '';
+  game.pendingGaveUp = false;
+  game.currentTurnSeconds = 0;
+  game.guessFlowForced = false;
+  for(var i=0;i<game.players.length;i++) game.players[i].viewed = false;
+  var entry = pickWord();
+  game.turnWord = entry.word;
+  game.turnCategory = entry.category;
+  closeFlowModal();
+  renderGame();
+  window.scrollTo(0,0);
+}
+function startTimer(){
+  if(game.phase !== 'prepare' && game.phase !== 'wordReveal') return;
+  var seats = getSpeakerOrder();
+  var all = true;
+  for(var i=0;i<seats.length;i++){
+    var p = playerBySeat(seats[i]);
+    if(!p) continue;
+    if(game.phase === 'prepare' && !p.ready) all = false;
+    if(game.phase === 'wordReveal' && !p.viewed) all = false;
+  }
+  if(!all){ showTips('还有玩家没有完成，请稍等。'); return; }
+
+  closeFlowModal();
+  game.phase = 'timer';
+  game.turnStartedAt = Date.now();
+  game.timerEnd = Date.now() + game.settings.turnSeconds*1000;
+  game.speakerOrder = seats;
+  game.speakerIndex = 0;
+  game.speakerCycle = 1;
+  game.skippedSeats = [];
+  game.guessModalOpen = false;
+  game.guessForced = false;
+  game.guessFlowForced = false;
+  game.currentTurnSeconds = 0;
+  game.pendingGuess = '';
+  game.pendingGaveUp = false;
+  game.lastTickSecond = null;
+  ensureAudio();
+  startTimerInterval();
+  renderGame();
+}
+function startTimerInterval(){
+  if(game.timerInterval){ clearInterval(game.timerInterval); game.timerInterval = null; }
+  game.timerInterval = setInterval(tick, 250);
+  tick();
+}
+function stopTimer(){
+  if(game.timerInterval){ clearInterval(game.timerInterval); game.timerInterval = null; }
+  game.timerEnd = null;
+}
+function tick(){
+  if(game.phase !== 'timer' || !game.timerEnd) return;
+  var left = Math.max(0, Math.ceil((game.timerEnd - Date.now())/1000));
+  var bar = $('barTimerEL');
+  if(bar) bar.textContent = formatTime(left);
+  var guessTimer = $('guessTimerEL');
+  if(guessTimer) guessTimer.textContent = formatTime(left);
+  if(left <= 10 && left > 0 && game.lastTickSecond !== left){
+    game.lastTickSecond = left;
+    playTick(left <= 3);
+  }
+  if(left <= 0) handleTimeUp();
+}
+function handleTimeUp(){
+  if(game.phase !== 'timer') return;
+  stopTimer();
+  playTimeUp();
+  game.guessFlowForced = true;
+  game.currentTurnSeconds = game.settings.turnSeconds;
+  game.phase = 'guess';
+  var bar = $('barTimerEL');
+  if(bar) bar.textContent = '00:00';
+  renderGame();
+  openGuessInput(true);
+}
+function beginGuessFlow(){
+  if(game.phase !== 'timer') return;
+  var seconds = game.turnStartedAt ? Math.min(game.settings.turnSeconds, Math.max(1, Math.round((Date.now()-game.turnStartedAt)/1000))) : game.settings.turnSeconds;
+  stopTimer();
+  game.currentTurnSeconds = seconds;
+  game.guessFlowForced = false;
+  game.phase = 'guess';
+  var bar = $('barTimerEL');
+  if(bar) bar.textContent = formatTime(seconds);
+  renderGame();
+  openGuessInput(false);
+}
+function advanceSpeaker(){
+  if(game.phase !== 'timer') return;
+  game.speakerIndex++;
+  if(game.speakerIndex >= game.speakerOrder.length){
+    game.speakerIndex = 0;
+    game.speakerCycle++;
+    game.skippedSeats = [];
+  }
+  renderGame();
+}
+function skipSpeaker(){
+  if(game.phase !== 'timer') return;
+  var seat = game.speakerOrder[game.speakerIndex];
+  if(game.skippedSeats.indexOf(seat) < 0) game.skippedSeats.push(seat);
+  advanceSpeaker();
+}
+function setSpeaker(seat){
+  if(game.phase !== 'timer') return;
+  var idx = game.speakerOrder.indexOf(seat);
+  if(idx < 0) return;
+  game.speakerIndex = idx;
+  var si = game.skippedSeats.indexOf(seat);
+  if(si >= 0) game.skippedSeats.splice(si,1);
+  renderGame();
+}
+
+/* ---------- 猜词 ---------- */
+function openGuessInput(forced){
+  if(game.phase !== 'guess') return;
+  game.guessModalOpen = true;
+  game.guessForced = !!forced;
+  var body = '<div class="guess-head"><span>第 '+game.turn+' 回合</span><span>本回合用时 <strong>'+formatTime(game.currentTurnSeconds || 0)+'</strong></span></div>'+
+    (forced
+      ? '<p class="danger-text">时间到！请先输入你的猜测（锁定），再完成身份表；提交身份表后系统才判定并公开词语。</p>'
+      : '<p class="muted">先输入你的猜测，提交后锁定；接着完成本回合身份表，系统才会判定并公开词语。</p>')+
+    '<input id="guessInput" class="text-input" type="text" maxlength="20" placeholder="输入你猜的词" />'+
+    '<p id="guessErrorEL" class="error-text"></p>';
+  var footer = '<button class="btn btn-primary" data-action="guess-submit">提交猜测，去标记身份</button>'+
+    '<button class="btn btn-ghost" data-action="guess-giveup">猜不出（算错）</button>';
+  openFlowModal(forced ? '时间到 · 输入猜测' : '输入猜测', body, footer, false);
+  var input = $('guessInput');
+  if(input){
+    input.focus();
+    input.addEventListener('keydown', function(e){
+      if(e.key === 'Enter'){ e.preventDefault(); submitGuess(); }
+    });
+  }
+}
+function submitGuess(){
+  if(game.phase !== 'guess') return;
+  var input = $('guessInput');
+  var val = input ? input.value.trim() : '';
+  if(!val){
+    var err = $('guessErrorEL');
+    if(err) err.textContent = '请输入一个词，或点“猜不出（算错）”。';
+    return;
+  }
+  game.pendingGuess = val;
+  game.pendingGaveUp = false;
+  game.guessModalOpen = false;
+  closeFlowModal();
+  openIdentityTable(false);
+}
+function giveUpGuess(){
+  if(game.phase !== 'guess') return;
+  game.pendingGuess = '';
+  game.pendingGaveUp = true;
+  game.guessModalOpen = false;
+  closeFlowModal();
+  openIdentityTable(false);
+}
+function resolveTurn(guess, gaveUp, seconds){
+  var correct = !gaveUp && normalizeWord(guess) === normalizeWord(game.turnWord);
+  if(correct) game.correctCount++;
+  else game.wrongCount++;
+  var result = {
+    turn: game.turn,
+    word: game.turnWord,
+    category: game.turnCategory,
+    guess: guess,
+    gaveUp: !!gaveUp,
+    correct: correct,
+    seconds: seconds || 0,
+    eunuchSees: clone(game.turnEunuchSees)
+  };
+  game.turnResults.push(result);
+  game.pendingGuess = '';
+  game.pendingGaveUp = false;
+  game.phase = 'turnResult';
+  renderGame();
+  showTurnResult(result);
+}
+function showTurnResult(result){
+  var body = '<div class="result-banner '+(result.correct ? 'win' : 'lose')+'">'+(result.correct ? '猜中' : '未猜中')+'</div>'+
+    wordCardHtml(result.word, result.category)+
+    '<p>皇帝猜测：<strong>'+(result.gaveUp ? '放弃' : escapeHtml(result.guess))+'</strong></p>'+
+    '<p>用时：<strong>'+formatTime(result.seconds)+'</strong></p>'+
+    '<p>当前战绩：猜中 <strong>'+game.correctCount+'</strong> · 猜错 <strong>'+game.wrongCount+'</strong></p>'+
+    '<p class="muted">本回合身份表已在判定前锁定。</p>';
+  var footer = '<button class="btn btn-primary" data-action="after-turn">继续</button>';
+  openFlowModal('第 '+result.turn+' 回合结束', body, footer, false);
+}
+
+/* ---------- 皇帝身份表 ---------- */
+function openIdentityTable(isDebate){
+  game.identityEditing = isDebate ? 'debate' : 'turn';
+  game.phase = isDebate ? 'debate' : 'identity';
+  game.identityDraft = {};
+  if(game.lastIdentityTable){
+    var keys = Object.keys(game.lastIdentityTable);
+    for(var i=0;i<keys.length;i++) game.identityDraft[keys[i]] = game.lastIdentityTable[keys[i]];
+  }
+  var seats = getSpeakerOrder();
+  for(var j=0;j<seats.length;j++){
+    if(!game.identityDraft[seats[j]]) game.identityDraft[seats[j]] = null;
+  }
+  var title = isDebate
+    ? '辩忠奸 · 最后一次修改'
+    : '第 '+game.turn+' 回合 · 判定前身份表';
+  var guessText = game.pendingGaveUp ? '放弃' : '『'+escapeHtml(game.pendingGuess)+'』';
+  var intro = isDebate
+    ? '<p class="danger-text">这是最后一次修改机会。提交后直接判定，不能再改。</p>'
+    : '<p class="muted">猜测已锁定：<strong>'+guessText+'</strong>。请完成本回合身份表；提交后系统判定并公开本回合词语。</p>'+
+      (game.guessFlowForced ? '<p class="danger-text">时间到！身份表提交后立即判定，不能再询问。</p>' : '')+
+      '<p class="muted">这张表可能直接用于辩忠奸或继位判定，请慎重。</p>';
+  var body = intro+
+    '<div class="identity-toolbar">'+
+      '<div id="identityCountsEL" class="identity-counts"></div>'+
+    '</div>'+
+    '<div id="identityListEL" class="identity-list"></div>'+
+    '<p id="identityErrorEL" class="error-text"></p>';
+  var footer = '';
+  if(isDebate){
+    footer = '<button class="btn btn-ghost" data-action="identity-clear">清空</button>'+
+      '<button id="identitySubmitBtn" class="btn btn-primary" data-action="debate-submit">提交最终判断</button>';
+  }else{
+    footer = '<button class="btn btn-ghost" data-action="identity-copy">复制上回合</button>'+
+      '<button class="btn btn-ghost" data-action="identity-clear">清空</button>'+
+      '<button id="identitySubmitBtn" class="btn btn-primary" data-action="identity-submit">提交身份表并判定</button>';
+  }
+  openFlowModal(title, body, footer, false);
+  renderGame();
+  renderIdentityBody();
+}
+function identityCounts(){
+  var seats = getSpeakerOrder();
+  var counts = {loyal:0, traitor:0, eunuch:0};
+  for(var i=0;i<seats.length;i++){
+    var role = game.identityDraft[seats[i]];
+    if(role && counts.hasOwnProperty(role)) counts[role]++;
+  }
+  return counts;
+}
+function renderIdentityBody(){
+  var countsEl = $('identityCountsEL');
+  var listEl = $('identityListEL');
+  if(!countsEl || !listEl) return;
+  var counts = identityCounts();
+  var required = game.composition;
+  var roleOrder = ['loyal','traitor','eunuch'];
+  var countHtml = '';
+  for(var i=0;i<roleOrder.length;i++){
+    var role = roleOrder[i];
+    if(required[role] <= 0) continue;
+    var over = counts[role] > required[role] ? ' over' : '';
+    countHtml += '<span class="count-pill'+over+'">'+roleName(role)+' '+counts[role]+'/'+required[role]+'</span>';
+  }
+  countsEl.innerHTML = countHtml;
+
+  var seats = getSpeakerOrder();
+  var html = '';
+  for(var j=0;j<seats.length;j++){
+    var seat = seats[j];
+    var current = game.identityDraft[seat];
+    html += '<div class="identity-row"><span class="identity-seat">'+seat+'号</span><div class="identity-buttons">';
+    for(var k=0;k<roleOrder.length;k++){
+      var role = roleOrder[k];
+      if(required[role] <= 0) continue;
+      var active = current === role ? ' active' : '';
+      html += '<button type="button" class="role-btn '+roleClass(role)+active+'" data-action="identity-set" data-seat="'+seat+'" data-role="'+role+'">'+ROLE_SHORT[role]+'</button>';
+    }
+    html += '</div></div>';
+  }
+  listEl.innerHTML = html;
+
+  var valid = true;
+  for(var m=0;m<seats.length;m++){
+    if(!game.identityDraft[seats[m]]){ valid = false; break; }
+  }
+  if(valid){
+    for(var n=0;n<roleOrder.length;n++){
+      if(counts[roleOrder[n]] !== required[roleOrder[n]]) valid = false;
+    }
+  }
+  var btn = $('identitySubmitBtn');
+  if(btn) btn.disabled = !valid;
+}
+function onIdentitySet(seat, role){
+  if(!game.identityDraft) return;
+  game.identityDraft[seat] = role;
+  renderIdentityBody();
+}
+function onIdentityCopy(){
+  if(!game.lastIdentityTable){ showTips('还没有上一回合的身份表。'); return; }
+  game.identityDraft = clone(game.lastIdentityTable);
+  var seats = getSpeakerOrder();
+  for(var i=0;i<seats.length;i++){
+    if(!game.identityDraft[seats[i]]) game.identityDraft[seats[i]] = null;
+  }
+  renderIdentityBody();
+}
+function onIdentityClear(){
+  game.identityDraft = {};
+  var seats = getSpeakerOrder();
+  for(var i=0;i<seats.length;i++) game.identityDraft[seats[i]] = null;
+  renderIdentityBody();
+}
+function submitIdentity(){
+  var seats = getSpeakerOrder();
+  var counts = identityCounts();
+  var required = game.composition;
+  var complete = true;
+  for(var i=0;i<seats.length;i++) if(!game.identityDraft[seats[i]]) complete = false;
+  if(!complete){
+    var err = $('identityErrorEL');
+    if(err) err.textContent = '还有玩家没有指定角色。';
+    return;
+  }
+  var roleOrder = ['loyal','traitor','eunuch'];
+  for(var j=0;j<roleOrder.length;j++){
+    if(counts[roleOrder[j]] !== required[roleOrder[j]]){
+      var err2 = $('identityErrorEL');
+      if(err2) err2.textContent = '角色数量不匹配：'+roleName(roleOrder[j])+' 需要 '+required[roleOrder[j]]+' 人。';
+      return;
+    }
+  }
+  var table = clone(game.identityDraft);
+  if(game.identityEditing === 'debate'){
+    game.debateTable = table;
+    game.debateSuccess = judgeDebate(table);
+    closeFlowModal();
+    settleRound(game.debateSuccess ? 'emperorWin' : 'traitorWin');
+  }else{
+    game.identityTables.push({turn: game.turn, table: table});
+    game.lastIdentityTable = table;
+    closeFlowModal();
+    resolveTurn(game.pendingGuess || '', !!game.pendingGaveUp, game.currentTurnSeconds || 0);
+  }
+}
+function judgeDebate(table){
+  var seats = getSpeakerOrder();
+  if(game.settings.playerCount <= 6){
+    for(var i=0;i<seats.length;i++){
+      var p = playerBySeat(seats[i]);
+      if(!p || table[seats[i]] !== p.role) return false;
+    }
+    return true;
+  }
+  var actual = [], guessed = [];
+  for(var j=0;j<seats.length;j++){
+    var p2 = playerBySeat(seats[j]);
+    if(p2 && p2.role === 'traitor') actual.push(seats[j]);
+    if(table[seats[j]] === 'traitor') guessed.push(seats[j]);
+  }
+  actual.sort(function(a,b){return a-b;});
+  guessed.sort(function(a,b){return a-b;});
+  if(actual.length !== guessed.length) return false;
+  for(var k=0;k<actual.length;k++) if(actual[k] !== guessed[k]) return false;
+  return true;
+}
+function afterTurnResult(){
+  closeFlowModal();
+  var remaining = game.settings.turnsPerRound - game.turn;
+  var lockedWin = game.wrongCount === 0 && remaining <= 1;
+  var lockedLoss = game.wrongCount >= 3;
+  var lastTurn = game.turn >= game.settings.turnsPerRound;
+  if(lockedWin || lockedLoss || lastTurn){
+    finishRound();
+  }else{
+    game.turn++;
+    startTurnViewing();
+  }
+}
+
+/* ---------- 本轮结算 ---------- */
+function finishRound(){
+  if(game.wrongCount === 2){
+    openIdentityTable(true);
+  }else{
+    settleRound(game.wrongCount <= 1 ? 'emperorWin' : 'traitorWin');
+  }
+}
+function chooseMostTrustedTraitor(){
+  var traitors = [];
+  for(var i=0;i<game.players.length;i++) if(game.players[i].role === 'traitor') traitors.push(game.players[i].seat);
+  if(traitors.length === 1) return traitors[0];
+  var table = game.debateTable || game.lastIdentityTable;
+  if(!table){
+    game.nextEmperorReason = 'random';
+    return traitors[Math.floor(Math.random()*traitors.length)];
+  }
+  var bestScore = -1, best = [];
+  for(var j=0;j<traitors.length;j++){
+    var seat = traitors[j];
+    var mark = table[seat];
+    var score = mark === 'loyal' ? 2 : (mark === 'eunuch' ? 1 : 0);
+    if(score > bestScore){ bestScore = score; best = [seat]; }
+    else if(score === bestScore){ best.push(seat); }
+  }
+  game.nextEmperorReason = bestScore === 2 ? 'loyal-mark' : (bestScore === 1 ? 'eunuch-mark' : 'random');
+  return best[Math.floor(Math.random()*best.length)];
+}
+function settleRound(result){
+  game.roundResult = result;
+  var streakAtEnd = result === 'emperorWin' ? game.emperorWinStreak + 1 : 0;
+  if(result === 'emperorWin' && streakAtEnd >= 2){
+    var loyalSeats = [];
+    for(var i=0;i<game.players.length;i++) if(game.players[i].role === 'loyal') loyalSeats.push(game.players[i].seat);
+    if(loyalSeats.length === 1){
+      finalizeSettlement(result, streakAtEnd, loyalSeats[0]);
+    }else{
+      showLoyalSuccessorModal(result, streakAtEnd, loyalSeats);
+    }
+    return;
+  }
+  if(result === 'emperorWin'){
+    finalizeSettlement(result, streakAtEnd, game.emperorSeat);
+    return;
+  }
+  var traitorSeat = chooseMostTrustedTraitor();
+  finalizeSettlement(result, streakAtEnd, traitorSeat);
+}
+function showLoyalSuccessorModal(result, streakAtEnd, loyalSeats){
+  var body = '<p>皇帝连胜两轮，请从以下忠臣中选择下一任皇帝。</p>'+
+    '<div class="settlement-roles">';
+  for(var i=0;i<loyalSeats.length;i++){
+    body += '<button type="button" class="bet-btn" data-action="successor-select" data-seat="'+loyalSeats[i]+'">'+loyalSeats[i]+'号<br><small>忠臣</small></button>';
+  }
+  body += '</div>';
+  openFlowModal('皇帝禅让', body, '', false);
+}
+function onSuccessorSelect(seat){
+  closeFlowModal();
+  var streakAtEnd = game.emperorWinStreak + 1;
+  finalizeSettlement('emperorWin', streakAtEnd, seat);
+}
+function finalizeSettlement(result, streakAtEnd, nextEmperorSeat){
+  game.nextEmperorSeat = nextEmperorSeat;
+  var nextStreak = (nextEmperorSeat === game.emperorSeat && result === 'emperorWin') ? streakAtEnd : 0;
+  var actual = result === 'emperorWin' ? 'win' : 'lose';
+  var betResults = {};
+  var hits = [];
+  for(var i=0;i<game.players.length;i++){
+    var p = game.players[i];
+    if(p.role !== 'eunuch') continue;
+    var bet = game.eunuchBets[p.seat];
+    if(!bet) continue;
+    var hit = bet === actual;
+    betResults[p.seat] = {bet:bet, hit:hit};
+    if(hit) hits.push(p.seat);
+  }
+  game.eunuchBetResults = betResults;
+  game.pendingEunuchRewards = hits.slice();
+  game.emperorWinStreak = nextStreak;
+
+  var roleMap = {};
+  for(var j=0;j<game.players.length;j++) roleMap[game.players[j].seat] = game.players[j].role;
+
+  var record = {
+    round: game.round,
+    playerCount: game.settings.playerCount,
+    emperorSeat: game.emperorSeat,
+    composition: clone(game.composition),
+    roles: roleMap,
+    turns: clone(game.turnResults),
+    identityTables: clone(game.identityTables),
+    debate: game.debateTable ? {table: clone(game.debateTable), success: !!game.debateSuccess} : null,
+    result: result,
+    streakAtEnd: streakAtEnd,
+    nextEmperorSeat: nextEmperorSeat,
+    nextStreak: nextStreak,
+    eunuchBets: clone(game.eunuchBets),
+    eunuchBetResults: clone(betResults),
+    pendingRewards: hits.slice(),
+    timestamp: Date.now()
+  };
+  game.history.push(record);
+  saveHistory();
+  game.currentRoundRecord = record;
+  game.phase = 'settlement';
+  renderGame();
+  showSettlement(record);
+}
+function showSettlement(record){
+  var body = '<div class="result-banner '+(record.result === 'emperorWin' ? 'win' : 'lose')+'">'+
+    (record.result === 'emperorWin' ? '皇帝胜' : '奸臣胜')+'</div>';
+
+  var totalSeconds = 0;
+  for(var i=0;i<record.turns.length;i++) totalSeconds += record.turns[i].seconds || 0;
+  body += '<div class="settlement-summary">'+
+    '<div>第 <strong>'+record.round+'</strong> 轮 · 皇帝 <strong>'+record.emperorSeat+'号</strong></div>'+
+    '<div>战绩：猜中 <strong>'+record.turns.filter(function(t){return t.correct;}).length+'</strong> · 猜错 <strong>'+record.turns.filter(function(t){return !t.correct;}).length+'</strong> · 总用时 <strong>'+formatTime(totalSeconds)+'</strong></div>'+
+    (record.debate ? '<div>辩忠奸：<strong>'+(record.debate.success ? '成功' : '失败')+'</strong></div>' : '')+
+    '</div>';
+
+  body += '<div class="settlement-section"><h3>身份公开</h3><div class="settlement-roles">';
+  var seats = Object.keys(record.roles).map(function(s){return parseInt(s,10);}).sort(function(a,b){return a-b;});
+  for(var j=0;j<seats.length;j++){
+    var seat = seats[j];
+    var role = record.roles[seat];
+    var extra = '';
+    if(role === 'eunuch'){
+      var br = record.eunuchBetResults[seat];
+      if(br) extra = '押'+(br.bet === 'win' ? '胜' : '负')+' · '+(br.hit ? '命中' : '未中');
+    }
+    body += '<div class="settlement-role '+roleClass(role)+'">'+seat+'号 '+roleName(role)+'<small>'+extra+'</small></div>';
+  }
+  body += '</div></div>';
+
+  var betSeats = Object.keys(record.eunuchBetResults || {}).map(function(s){return parseInt(s,10);});
+  if(betSeats.length){
+    body += '<div class="settlement-section"><h3>太监押宝</h3>';
+    for(var k=0;k<betSeats.length;k++){
+      var bs = betSeats[k];
+      var info = record.eunuchBetResults[bs];
+      body += '<div>'+bs+'号太监押 <strong>'+(info.bet === 'win' ? '皇帝胜' : '皇帝负')+'</strong> → <strong>'+(info.hit ? '命中，下轮可任选角色' : '未中，正常分配')+'</strong></div>';
+    }
+    body += '</div>';
+  }
+
+  body += '<div class="settlement-section"><h3>下一任皇帝</h3>';
+  if(record.result === 'emperorWin' && record.nextEmperorSeat === record.emperorSeat){
+    body += '<div><strong>'+record.nextEmperorSeat+'号皇帝</strong>继续执政（连胜 '+record.streakAtEnd+'/2）</div>';
+  }else{
+    var nextRole = record.roles[record.nextEmperorSeat] || '';
+    var reason = '';
+    if(record.result !== 'emperorWin'){
+      if(game.nextEmperorReason === 'loyal-mark') reason = '（皇帝最信任的奸臣，被标为忠臣）';
+      else if(game.nextEmperorReason === 'eunuch-mark') reason = '（皇帝次信任的奸臣，被标为太监）';
+      else reason = '（随机）';
+    }
+    body += '<div><strong>'+record.nextEmperorSeat+'号</strong> '+(nextRole ? roleName(nextRole)+' ' : '')+'继位 '+reason+'</div>';
+  }
+  body += '</div>';
+
+  var sameEmperor = record.result === 'emperorWin' && record.nextEmperorSeat === record.emperorSeat;
+  body += '<div class="privacy-note" style="margin-top:12px;">'+
+    (sameEmperor
+      ? '下一轮继续由 <strong>'+record.nextEmperorSeat+'号皇帝</strong>执政。请将手机交回皇帝，点击“下一轮”。'
+      : '下一轮由 <strong>'+record.nextEmperorSeat+'号皇帝</strong>执政。请将手机交给该玩家，点击“下一轮”。')+
+    '</div>';
+
+  var finalTable = null, finalLabel = '', finalTitle = '';
+  if(record.debate && record.debate.table){
+    finalTable = record.debate.table;
+    finalLabel = '皇帝最终判断';
+    finalTitle = '辩忠奸最终表';
+  }else if(record.identityTables && record.identityTables.length){
+    var last = record.identityTables[record.identityTables.length-1];
+    finalTable = last.table;
+    finalLabel = '第 '+last.turn+' 回合';
+    finalTitle = '皇帝最后身份表';
+  }
+  if(finalTable){
+    body += '<div class="settlement-section"><h3>'+finalTitle+'</h3>';
+    body += '<div class="identity-summary">'+finalLabel+'：';
+    var tkeys = Object.keys(finalTable).map(function(s){return parseInt(s,10);}).sort(function(a,b){return a-b;});
+    for(var m=0;m<tkeys.length;m++){
+      body += tkeys[m]+'号'+ROLE_SHORT[finalTable[tkeys[m]]] + (m < tkeys.length-1 ? ' · ' : '');
+    }
+    body += '</div></div>';
+  }
+
+  var nextBtnText = (record.result === 'emperorWin' && record.nextEmperorSeat === record.emperorSeat)
+    ? '下一轮（皇帝继续）'
+    : '下一轮（交给'+record.nextEmperorSeat+'号）';
+  var footer = '<button class="btn btn-ghost" data-action="info-history">查看记录</button>'+
+    '<button class="btn btn-primary" data-action="next-round">'+nextBtnText+'</button>'+
+    '<button class="btn btn-ghost" data-action="end-game">结束本局</button>';
+  openFlowModal('第 '+record.round+' 轮结算', body, footer, false);
+}
+
+/* ---------- 太监押中奖励 ---------- */
+function startEunuchRewards(rewards, composition){
+  game.rewardQueue = rewards.slice();
+  game.rewardIndex = 0;
+  game.rewardChoices = {};
+  game.rewardSlots = {loyal:composition.loyal, traitor:composition.traitor, eunuch:composition.eunuch};
+  game.rewardComposition = composition;
+  processReward();
+}
+function processReward(){
+  if(game.rewardIndex >= game.rewardQueue.length){
+    var choices = game.rewardChoices;
+    var composition = game.rewardComposition;
+    game.pendingEunuchRewards = [];
+    game.rewardQueue = [];
+    game.rewardIndex = 0;
+    assignRoles(composition, choices);
+    showEmperorConfirm();
+    return;
+  }
+  var seat = game.rewardQueue[game.rewardIndex];
+  var slots = game.rewardSlots;
+  var body = '<div class="privacy-note">请将设备交给 <strong>'+seat+'号玩家</strong>，其他玩家回避。押宝命中后可任选下一轮角色。</div>'+
+    '<div class="settlement-roles" style="margin-top:16px;">';
+  var roles = ['loyal','traitor','eunuch'];
+  for(var i=0;i<roles.length;i++){
+    var role = roles[i];
+    var left = slots[role] || 0;
+    var disabled = left <= 0 ? ' disabled' : '';
+    body += '<button type="button" class="bet-btn '+roleClass(role)+'" data-action="reward-select" data-role="'+role+'"'+disabled+'>'+
+      roleName(role)+'<small style="display:block;font-size:12px;font-weight:500;margin-top:4px;">剩余 '+left+' 个名额</small></button>';
+  }
+  body += '</div>';
+  openFlowModal(seat+'号玩家 · 太监押中奖励', body, '', false);
+}
+function onRewardSelect(role){
+  var seat = game.rewardQueue[game.rewardIndex];
+  if(!seat) return;
+  if((game.rewardSlots[role] || 0) <= 0) return;
+  game.rewardChoices[seat] = role;
+  game.rewardSlots[role]--;
+  game.rewardIndex++;
+  processReward();
+}
+
+/* ---------- 渲染 ---------- */
+function renderSetup(){
+  $('playerCountInput').value = game.settings.playerCount;
+  $('turnsInput').value = game.settings.turnsPerRound;
+  $('secondsInput').value = game.settings.turnSeconds;
+  $('eunuchProbInput').value = game.settings.eunuchProbability;
+  $('soundEnabledInput').checked = !!game.settings.soundEnabled;
+  $('customWordsInput').value = game.customWords.join('\n');
+  renderCompositionPreview();
+  renderWordStats();
+}
+function renderCompositionPreview(){
+  var n = parseInt($('playerCountInput').value,10) || 4;
+  var html = '';
+  if(n === 4){
+    html = '<strong>4 人局：</strong>1 皇帝 · 1 忠臣 · 1 奸臣 · 1 太监 <span class="muted">（首轮随机；或 1 皇帝 · 1 忠臣 · 2 奸臣）</span>';
+  }else{
+    var c = getComposition(n, null);
+    html = '<strong>'+n+' 人局：</strong>'+compositionText(c);
+  }
+  $('compositionPreview').innerHTML = html;
+}
+function renderWordStats(){
+  var builtin = WORD_LIBRARY.length;
+  var custom = game.customWords.length;
+  $('wordStatsEL').textContent = '内置 '+builtin+' 词 · 自定义 '+custom+' 词 · 合计 '+(builtin+custom)+' 词';
+}
+function renderGame(){
+  if(game.phase === 'setup') return;
+  renderBar();
+  renderPlayerGrid();
+  renderTableHint();
+  renderTableActions();
+}
+function renderBar(){
+  var roundEl = $('barRoundEL'), turnEl = $('barTurnEL'), timerEl = $('barTimerEL'), phaseEl = $('barPhaseEL');
+  if(roundEl) roundEl.textContent = '第 '+game.round+' 轮';
+  if(turnEl) turnEl.textContent = '第 '+game.turn+' / '+game.settings.turnsPerRound+' 回合';
+  if(timerEl){
+    if(game.phase === 'timer' && game.timerEnd){
+      timerEl.textContent = formatTime(Math.max(0, Math.ceil((game.timerEnd - Date.now())/1000)));
+    }else if(game.phase === 'prepare' || game.phase === 'wordReveal' || game.phase === 'emperorConfirm'){
+      timerEl.textContent = formatTime(game.settings.turnSeconds);
+    }else if(game.phase === 'identity' || game.phase === 'guess'){
+      timerEl.textContent = formatTime(game.currentTurnSeconds || 0);
+    }else{
+      timerEl.textContent = '--:--';
+    }
+  }
+  if(phaseEl){
+    var labels = {emperorConfirm:'皇帝确认', prepare:'准备', wordReveal:'看词', timer:'计时', identity:'身份表', guess:'猜词', turnResult:'回合结束', debate:'辩忠奸', settlement:'结算'};
+    phaseEl.textContent = labels[game.phase] || '';
+  }
+  var guessBtn = $('guessBtn');
+  if(guessBtn) guessBtn.disabled = game.phase !== 'timer';
+  renderSoundButton();
+}
+function renderPlayerGrid(){
+  var grid = $('playerGridEL');
+  if(!grid) return;
+  var html = '';
+  var currentSeat = null;
+  if(game.phase === 'prepare') currentSeat = game.prepareQueue[game.prepareIndex];
+  if(game.phase === 'wordReveal') currentSeat = game.wordQueue[game.wordIndex];
+  if(game.phase === 'timer') currentSeat = game.speakerOrder[game.speakerIndex];
+
+  for(var i=0;i<game.players.length;i++){
+    var p = game.players[i];
+    var cls = 'player';
+    var label = p.seat+'号';
+    var sub = '';
+    if(game.phase === 'prepare'){
+      if(p.seat === game.emperorSeat){ cls += ' is-emperor'; label = '皇帝'; sub = '公开身份'; }
+      else if(p.ready){ cls += ' is-done'; sub = '已准备'; }
+      else if(p.seat === currentSeat){ cls += ' is-active'; sub = '点击查看'; }
+      else{ cls += ' is-waiting'; sub = '等待中'; }
+    }else if(game.phase === 'wordReveal'){
+      if(p.seat === game.emperorSeat){ cls += ' is-emperor'; label = '皇帝'; sub = '公开身份'; }
+      else if(p.viewed){ cls += ' is-done'; sub = '已看词'; }
+      else if(p.seat === currentSeat){ cls += ' is-active'; sub = '点击看词'; }
+      else{ cls += ' is-waiting'; sub = '等待中'; }
+    }else if(game.phase === 'timer'){
+      if(p.seat === game.emperorSeat){ cls += ' is-emperor'; label = '皇帝'; sub = '公开身份'; }
+      else if(game.skippedSeats.indexOf(p.seat) >= 0){ cls += ' is-skipped'; sub = '已跳过'; }
+      else if(p.seat === currentSeat){ cls += ' is-speaking'; sub = '发言中'; }
+      else{ cls += ' is-idle'; sub = '等待'; }
+    }else if(game.phase === 'settlement'){
+      cls += ' '+roleClass(p.role);
+      sub = roleName(p.role);
+    }else{
+      if(p.seat === game.emperorSeat){ cls += ' is-emperor'; label = '皇帝'; sub = '公开身份'; }
+      else{ cls += ' is-idle'; sub = ''; }
+    }
+    html += '<div class="'+cls+'" data-seat="'+p.seat+'"><span class="player-seat">'+label+'</span><span class="player-sub">'+sub+'</span></div>';
+  }
+  grid.innerHTML = html;
+}
+function renderTableHint(){
+  var hint = $('tableHintEL');
+  if(!hint) return;
+  var html = '';
+  if(game.composition && game.composition.loyal + game.composition.traitor + game.composition.eunuch > 0){
+    html += '<div class="composition-line">本局配置：'+escapeHtml(compositionText(game.composition))+'</div>';
+  }
+  if(game.phase === 'emperorConfirm'){
+    html += '请将手机交给 <strong>'+game.emperorSeat+'号皇帝</strong>，确认游戏信息后开始传阅。';
+  }else if(game.phase === 'prepare'){
+    var seats = getSpeakerOrder();
+    var allReady = true;
+    for(var i=0;i<seats.length;i++){ if(!playerBySeat(seats[i]).ready){ allReady = false; break; } }
+    if(allReady){
+      html += '所有人已准备。请将设备交给皇帝，点击“开始计时”。';
+      html += '<br><span class="muted">计时开始后，第一个看身份的玩家先描述。</span>';
+    }else{
+      html += '请将设备交给 <strong>'+game.prepareQueue[game.prepareIndex]+'号玩家</strong>，点击自己的卡片查看身份和第一个词。';
+      html += '<br><span class="muted">皇帝无需看词；所有人准备后由皇帝开始计时，第一个看身份的玩家先描述。</span>';
+    }
+  }else if(game.phase === 'wordReveal'){
+    var seats2 = getSpeakerOrder();
+    var allViewed = true;
+    for(var j=0;j<seats2.length;j++){ if(!playerBySeat(seats2[j]).viewed){ allViewed = false; break; } }
+    if(allViewed){
+      html += '所有人已看词。请将设备交给皇帝，点击“开始计时”。';
+    }else{
+      html += '请将设备交给 <strong>'+game.wordQueue[game.wordIndex]+'号玩家</strong> 看词。';
+    }
+  }else if(game.phase === 'timer'){
+    var order = game.speakerOrder.map(function(s){return s+'号';}).join(' → ');
+    html += '发言顺序：'+order+' <span class="muted">（第 '+game.speakerCycle+' 轮发言）</span><br>';
+    html += '当前发言：<strong>'+game.speakerOrder[game.speakerIndex]+'号</strong> · 皇帝可随时猜词。';
+  }else if(game.phase === 'turnResult'){
+    html += '本回合结果已出，等待继续。';
+  }else if(game.phase === 'identity'){
+    html += '皇帝正在完成判定前身份表；提交后才判定并公开词语。';
+  }else if(game.phase === 'guess'){
+    html += '皇帝正在输入猜测；提交后锁定，再标记身份。';
+  }else if(game.phase === 'debate'){
+    html += '辩忠奸中。';
+  }else if(game.phase === 'settlement'){
+    html += '本轮结束，身份已公开。';
+  }
+  hint.innerHTML = html;
+}
+function renderTableActions(){
+  var el = $('tableActionsEL');
+  if(!el) return;
+  var html = '';
+  if(game.phase === 'prepare'){
+    var seats = getSpeakerOrder();
+    var all = true;
+    for(var i=0;i<seats.length;i++){ if(!playerBySeat(seats[i]).ready){ all = false; break; } }
+    if(all) html = '<button class="btn btn-primary" data-action="start-timer">开始计时</button>';
+  }else if(game.phase === 'wordReveal'){
+    var seats2 = getSpeakerOrder();
+    var all2 = true;
+    for(var j=0;j<seats2.length;j++){ if(!playerBySeat(seats2[j]).viewed){ all2 = false; break; } }
+    if(all2) html = '<button class="btn btn-primary" data-action="start-timer">开始计时</button>';
+  }else if(game.phase === 'timer'){
+    html = '<button class="btn btn-ghost" data-action="next-speaker">下一位</button>'+
+      '<button class="btn btn-ghost" data-action="skip-speaker">跳过</button>';
+  }
+  el.innerHTML = html;
+}
+
+/* ---------- 弹窗控制 ---------- */
+function openFlowModal(title, body, footer, dismissible){
+  $('flowTitleEL').textContent = title;
+  $('flowBodyEL').innerHTML = body;
+  $('flowFooterEL').innerHTML = footer || '';
+  $('flowBodyEL').scrollTop = 0;
+  game.flowDismissible = !!dismissible;
+  $('flowMaskEL').classList.add('show');
+  var input = $('flowBodyEL').querySelector('input,textarea');
+  if(input) setTimeout(function(){ try{ input.focus(); }catch(e){} }, 30);
+}
+function closeFlowModal(){
+  $('flowMaskEL').classList.remove('show');
+  game.flowDismissible = false;
+}
+function openInfoModal(title, body, footer){
+  $('infoTitleEL').textContent = title;
+  $('infoBodyEL').innerHTML = body;
+  $('infoFooterEL').innerHTML = footer || '';
+  $('infoBodyEL').scrollTop = 0;
+  $('infoMaskEL').classList.add('show');
+}
+function closeInfoModal(){
+  $('infoMaskEL').classList.remove('show');
+}
+function showTips(message){
+  $('tipsMessageEL').textContent = message;
+  $('tipsMaskEL').classList.add('show');
+  var btn = $('tipsMaskEL').querySelector('button');
+  if(btn) btn.focus();
+}
+function hideTips(){
+  $('tipsMaskEL').classList.remove('show');
+}
+
+/* ---------- 历史记录 ---------- */
+function showHistory(){
+  var total = game.history.length;
+  var emperorWins = 0, traitorWins = 0, betTotal = 0, betHits = 0;
+  for(var i=0;i<game.history.length;i++){
+    var r = game.history[i];
+    if(r.result === 'emperorWin') emperorWins++;
+    else traitorWins++;
+    var brs = r.eunuchBetResults || {};
+    var keys = Object.keys(brs);
+    for(var j=0;j<keys.length;j++){
+      betTotal++;
+      if(brs[keys[j]].hit) betHits++;
+    }
+  }
+  var body = '<div class="history-summary">'+
+    '<span>共 <strong>'+total+'</strong> 轮</span>'+
+    '<span>皇帝阵营胜 <strong>'+emperorWins+'</strong></span>'+
+    '<span>奸臣阵营胜 <strong>'+traitorWins+'</strong></span>'+
+    '<span>太监押中 <strong>'+betHits+'/'+betTotal+'</strong></span>'+
+    '</div>';
+  if(total === 0){
+    body += '<p class="muted">暂无记录。完成一轮后会出现在这里。</p>';
+  }else{
+    for(var m=game.history.length-1;m>=0;m--){
+      var rec = game.history[m];
+      body += '<details class="history-card">';
+      body += '<summary>第 '+rec.round+' 轮 · 皇帝 '+rec.emperorSeat+'号 · '+(rec.result === 'emperorWin' ? '皇帝胜' : '奸臣胜')+'</summary>';
+      body += '<div class="history-body">';
+      body += '<div>配置：'+escapeHtml(compositionText(rec.composition || {loyal:0,traitor:0,eunuch:0}))+'</div>';
+      var roles = rec.roles || {};
+      var seats = Object.keys(roles).map(function(s){return parseInt(s,10);}).sort(function(a,b){return a-b;});
+      body += '<div style="margin:6px 0;">';
+      for(var n=0;n<seats.length;n++){
+        body += '<span class="role-chip '+roleClass(roles[seats[n]])+'">'+seats[n]+'号 '+roleName(roles[seats[n]])+'</span>';
+      }
+      body += '</div>';
+      if(rec.turns && rec.turns.length){
+        body += '<ul class="turn-list">';
+        for(var t=0;t<rec.turns.length;t++){
+          var turn = rec.turns[t];
+          body += '<li>第 '+turn.turn+' 回合：『'+escapeHtml(turn.word)+'』'+escapeHtml(turn.category||'')+
+            ' → '+(turn.gaveUp ? '放弃' : '猜『'+escapeHtml(turn.guess)+'』')+
+            ' '+(turn.correct ? '✓' : '✗')+' · 用时 '+formatTime(turn.seconds||0)+'</li>';
+        }
+        body += '</ul>';
+      }
+      if(rec.identityTables && rec.identityTables.length){
+        body += '<div class="identity-summary"><strong>皇帝身份表：</strong><br>';
+        for(var it=0;it<rec.identityTables.length;it++){
+          var item = rec.identityTables[it];
+          var parts = [];
+          var tkeys = Object.keys(item.table).map(function(s){return parseInt(s,10);}).sort(function(a,b){return a-b;});
+          for(var k=0;k<tkeys.length;k++) parts.push(tkeys[k]+'号'+ROLE_SHORT[item.table[tkeys[k]]]);
+          body += '第 '+item.turn+' 回合：'+parts.join(' · ')+'<br>';
+        }
+        body += '</div>';
+      }
+      if(rec.debate){
+        body += '<div>辩忠奸：<strong>'+(rec.debate.success ? '成功' : '失败')+'</strong></div>';
+        if(rec.debate.table){
+          var dparts = [];
+          var dkeys = Object.keys(rec.debate.table).map(function(s){return parseInt(s,10);}).sort(function(a,b){return a-b;});
+          for(var d=0;d<dkeys.length;d++) dparts.push(dkeys[d]+'号'+ROLE_SHORT[rec.debate.table[dkeys[d]]]);
+          body += '<div class="identity-summary">辩忠奸最终表：'+dparts.join(' · ')+'</div>';
+        }
+      }
+      var brs2 = rec.eunuchBetResults || {};
+      var bkeys = Object.keys(brs2);
+      if(bkeys.length){
+        body += '<div>太监押宝：';
+        for(var b=0;b<bkeys.length;b++){
+          var bi = brs2[bkeys[b]];
+          body += bkeys[b]+'号押'+(bi.bet === 'win' ? '胜' : '负')+'→'+(bi.hit ? '命中' : '未中')+(b<bkeys.length-1?'；':'');
+        }
+        body += '</div>';
+      }
+      body += '<div>下一任：<strong>'+rec.nextEmperorSeat+'号</strong>'+
+        (rec.result === 'emperorWin' && rec.nextEmperorSeat === rec.emperorSeat ? '（继续执政）' : '（继位）')+'</div>';
+      body += '</div></details>';
+    }
+  }
+  var footer = '<button class="btn btn-danger" data-action="history-clear">清空记录</button>'+
+    '<button class="btn btn-ghost" data-action="info-close">关闭</button>';
+  openInfoModal('游戏记录', body, footer);
+}
+function clearHistory(){
+  if(!window.confirm('清空所有游戏记录？此操作不可恢复。')) return;
+  game.history = [];
+  saveHistory();
+  showHistory();
+}
+
+/* ---------- 规则 ---------- */
+function showRules(){
+  var body = '<div class="rules-section"><h3>角色目标</h3><ul>'+
+    '<li><span class="tag">皇帝</span>看不到目标词。听描述猜词，并判断谁是忠臣、谁是奸臣。</li>'+
+    '<li><span class="tag">忠臣</span>看到目标词。用正向描述帮皇帝猜中；皇帝连胜两轮后，可能被禅让为下一任皇帝。</li>'+
+    '<li><span class="tag">奸臣</span>看到目标词。用非正向或误导性描述让皇帝猜错，同时争取皇帝信任；皇帝失败后，最受信任的奸臣继位。</li>'+
+    '<li><span class="tag">太监</span>中立。每轮开始前秘密押皇帝胜/负；押中下轮可任选非皇帝角色。押宝后知道自己所押阵营的成员。</li>'+
+    '</ul></div>'+
+    '<div class="rules-section"><h3>轮与回合</h3><ul>'+
+    '<li>每轮默认 3 回合，可设 3-6 回合；每回合默认 3 分钟，可设 60-600 秒。最后 10 秒会有滴答提示音，可在设置页或顶栏“音”按钮关闭。</li>'+
+    '<li>每回合系统随机一个目标词。忠臣/奸臣必看；太监每回合独立 50% 概率看到；皇帝不看。</li>'+
+    '<li>除皇帝外所有人看词后，皇帝点“开始计时”。发言按座位顺序循环，皇帝可随时猜词或跳过某人。</li>'+
+    '<li>皇帝每回合只有一次猜词机会；猜中、猜错、放弃都会立即结束该回合。时间到必须立即猜，不能再询问。</li>'+
+    '<li>皇帝决定猜词后，先输入猜测（锁定），再提交本回合身份表；提交身份表后系统才判定并公开该回合词。</li>'+
+    '</ul></div>'+
+    '<div class="rules-section"><h3>胜负判定</h3><ul>'+
+    '<li>本轮猜错 0-1 回合：皇帝胜。</li>'+
+    '<li>本轮恰好猜错 2 回合：进入辩忠奸。4-6 人检查整张身份表；7 人以上只检查奸臣集合。辩忠奸时可最后修改一次身份表，提交后直接判定。</li>'+
+    '<li>本轮猜错 3 回合及以上：皇帝负。</li>'+
+    '<li>提前结算：0 错且剩余回合已不可能让皇帝输（只剩 1 回合），或猜错达到 3 次时，立即结算，不再打无效回合。</li>'+
+    '</ul></div>'+
+    '<div class="rules-section"><h3>皇帝身份表</h3><ul>'+
+    '<li>每回合判定前，皇帝必须给每个非皇帝玩家指定忠臣/奸臣/太监，数量必须与本局配置一致；提交身份表后系统才判定并公开词语。</li>'+
+    '<li>下一回合可基于上一张表重新提交，旧表保留在记录中。</li>'+
+    '<li>最后一张表用于辩忠奸（可最后修改一次）和“最信任的奸臣”判定。</li>'+
+    '</ul></div>'+
+    '<div class="rules-section"><h3>继位与太监奖励</h3><ul>'+
+    '<li>皇帝连胜 2 轮：从忠臣中选一人继位。</li>'+
+    '<li>皇帝失败：最后一张表里被标为忠臣的奸臣优先继位，其次被标为太监的奸臣，最后随机。</li>'+
+    '<li>太监押中：下一轮可在角色空缺中任选非皇帝角色；未中正常随机分配。</li>'+
+    '<li>4 人局首轮随机“1 皇 1 忠 1 奸 1 监”或“1 皇 1 忠 2 奸”；之后皇帝胜用后者，皇帝负用前者。</li>'+
+    '</ul></div>'+
+    '<div class="rules-section"><h3>桌规</h3><ul>'+
+    '<li>描述中不得直接说出目标词、同音字、拆字、外文翻译或书写。违规第一次警告，第二次本轮禁言，严重者皇帝直接胜。</li>'+
+    '<li>太监不得直接点破任何人的忠奸身份，只能用描述和态度配合。</li>'+
+    '<li>玩家可以主动“过”；由皇帝点“跳过”记录，App 不单独判定。</li>'+
+    '<li>本工具是游戏助手：描述、提问、讨论、投票都在线下完成；App 只负责随机、私密查看、计时、身份表判定和记录。</li>'+
+    '</ul></div>';
+  var footer = '<button class="btn btn-ghost" data-action="info-close">关闭</button>';
+  openInfoModal('玩法说明', body, footer);
+}
+
+/* ---------- 开始/结束 ---------- */
+function startGame(){
+  var n = parseInt($('playerCountInput').value,10);
+  var t = parseInt($('turnsInput').value,10);
+  var s = parseInt($('secondsInput').value,10);
+  var p = parseInt($('eunuchProbInput').value,10);
+  if(!(n>=4 && n<=10)){ showTips('玩家人数需在 4-10 之间。'); return; }
+  if(!(t>=3 && t<=6)){ showTips('每轮回合数需在 3-6 之间。'); return; }
+  if(!(s>=60 && s<=600)){ showTips('每回合时限需在 60-600 秒之间。'); return; }
+  if(!(p>=0 && p<=100)){ showTips('太监看词概率需在 0-100 之间。'); return; }
+
+  var soundEnabled = !!$('soundEnabledInput').checked;
+  game.settings = {playerCount:n, turnsPerRound:t, turnSeconds:s, eunuchProbability:p, soundEnabled:soundEnabled};
+  saveSettings();
+  renderSoundButton();
+  buildWordPool();
+  game.round = 1;
+  game.prevRoundResult = null;
+  game.nextEmperorSeat = null;
+  game.emperorWinStreak = 0;
+  game.pendingEunuchRewards = [];
+  game.currentRoundRecord = null;
+  game.phase = 'prepare';
+  document.body.classList.add('game-fullscreen');
+  startRound();
+}
+function saveCustomWordsFromInput(){
+  var raw = $('customWordsInput').value.split(/\r?\n/);
+  var words = [];
+  for(var i=0;i<raw.length;i++){
+    var w = raw[i].trim();
+    if(!w) continue;
+    if(w.length > 20){ showTips('已忽略超过 20 字的词：'+w); continue; }
+    words.push(w);
+  }
+  game.customWords = uniqueWords(words);
+  saveCustomWords();
+  renderWordStats();
+  showTips('自定义词库已保存，共 '+game.customWords.length+' 个词。');
+}
+function confirmEndGame(){
+  if(!window.confirm('结束本局？当前未结算的回合会丢失，已完成记录保留。')) return;
+  stopTimer();
+  closeFlowModal();
+  closeInfoModal();
+  hideTips();
+  document.body.classList.remove('game-fullscreen');
+  game.phase = 'setup';
+  game.players = [];
+  game.currentRoundRecord = null;
+  game.pendingEunuchRewards = [];
+  game.nextEmperorSeat = null;
+  game.prevRoundResult = null;
+  game.round = 1;
+  game.emperorWinStreak = 0;
+  $('playerGridEL').innerHTML = '';
+  $('tableHintEL').innerHTML = '';
+  $('tableActionsEL').innerHTML = '';
+  renderSetup();
+}
+function onNextRound(){
+  var record = game.currentRoundRecord;
+  if(!record) return;
+  closeFlowModal();
+  closeInfoModal();
+  game.round++;
+  game.prevRoundResult = record.result;
+  game.pendingEunuchRewards = (record.pendingRewards || []).slice();
+  game.emperorWinStreak = record.nextStreak || 0;
+  startRound();
+}
+
+/* ---------- 事件 ---------- */
+function handlePlayerClick(e){
+  var card = e.target.closest ? e.target.closest('.player') : null;
+  if(!card) return;
+  var seat = parseInt(card.getAttribute('data-seat'),10);
+  if(!seat) return;
+  if(game.phase === 'prepare'){
+    if(seat === game.emperorSeat) return;
+    if(seat !== game.prepareQueue[game.prepareIndex]){
+      showTips('请先让 '+game.prepareQueue[game.prepareIndex]+'号玩家查看。');
+      return;
+    }
+    openPreparePrivacy(seat);
+  }else if(game.phase === 'wordReveal'){
+    if(seat === game.emperorSeat) return;
+    if(seat !== game.wordQueue[game.wordIndex]){
+      showTips('请先让 '+game.wordQueue[game.wordIndex]+'号玩家看词。');
+      return;
+    }
+    openWordPrivacy(seat);
+  }else if(game.phase === 'timer'){
+    if(seat === game.emperorSeat) return;
+    setSpeaker(seat);
+  }
+}
+function handleActionClick(e){
+  var el = e.target.closest ? e.target.closest('[data-action]') : null;
+  if(!el) return;
+  var action = el.getAttribute('data-action');
+  e.preventDefault();
+  switch(action){
+    case 'start-game': startGame(); break;
+    case 'show-rules': showRules(); break;
+    case 'show-history': showHistory(); break;
+    case 'save-words': saveCustomWordsFromInput(); break;
+    case 'emperor-confirm': onEmperorConfirm(); break;
+    case 'guess': beginGuessFlow(); break;
+    case 'toggle-sound': toggleSound(); break;
+    case 'end-game': confirmEndGame(); break;
+    case 'flow-close': closeFlowModal(); break;
+    case 'info-close': closeInfoModal(); break;
+    case 'tips-ok': hideTips(); break;
+    case 'prepare-show': showPrepareRole(parseInt(el.getAttribute('data-seat'),10)); break;
+    case 'bet-select': onBetSelect(parseInt(el.getAttribute('data-seat'),10), el.getAttribute('data-bet')); break;
+    case 'bet-reset': onBetReset(parseInt(el.getAttribute('data-seat'),10)); break;
+    case 'bet-confirm': onBetConfirm(parseInt(el.getAttribute('data-seat'),10)); break;
+    case 'prepare-done': finishPrepare(parseInt(el.getAttribute('data-seat'),10)); break;
+    case 'word-show': showWordModal(parseInt(el.getAttribute('data-seat'),10)); break;
+    case 'word-done': finishWordView(parseInt(el.getAttribute('data-seat'),10)); break;
+    case 'start-timer': startTimer(); break;
+    case 'next-speaker': advanceSpeaker(); break;
+    case 'skip-speaker': skipSpeaker(); break;
+    case 'guess-submit': submitGuess(); break;
+    case 'guess-giveup': giveUpGuess(); break;
+    case 'after-turn': afterTurnResult(); break;
+    case 'identity-set': onIdentitySet(parseInt(el.getAttribute('data-seat'),10), el.getAttribute('data-role')); break;
+    case 'identity-copy': onIdentityCopy(); break;
+    case 'identity-clear': onIdentityClear(); break;
+    case 'identity-submit': submitIdentity(); break;
+    case 'debate-submit': submitIdentity(); break;
+    case 'next-round': onNextRound(); break;
+    case 'info-history': showHistory(); break;
+    case 'successor-select': onSuccessorSelect(parseInt(el.getAttribute('data-seat'),10)); break;
+    case 'reward-select': onRewardSelect(el.getAttribute('data-role')); break;
+    case 'history-clear': clearHistory(); break;
+    default: console.warn('unknown action', action);
+  }
+}
+function init(){
+  loadStorage();
+  renderSetup();
+  renderSoundButton();
+  $('playerCountInput').addEventListener('input', renderCompositionPreview);
+  $('playerGridEL').addEventListener('click', handlePlayerClick);
+  document.addEventListener('click', handleActionClick);
+  $('flowMaskEL').addEventListener('click', function(e){
+    if(e.target === this && game.flowDismissible) closeFlowModal();
+  });
+  $('infoMaskEL').addEventListener('click', function(e){
+    if(e.target === this) closeInfoModal();
+  });
+  window.addEventListener('beforeunload', function(e){
+    if(game.phase !== 'setup'){
+      e.preventDefault();
+      e.returnValue = '';
+    }
+  });
+}
+init();
+</script>
+</body>
+</html>
