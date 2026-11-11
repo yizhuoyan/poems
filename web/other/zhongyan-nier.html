@@ -972,14 +972,15 @@ function startRound(){
 function showEmperorConfirm(){
   game.phase = 'emperorConfirm';
   renderGame();
-  var body = '<div class="privacy-note">请将手机交给 <strong>'+game.emperorSeat+'号皇帝</strong>。其他玩家先不要操作。</div>'+
+  var nextSeat = getSpeakerOrder()[0];
+  var body = '<p class="role-goal" style="margin-top:0;">你是 <strong>'+game.emperorSeat+'号皇帝</strong>。你看不到目标词。</p>'+
     '<div class="settlement-summary" style="margin-top:14px;">'+
     '<div>第 <strong>'+game.round+'</strong> 轮 · 第 <strong>1 / '+game.settings.turnsPerRound+'</strong> 回合</div>'+
     '<div>本局配置：'+escapeHtml(compositionText(game.composition))+'</div>'+
     '<div>每回合时限：<strong>'+formatTime(game.settings.turnSeconds)+'</strong></div>'+
     '</div>'+
-    '<p class="role-goal">你是 <strong>'+game.emperorSeat+'号皇帝</strong>。你看不到目标词。</p>';
-  var footer = '<button class="btn btn-primary" data-action="emperor-confirm">确认，开始传阅</button>';
+    '<div class="privacy-note" style="margin-top:12px;">确认后请把手机交给 <strong>'+nextSeat+'号玩家</strong>。</div>';
+  var footer = '<button class="btn btn-primary" data-action="emperor-confirm">确认，交给'+nextSeat+'号</button>';
   openFlowModal('皇帝确认 · 第 '+game.round+' 轮', body, footer, false);
 }
 function onEmperorConfirm(){
