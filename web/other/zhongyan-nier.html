@@ -362,7 +362,7 @@ body.game-fullscreen #gameBarEL{
       <label class="check-label"><input id="soundEnabledInput" type="checkbox" checked /> <span>最后 10 秒滴答音效</span></label>
     </div>
     <div id="compositionPreview" class="composition-preview"></div>
-    <p class="muted" style="margin:8px 0 0;font-size:12px;">首轮皇帝由线下商定，App 只记录选择；后续皇帝按胜负/禅让规则产生。</p>
+    <p class="muted" style="margin:8px 0 0;font-size:12px;">首轮默认 1 号玩家为皇帝。</p>
     <details class="custom-words">
       <summary>自定义词库</summary>
       <textarea id="customWordsInput" placeholder="一行一个词，例如：&#10;苹果&#10;长城&#10;孙悟空"></textarea>
@@ -852,7 +852,7 @@ function showPrepareRole(seat){
 function showBetStep(seat){
   var body = roleBadgeHtml('eunuch')+
     '<p class="role-goal">'+ROLE_GOALS.eunuch+'</p>'+
-    '<div class="privacy-note">本轮押宝：<strong>皇帝能否胜利？</strong> 押宝后再看第一个词。确认后不可更改。</div>'+
+    '<div class="privacy-note">本轮押宝：<strong>皇帝能否胜利？</strong> 确认后不可更改。</div>'+
     '<div class="bet-options">'+
     '<button type="button" class="bet-btn" data-action="bet-select" data-seat="'+seat+'" data-bet="win">押皇帝胜</button>'+
     '<button type="button" class="bet-btn" data-action="bet-select" data-seat="'+seat+'" data-bet="lose">押皇帝负</button>'+
@@ -978,7 +978,7 @@ function showEmperorConfirm(){
     '<div>本局配置：'+escapeHtml(compositionText(game.composition))+'</div>'+
     '<div>每回合时限：<strong>'+formatTime(game.settings.turnSeconds)+'</strong></div>'+
     '</div>'+
-    '<p class="role-goal">你是 <strong>'+game.emperorSeat+'号皇帝</strong>。你看不到目标词。流程：你确认 → 手机传给下家，非皇帝玩家逐个查看身份和第一个词 → 手机回到你手中，点击“开始计时” → 第一个看身份的玩家开始描述。</p>';
+    '<p class="role-goal">你是 <strong>'+game.emperorSeat+'号皇帝</strong>。你看不到目标词。</p>';
   var footer = '<button class="btn btn-primary" data-action="emperor-confirm">确认，开始传阅</button>';
   openFlowModal('皇帝确认 · 第 '+game.round+' 轮', body, footer, false);
 }
@@ -1133,8 +1133,8 @@ function openGuessInput(forced){
   game.guessForced = !!forced;
   var body = '<div class="guess-head"><span>第 '+game.turn+' 回合</span><span>本回合用时 <strong>'+formatTime(game.currentTurnSeconds || 0)+'</strong></span></div>'+
     (forced
-      ? '<p class="danger-text">时间到！请先输入你的猜测（锁定），再完成身份表；提交身份表后系统才判定并公开词语。</p>'
-      : '<p class="muted">先输入你的猜测，提交后锁定；接着完成本回合身份表，系统才会判定并公开词语。</p>')+
+      ? '<p class="danger-text">时间到！请输入你的猜测。</p>'
+      : '<p class="muted">输入你的猜测，提交后锁定。</p>')+
     '<input id="guessInput" class="text-input" type="text" maxlength="20" placeholder="输入你猜的词" />'+
     '<p id="guessErrorEL" class="error-text"></p>';
   var footer = '<button class="btn btn-primary" data-action="guess-submit">提交猜测，去标记身份</button>'+
@@ -1197,8 +1197,7 @@ function showTurnResult(result){
     wordCardHtml(result.word, result.category)+
     '<p>皇帝猜测：<strong>'+(result.gaveUp ? '放弃' : escapeHtml(result.guess))+'</strong></p>'+
     '<p>用时：<strong>'+formatTime(result.seconds)+'</strong></p>'+
-    '<p>当前战绩：猜中 <strong>'+game.correctCount+'</strong> · 猜错 <strong>'+game.wrongCount+'</strong></p>'+
-    '<p class="muted">本回合身份表已在判定前锁定。</p>';
+    '<p>当前战绩：猜中 <strong>'+game.correctCount+'</strong> · 猜错 <strong>'+game.wrongCount+'</strong></p>';
   var footer = '<button class="btn btn-primary" data-action="after-turn">继续</button>';
   openFlowModal('第 '+result.turn+' 回合结束', body, footer, false);
 }
@@ -1222,9 +1221,8 @@ function openIdentityTable(isDebate){
   var guessText = game.pendingGaveUp ? '放弃' : '『'+escapeHtml(game.pendingGuess)+'』';
   var intro = isDebate
     ? '<p class="danger-text">这是最后一次修改机会。提交后直接判定，不能再改。</p>'
-    : '<p class="muted">猜测已锁定：<strong>'+guessText+'</strong>。请完成本回合身份表；提交后系统判定并公开本回合词语。</p>'+
-      (game.guessFlowForced ? '<p class="danger-text">时间到！身份表提交后立即判定，不能再询问。</p>' : '')+
-      '<p class="muted">这张表可能直接用于辩忠奸或继位判定，请慎重。</p>';
+    : '<p class="muted">猜测已锁定：<strong>'+guessText+'</strong>。请完成本回合身份表。</p>'+
+      (game.guessFlowForced ? '<p class="danger-text">时间到！</p>' : '');
   var body = intro+
     '<div class="identity-toolbar">'+
       '<div id="identityCountsEL" class="identity-counts"></div>'+
@@ -1677,7 +1675,7 @@ function renderBar(){
     }
   }
   if(phaseEl){
-    var labels = {firstEmperor:'首轮皇帝', emperorConfirm:'皇帝确认', prepare:'准备', wordReveal:'看词', timer:'计时', identity:'身份表', guess:'猜词', turnResult:'回合结束', debate:'辩忠奸', settlement:'结算'};
+    var labels = {emperorConfirm:'皇帝确认', prepare:'准备', wordReveal:'看词', timer:'计时', identity:'身份表', guess:'猜词', turnResult:'回合结束', debate:'辩忠奸', settlement:'结算'};
     phaseEl.textContent = labels[game.phase] || '';
   }
   var guessBtn = $('guessBtn');
@@ -1731,9 +1729,7 @@ function renderTableHint(){
   if(game.composition && game.composition.loyal + game.composition.traitor + game.composition.eunuch > 0){
     html += '<div class="composition-line">本局配置：'+escapeHtml(compositionText(game.composition))+'</div>';
   }
-  if(game.phase === 'firstEmperor'){
-    html += '请在桌面上商定第一轮皇帝，然后在弹窗中点击对应座位。';
-  }else if(game.phase === 'emperorConfirm'){
+  if(game.phase === 'emperorConfirm'){
     html += '请将手机交给 <strong>'+game.emperorSeat+'号皇帝</strong>，确认游戏信息后开始传阅。';
   }else if(game.phase === 'prepare'){
     var seats = getSpeakerOrder();
@@ -1741,10 +1737,8 @@ function renderTableHint(){
     for(var i=0;i<seats.length;i++){ if(!playerBySeat(seats[i]).ready){ allReady = false; break; } }
     if(allReady){
       html += '所有人已准备。请将设备交给皇帝，点击“开始计时”。';
-      html += '<br><span class="muted">计时开始后，第一个看身份的玩家先描述。</span>';
     }else{
       html += '请将设备交给 <strong>'+game.prepareQueue[game.prepareIndex]+'号玩家</strong>，点击自己的卡片查看身份和第一个词。';
-      html += '<br><span class="muted">皇帝无需看词；所有人准备后由皇帝开始计时，第一个看身份的玩家先描述。</span>';
     }
   }else if(game.phase === 'wordReveal'){
     var seats2 = getSpeakerOrder();
@@ -1762,9 +1756,9 @@ function renderTableHint(){
   }else if(game.phase === 'turnResult'){
     html += '本回合结果已出，等待继续。';
   }else if(game.phase === 'identity'){
-    html += '皇帝正在完成判定前身份表；提交后才判定并公开词语。';
+    html += '皇帝正在提交身份表。';
   }else if(game.phase === 'guess'){
-    html += '皇帝正在输入猜测；提交后锁定，再标记身份。';
+    html += '皇帝正在输入猜测。';
   }else if(game.phase === 'debate'){
     html += '辩忠奸中。';
   }else if(game.phase === 'settlement'){
@@ -1982,44 +1976,16 @@ function startGame(){
   buildWordPool();
   game.round = 1;
   game.prevRoundResult = null;
-  game.nextEmperorSeat = null;
+  game.nextEmperorSeat = 1;
   game.emperorWinStreak = 0;
   game.pendingEunuchRewards = [];
   game.currentRoundRecord = null;
   game.players = [];
   game.composition = {loyal:0, traitor:0, eunuch:0};
-  game.emperorSeat = null;
-  game.phase = 'firstEmperor';
+  game.emperorSeat = 1;
+  game.phase = 'prepare';
   document.body.classList.add('game-fullscreen');
-  renderGame();
-  showFirstEmperorModal();
-}
-function showFirstEmperorModal(){
-  var body = '<div class="privacy-note">请在桌面上商定第一轮皇帝，然后点击对应座位。<strong>App 不会随机指定首轮皇帝。</strong></div>'+
-    '<p class="role-goal" style="margin-top:14px;">选定后，手机会提示交给该玩家确认游戏信息；其余角色由 App 随机分配。</p>'+
-    '<div class="settlement-roles" style="margin-top:16px;">';
-  for(var i=1;i<=game.settings.playerCount;i++){
-    body += '<button type="button" class="bet-btn" data-action="first-emperor" data-seat="'+i+'">'+i+'号</button>';
-  }
-  body += '</div>';
-  var footer = '<button class="btn btn-ghost" data-action="cancel-start">返回设置</button>';
-  openFlowModal('线下决定首轮皇帝', body, footer, false);
-}
-function onFirstEmperorSelect(seat){
-  if(!seat) return;
-  game.nextEmperorSeat = seat;
-  game.emperorSeat = seat;
-  closeFlowModal();
   startRound();
-}
-function cancelStartGame(){
-  closeFlowModal();
-  document.body.classList.remove('game-fullscreen');
-  game.phase = 'setup';
-  game.players = [];
-  game.emperorSeat = null;
-  game.composition = {loyal:0, traitor:0, eunuch:0};
-  renderSetup();
 }
 function saveCustomWordsFromInput(){
   var raw = $('customWordsInput').value.split(/\r?\n/);
@@ -2099,8 +2065,6 @@ function handleActionClick(e){
   e.preventDefault();
   switch(action){
     case 'start-game': startGame(); break;
-    case 'first-emperor': onFirstEmperorSelect(parseInt(el.getAttribute('data-seat'),10)); break;
-    case 'cancel-start': cancelStartGame(); break;
     case 'show-rules': showRules(); break;
     case 'show-history': showHistory(); break;
     case 'save-words': saveCustomWordsFromInput(); break;
