@@ -330,6 +330,109 @@
                 line-height: 1.6;
             }
 
+            .custom-form {
+                display: grid;
+                gap: 12px;
+            }
+
+            .custom-field {
+                display: grid;
+                gap: 6px;
+            }
+
+            .custom-field .setting-label {
+                margin-bottom: 0;
+            }
+
+            .custom-input {
+                width: 100%;
+                height: 48px;
+                padding: 0 14px;
+                border: 1px solid var(--border);
+                border-radius: 14px;
+                outline: none;
+                background: rgba(255, 255, 255, 0.05);
+                color: var(--text);
+                font: inherit;
+            }
+
+            .custom-input::placeholder {
+                color: var(--muted-2);
+            }
+
+            .custom-input:focus {
+                border-color: rgba(124, 156, 255, 0.6);
+                box-shadow: 0 0 0 3px rgba(124, 156, 255, 0.12);
+            }
+
+            .custom-hint {
+                margin: 0;
+                color: #8ee6b0;
+                font-size: 13px;
+                line-height: 1.6;
+            }
+
+            .custom-hint.is-error {
+                color: #ff9bad;
+            }
+
+            .custom-list {
+                display: grid;
+                gap: 8px;
+                margin-top: 14px;
+            }
+
+            .custom-empty {
+                margin: 0;
+                padding: 12px 14px;
+                border: 1px dashed var(--border);
+                border-radius: 13px;
+                color: var(--muted-2);
+                font-size: 13px;
+                line-height: 1.6;
+            }
+
+            .custom-item {
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                gap: 12px;
+                padding: 12px 14px;
+                border: 1px solid var(--border);
+                border-radius: 13px;
+                background: rgba(255, 255, 255, 0.035);
+            }
+
+            .custom-item-info {
+                display: grid;
+                min-width: 0;
+                gap: 3px;
+            }
+
+            .custom-item-name {
+                color: var(--text);
+                font-size: 15px;
+                overflow-wrap: anywhere;
+            }
+
+            .custom-item-roles {
+                color: var(--muted);
+                font-size: 12px;
+                line-height: 1.5;
+                overflow-wrap: anywhere;
+            }
+
+            .custom-badge {
+                flex: none;
+                padding: 3px 8px;
+                border: 1px solid rgba(124, 156, 255, 0.3);
+                border-radius: 999px;
+                background: rgba(124, 156, 255, 0.12);
+                color: #aebfff;
+                font-size: 11px;
+                letter-spacing: 0.08em;
+            }
+
             .rules h2 {
                 margin: 0 0 14px;
                 font-size: 17px;
@@ -474,14 +577,6 @@
                 border-radius: 50%;
                 background: var(--red);
                 box-shadow: 0 0 12px var(--red);
-            }
-
-            .topbar .btn {
-                width: auto;
-                min-height: 38px;
-                padding: 8px 14px;
-                border-radius: 999px;
-                font-size: 13px;
             }
 
             .progress-text {
@@ -656,11 +751,6 @@
                 box-shadow: 0 0 14px var(--green);
             }
 
-            .timer-status.is-paused .status-dot {
-                background: var(--muted-2);
-                box-shadow: none;
-            }
-
             .timer-display {
                 margin: 12px 0 0;
                 font-size: clamp(64px, 21vw, 92px);
@@ -675,6 +765,13 @@
                 grid-template-columns: 1fr 1fr;
                 gap: 10px;
                 margin-top: 24px;
+            }
+
+            .timer-actions .btn {
+                padding-right: 10px;
+                padding-left: 10px;
+                font-size: 15px;
+                white-space: nowrap;
             }
 
             .tips-card {
@@ -1042,6 +1139,99 @@
                 line-height: 1.6;
             }
 
+            /* ---------- 身份揭晓弹窗 ---------- */
+
+            .reveal-dialog {
+                display: flex;
+                width: 100%;
+                max-width: 420px;
+                max-height: calc(100vh - 40px);
+                max-height: calc(100dvh - 40px);
+                flex-direction: column;
+                align-items: center;
+                overflow-y: auto;
+                padding: 28px 22px 22px;
+                border: 1px solid var(--border-strong);
+                border-radius: 28px;
+                background: linear-gradient(155deg, #1a2134 0%, #101624 60%, #0d1220 100%);
+                box-shadow: var(--shadow);
+                text-align: center;
+                animation: modal-in 0.2s ease both;
+            }
+
+            .reveal-dialog .eyebrow {
+                margin-bottom: 6px;
+            }
+
+            .reveal-dialog h2 {
+                margin: 0;
+                color: var(--muted);
+                font-size: 13px;
+                font-weight: 600;
+                letter-spacing: 0.16em;
+            }
+
+            .reveal-location {
+                margin-top: 4px;
+                font-size: clamp(30px, 9vw, 40px);
+                font-weight: 760;
+                letter-spacing: -0.02em;
+                line-height: 1.15;
+            }
+
+            .reveal-spy {
+                margin: 10px 0 0;
+                color: #ff8da1;
+                font-size: 14px;
+                font-weight: 700;
+            }
+
+            .reveal-list {
+                display: grid;
+                width: 100%;
+                flex: none;
+                gap: 8px;
+                margin: 18px 0 0;
+                padding: 0;
+                list-style: none;
+            }
+
+            .reveal-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                padding: 11px 14px;
+                border: 1px solid var(--border);
+                border-radius: 13px;
+                background: rgba(255, 255, 255, 0.035);
+                font-size: 14px;
+            }
+
+            .reveal-row.is-spy {
+                border-color: rgba(255, 77, 109, 0.55);
+                background: rgba(255, 77, 109, 0.12);
+            }
+
+            .reveal-player {
+                color: var(--muted);
+            }
+
+            .reveal-role {
+                color: var(--text);
+                font-weight: 700;
+            }
+
+            .reveal-row.is-spy .reveal-role {
+                color: #ff8da1;
+            }
+
+            .reveal-actions {
+                width: 100%;
+                flex: none;
+                margin-top: 20px;
+            }
+
             /* ---------- 适配 ---------- */
 
             @media (min-width: 480px) {
@@ -1188,6 +1378,46 @@
                     </div>
                 </section>
 
+                <section class="panel custom-panel" aria-labelledby="customTitle">
+                    <h2 class="field-label" id="customTitle">自定义地点</h2>
+                    <div class="custom-form">
+                        <label class="custom-field">
+                            <span class="setting-label">地点名称</span>
+                            <input
+                                class="custom-input"
+                                id="customLocationName"
+                                type="text"
+                                maxlength="20"
+                                placeholder="例如：潜水艇"
+                                autocomplete="off"
+                            />
+                        </label>
+                        <label class="custom-field">
+                            <span class="setting-label">地点身份（可选）</span>
+                            <input
+                                class="custom-input"
+                                id="customLocationRoles"
+                                type="text"
+                                maxlength="200"
+                                placeholder="用逗号分隔，例如：艇长, 船员, 厨师"
+                                autocomplete="off"
+                            />
+                        </label>
+                        <button
+                            class="btn secondary"
+                            id="addCustomLocationBtn"
+                            type="button"
+                        >
+                            添加自定义地点
+                        </button>
+                        <p class="custom-hint" id="customLocationHint" hidden></p>
+                    </div>
+                    <div class="custom-list" id="customLocationList"></div>
+                    <p class="hint">
+                        添加后会与内置地点一起随机抽取。开启「使用身份」时才会分配这里的身份，数量不足会自动补「平民」。
+                    </p>
+                </section>
+
                 <section class="panel rules" aria-labelledby="rulesTitle">
                     <h2 id="rulesTitle">怎么玩</h2>
                     <ol class="rules-list">
@@ -1239,25 +1469,22 @@
             <section class="screen" id="discussScreen" hidden>
                 <header class="topbar">
                     <span class="round-pill" id="discussRoundLabel">第 1 局</span>
-                    <button class="btn ghost" id="endBtn" type="button">
-                        结束本局
-                    </button>
                 </header>
 
                 <div class="timer-block">
-                    <span class="timer-status" id="timerStatus">
+                    <span class="timer-status">
                         <span class="status-dot" aria-hidden="true"></span>
-                        <span id="timerStatusText">讨论中</span>
+                        <span>讨论中</span>
                     </span>
                     <div class="timer-display" id="timer" role="timer" aria-live="off">
                         00:00
                     </div>
                     <div class="timer-actions">
-                        <button class="btn secondary" id="pauseBtn" type="button">
-                            暂停
+                        <button class="btn secondary" id="revealBtn" type="button">
+                            看看谁是间谍？
                         </button>
-                        <button class="btn secondary" id="locationsBtn" type="button">
-                            查看地点
+                        <button class="btn secondary" id="endGameBtn" type="button">
+                            结束本局游戏
                         </button>
                     </div>
                 </div>
@@ -1270,7 +1497,7 @@
                     <p>
                         回答得像知道地点，但别说得太具体。太具体会泄露给间谍，太模糊又会被怀疑。
                     </p>
-                    <p>随时可以点「查看地点」。</p>
+                    <p>想提前揭晓时，点「看看谁是间谍？」。</p>
                 </section>
             </section>
 
@@ -1386,6 +1613,28 @@
                     </button>
                 </div>
                 <p class="identity-dialog-note" id="identityDialogNote"></p>
+            </section>
+        </div>
+
+        <!-- 身份揭晓弹窗 -->
+        <div class="modal-backdrop" id="revealBackdrop" hidden>
+            <section
+                class="reveal-dialog"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="revealTitle"
+                aria-describedby="revealSpy"
+            >
+                <p class="eyebrow">本局揭晓</p>
+                <h2 id="revealTitle">本局地点</h2>
+                <div class="reveal-location" id="revealLocation"></div>
+                <p class="reveal-spy" id="revealSpy"></p>
+                <ul class="reveal-list" id="revealList"></ul>
+                <div class="reveal-actions">
+                    <button class="btn primary" id="closeRevealBtn" type="button">
+                        关闭
+                    </button>
+                </div>
             </section>
         </div>
 
@@ -1854,8 +2103,10 @@
 
                 var STORAGE_KEY = "spyfall_player_count_v1";
                 var ROLES_STORAGE_KEY = "spyfall_use_roles_v1";
+                var CUSTOM_STORAGE_KEY = "spyfall_custom_locations_v1";
                 var MIN_PLAYERS = 3;
                 var MAX_PLAYERS = 10;
+                var customLocations = loadCustomLocations();
 
                 var els = {
                     app: document.getElementById("app"),
@@ -1870,6 +2121,11 @@
                     rolesOffBtn: document.getElementById("rolesOffBtn"),
                     rolesHint: document.getElementById("rolesHint"),
                     startBtn: document.getElementById("startBtn"),
+                    customLocationName: document.getElementById("customLocationName"),
+                    customLocationRoles: document.getElementById("customLocationRoles"),
+                    addCustomLocationBtn: document.getElementById("addCustomLocationBtn"),
+                    customLocationHint: document.getElementById("customLocationHint"),
+                    customLocationList: document.getElementById("customLocationList"),
                     dealRoundLabel: document.getElementById("dealRoundLabel"),
                     dealProgress: document.getElementById("dealProgress"),
                     dealProgressFill: document.getElementById("dealProgressFill"),
@@ -1884,12 +2140,14 @@
                     identityConfirmBtn: document.getElementById("identityConfirmBtn"),
                     identityDialogNote: document.getElementById("identityDialogNote"),
                     discussRoundLabel: document.getElementById("discussRoundLabel"),
-                    endBtn: document.getElementById("endBtn"),
-                    timerStatus: document.getElementById("timerStatus"),
-                    timerStatusText: document.getElementById("timerStatusText"),
                     timer: document.getElementById("timer"),
-                    pauseBtn: document.getElementById("pauseBtn"),
-                    locationsBtn: document.getElementById("locationsBtn"),
+                    revealBtn: document.getElementById("revealBtn"),
+                    endGameBtn: document.getElementById("endGameBtn"),
+                    revealBackdrop: document.getElementById("revealBackdrop"),
+                    revealLocation: document.getElementById("revealLocation"),
+                    revealSpy: document.getElementById("revealSpy"),
+                    revealList: document.getElementById("revealList"),
+                    closeRevealBtn: document.getElementById("closeRevealBtn"),
                     endTime: document.getElementById("endTime"),
                     nextRoundBtn: document.getElementById("nextRoundBtn"),
                     backSetupBtn: document.getElementById("backSetupBtn"),
@@ -1923,13 +2181,13 @@
                 };
 
                 var lastFocused = null;
-                var confirmWasRunning = false;
 
                 init();
 
                 function init() {
                     setPlayerCount(state.playerCount);
                     setUseRoles(state.useRoles, false);
+                    renderCustomLocations();
                     renderLocationGrid();
                     bindEvents();
                     showSetup();
@@ -1956,6 +2214,16 @@
                         startGame();
                     });
 
+                    els.addCustomLocationBtn.addEventListener("click", addCustomLocation);
+                    els.customLocationName.addEventListener(
+                        "keydown",
+                        handleCustomLocationKeydown
+                    );
+                    els.customLocationRoles.addEventListener(
+                        "keydown",
+                        handleCustomLocationKeydown
+                    );
+
                     els.identityCard.addEventListener("click", openIdentityModal);
                     els.identityCard.addEventListener("contextmenu", function (event) {
                         event.preventDefault();
@@ -1975,15 +2243,18 @@
                         }
                     });
 
-                    els.pauseBtn.addEventListener("click", function () {
-                        if (timer.running) {
-                            pauseTimer();
-                        } else {
-                            startTimer();
+                    els.revealBtn.addEventListener("click", openReveal);
+                    els.closeRevealBtn.addEventListener("click", function () {
+                        closeReveal(true);
+                    });
+                    els.revealBackdrop.addEventListener("click", function (event) {
+                        if (event.target === els.revealBackdrop) {
+                            closeReveal(true);
                         }
                     });
 
-                    els.locationsBtn.addEventListener("click", openSheet);
+                    els.endGameBtn.addEventListener("click", openConfirm);
+
                     els.closeSheetBtn.addEventListener("click", closeSheet);
                     els.sheetBackdrop.addEventListener("click", function (event) {
                         if (event.target === els.sheetBackdrop) {
@@ -1992,14 +2263,13 @@
                     });
                     els.locationSearch.addEventListener("input", filterLocations);
 
-                    els.endBtn.addEventListener("click", openConfirm);
                     els.cancelEndBtn.addEventListener("click", function () {
-                        closeConfirm(true);
+                        closeConfirm();
                     });
                     els.confirmEndBtn.addEventListener("click", endRound);
                     els.confirmBackdrop.addEventListener("click", function (event) {
                         if (event.target === els.confirmBackdrop) {
-                            closeConfirm(true);
+                            closeConfirm();
                         }
                     });
 
@@ -2012,10 +2282,12 @@
                         }
                         if (!els.identityBackdrop.hidden) {
                             closeIdentityModal(true);
+                        } else if (!els.revealBackdrop.hidden) {
+                            closeReveal(true);
                         } else if (!els.sheetBackdrop.hidden) {
                             closeSheet();
                         } else if (!els.confirmBackdrop.hidden) {
-                            closeConfirm(true);
+                            closeConfirm();
                         }
                     });
                 }
@@ -2092,10 +2364,181 @@
                     }
                 }
 
+                function handleCustomLocationKeydown(event) {
+                    if (event.key !== "Enter") {
+                        return;
+                    }
+                    event.preventDefault();
+                    addCustomLocation();
+                }
+
+                function addCustomLocation() {
+                    var name = els.customLocationName.value.trim().slice(0, 20);
+                    if (!name) {
+                        showCustomLocationHint("请先填写地点名称。", true);
+                        els.customLocationName.focus();
+                        return;
+                    }
+                    if (isLocationNameTaken(name)) {
+                        showCustomLocationHint("地点「" + name + "」已存在。", true);
+                        els.customLocationName.focus();
+                        return;
+                    }
+
+                    customLocations.push({
+                        name: name,
+                        roles: parseCustomRoles(els.customLocationRoles.value)
+                    });
+                    saveCustomLocations();
+                    renderCustomLocations();
+                    els.customLocationName.value = "";
+                    els.customLocationRoles.value = "";
+                    showCustomLocationHint(
+                        "已添加「" + name + "」，会加入随机地点池。",
+                        false
+                    );
+                    els.customLocationName.focus();
+                }
+
+                function parseCustomRoles(value) {
+                    var roles = [];
+                    value.split(/[,，、;；\n]/).forEach(function (part) {
+                        var role = part.trim();
+                        if (role && roles.indexOf(role) === -1) {
+                            roles.push(role);
+                        }
+                    });
+                    return roles;
+                }
+
+                function isLocationNameTaken(name) {
+                    var normalized = name.toLowerCase();
+                    var pool = getLocationPool();
+                    for (var i = 0; i < pool.length; i += 1) {
+                        if (pool[i].name.toLowerCase() === normalized) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+
+                function getLocationPool() {
+                    return LOCATIONS.concat(customLocations);
+                }
+
+                function loadCustomLocations() {
+                    try {
+                        var raw = localStorage.getItem(CUSTOM_STORAGE_KEY);
+                        if (!raw) {
+                            return [];
+                        }
+                        var parsed = JSON.parse(raw);
+                        if (!Array.isArray(parsed)) {
+                            return [];
+                        }
+
+                        var locations = [];
+                        parsed.forEach(function (item) {
+                            if (!item || typeof item.name !== "string") {
+                                return;
+                            }
+                            var name = item.name.trim().slice(0, 20);
+                            if (!name) {
+                                return;
+                            }
+                            var exists = locations.some(function (location) {
+                                return location.name.toLowerCase() === name.toLowerCase();
+                            });
+                            if (exists) {
+                                return;
+                            }
+
+                            var roles = [];
+                            if (Array.isArray(item.roles)) {
+                                item.roles.forEach(function (role) {
+                                    if (typeof role !== "string") {
+                                        return;
+                                    }
+                                    var trimmed = role.trim();
+                                    if (trimmed && roles.indexOf(trimmed) === -1) {
+                                        roles.push(trimmed);
+                                    }
+                                });
+                            }
+                            locations.push({ name: name, roles: roles });
+                        });
+                        return locations;
+                    } catch (error) {
+                        return [];
+                    }
+                }
+
+                function saveCustomLocations() {
+                    try {
+                        localStorage.setItem(
+                            CUSTOM_STORAGE_KEY,
+                            JSON.stringify(customLocations)
+                        );
+                    } catch (error) {
+                        // 忽略存储失败
+                    }
+                }
+
+                function renderCustomLocations() {
+                    els.customLocationList.textContent = "";
+
+                    if (customLocations.length === 0) {
+                        var empty = document.createElement("p");
+                        empty.className = "custom-empty";
+                        empty.textContent =
+                            "还没有自定义地点。添加后会与内置地点一起随机抽取。";
+                        els.customLocationList.appendChild(empty);
+                        return;
+                    }
+
+                    customLocations.forEach(function (location) {
+                        var item = document.createElement("div");
+                        item.className = "custom-item";
+
+                        var info = document.createElement("div");
+                        info.className = "custom-item-info";
+
+                        var name = document.createElement("strong");
+                        name.className = "custom-item-name";
+                        name.textContent = location.name;
+
+                        var roles = document.createElement("span");
+                        roles.className = "custom-item-roles";
+                        roles.textContent =
+                            location.roles.length > 0
+                                ? location.roles.join("、")
+                                : "未填身份，非间谍将显示为「平民」";
+
+                        info.appendChild(name);
+                        info.appendChild(roles);
+
+                        var badge = document.createElement("span");
+                        badge.className = "custom-badge";
+                        badge.textContent = "自定义";
+
+                        item.appendChild(info);
+                        item.appendChild(badge);
+                        els.customLocationList.appendChild(item);
+                    });
+                }
+
+                function showCustomLocationHint(message, isError) {
+                    els.customLocationHint.textContent = message;
+                    els.customLocationHint.classList.toggle("is-error", isError);
+                    els.customLocationHint.hidden = false;
+                }
+
                 function showSetup() {
                     closeIdentityModal(false);
+                    closeReveal(false);
                     stopTimer();
                     resetTimer();
+                    els.customLocationHint.hidden = true;
                     state.round = 1;
                     state.lastSpyIndex = null;
                     state.lastLocationIndex = null;
@@ -2112,9 +2555,10 @@
                 }
 
                 function startRound() {
-                    var locationIndex = pickDifferentIndex(LOCATIONS.length, state.lastLocationIndex);
+                    var pool = getLocationPool();
+                    var locationIndex = pickDifferentIndex(pool.length, state.lastLocationIndex);
                     state.lastLocationIndex = locationIndex;
-                    state.location = LOCATIONS[locationIndex];
+                    state.location = pool[locationIndex];
 
                     var spyIndex = pickDifferentIndex(state.playerCount, state.lastSpyIndex);
                     state.lastSpyIndex = spyIndex;
@@ -2134,7 +2578,7 @@
                         } else if (state.useRoles) {
                             state.assignments.push({
                                 spy: false,
-                                role: roles[roleIndex]
+                                role: roles[roleIndex] || "平民"
                             });
                             roleIndex += 1;
                         } else {
@@ -2253,7 +2697,6 @@
                     stopTimer();
                     timer.elapsed = 0;
                     renderTimer();
-                    updateTimerStatus();
                 }
 
                 function startTimer() {
@@ -2264,7 +2707,6 @@
                     timer.startedAt = Date.now() - timer.elapsed;
                     timer.intervalId = window.setInterval(renderTimer, 250);
                     renderTimer();
-                    updateTimerStatus();
                 }
 
                 function pauseTimer() {
@@ -2278,7 +2720,6 @@
                         timer.intervalId = null;
                     }
                     renderTimer();
-                    updateTimerStatus();
                 }
 
                 function stopTimer() {
@@ -2291,12 +2732,6 @@
 
                 function renderTimer() {
                     els.timer.textContent = formatTime(getElapsed());
-                }
-
-                function updateTimerStatus() {
-                    els.timerStatus.classList.toggle("is-paused", !timer.running);
-                    els.timerStatusText.textContent = timer.running ? "讨论中" : "已暂停";
-                    els.pauseBtn.textContent = timer.running ? "暂停" : "继续";
                 }
 
                 function formatTime(milliseconds) {
@@ -2315,8 +2750,6 @@
                 }
 
                 function openConfirm() {
-                    confirmWasRunning = timer.running;
-                    pauseTimer();
                     lastFocused = document.activeElement;
                     els.confirmBackdrop.hidden = false;
                     document.body.classList.add("modal-open");
@@ -2324,29 +2757,85 @@
                     els.cancelEndBtn.focus();
                 }
 
-                function closeConfirm(resume) {
+                function closeConfirm() {
                     if (els.confirmBackdrop.hidden) {
                         return;
                     }
-                    var shouldResume = Boolean(resume) && confirmWasRunning;
                     els.confirmBackdrop.hidden = true;
                     document.body.classList.remove("modal-open");
                     els.app.inert = false;
-                    confirmWasRunning = false;
-                    if (shouldResume) {
-                        startTimer();
-                    }
                     if (lastFocused && typeof lastFocused.focus === "function") {
                         lastFocused.focus();
                     }
                 }
 
                 function endRound() {
-                    closeConfirm(false);
+                    closeConfirm();
                     pauseTimer();
                     state.endElapsed = getElapsed();
                     els.endTime.textContent = formatTime(state.endElapsed);
                     setScreen(els.endScreen);
+                }
+
+                function openReveal() {
+                    if (!state.location || state.assignments.length === 0) {
+                        return;
+                    }
+
+                    els.revealLocation.textContent = state.location.name;
+                    els.revealList.innerHTML = "";
+                    var spyNumber = 0;
+
+                    for (var i = 0; i < state.assignments.length; i += 1) {
+                        var assignment = state.assignments[i];
+                        if (assignment.spy) {
+                            spyNumber = i + 1;
+                        }
+
+                        var row = document.createElement("li");
+                        row.className =
+                            "reveal-row" + (assignment.spy ? " is-spy" : "");
+
+                        var player = document.createElement("span");
+                        player.className = "reveal-player";
+                        player.textContent = "玩家 " + (i + 1);
+
+                        var role = document.createElement("span");
+                        role.className = "reveal-role";
+                        if (assignment.spy) {
+                            role.textContent = "间谍";
+                        } else if (state.useRoles) {
+                            role.textContent = assignment.role;
+                        } else {
+                            role.textContent = "平民";
+                        }
+
+                        row.appendChild(player);
+                        row.appendChild(role);
+                        els.revealList.appendChild(row);
+                    }
+
+                    els.revealSpy.textContent =
+                        spyNumber > 0 ? "本局间谍：玩家 " + spyNumber : "";
+
+                    els.revealBackdrop.hidden = false;
+                    document.body.classList.add("modal-open");
+                    els.app.inert = true;
+                    els.closeRevealBtn.focus();
+                }
+
+                function closeReveal(restoreFocus) {
+                    if (els.revealBackdrop.hidden) {
+                        return;
+                    }
+
+                    els.revealBackdrop.hidden = true;
+                    document.body.classList.remove("modal-open");
+                    els.app.inert = false;
+
+                    if (restoreFocus) {
+                        els.revealBtn.focus();
+                    }
                 }
 
                 function openSheet() {
@@ -2393,7 +2882,7 @@
                 function renderLocationGrid() {
                     var fragment = document.createDocumentFragment();
 
-                    LOCATIONS.forEach(function (location, index) {
+                    getLocationPool().forEach(function (location, index) {
                         var item = document.createElement("div");
                         item.className = "location-item";
                         item.setAttribute("data-name", location.name);
