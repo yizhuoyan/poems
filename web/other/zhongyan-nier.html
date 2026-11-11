@@ -1731,24 +1731,24 @@ function renderTableHint(){
     html += '<div class="composition-line">本局配置：'+escapeHtml(compositionText(game.composition))+'</div>';
   }
   if(game.phase === 'emperorConfirm'){
-    html += '请将手机交给 <strong>'+game.emperorSeat+'号皇帝</strong>，确认游戏信息后开始传阅。';
+    html += '皇帝请确认游戏信息。';
   }else if(game.phase === 'prepare'){
     var seats = getSpeakerOrder();
     var allReady = true;
     for(var i=0;i<seats.length;i++){ if(!playerBySeat(seats[i]).ready){ allReady = false; break; } }
     if(allReady){
-      html += '所有人已准备。请将设备交给皇帝，点击“开始计时”。';
+      html += '所有人已准备。皇帝请点击“开始计时”。';
     }else{
-      html += '请将设备交给 <strong>'+game.prepareQueue[game.prepareIndex]+'号玩家</strong>，点击自己的卡片查看身份和第一个词。';
+      html += '你是 <strong>'+game.prepareQueue[game.prepareIndex]+'号玩家</strong>，请点击卡片查看身份和提示词。';
     }
   }else if(game.phase === 'wordReveal'){
     var seats2 = getSpeakerOrder();
     var allViewed = true;
     for(var j=0;j<seats2.length;j++){ if(!playerBySeat(seats2[j]).viewed){ allViewed = false; break; } }
     if(allViewed){
-      html += '所有人已看词。请将设备交给皇帝，点击“开始计时”。';
+      html += '所有人已看词。皇帝请点击“开始计时”。';
     }else{
-      html += '请将设备交给 <strong>'+game.wordQueue[game.wordIndex]+'号玩家</strong> 看词。';
+      html += '你是 <strong>'+game.wordQueue[game.wordIndex]+'号玩家</strong>，请点击卡片看词。';
     }
   }else if(game.phase === 'timer'){
     var order = game.speakerOrder.map(function(s){return s+'号';}).join(' → ');
