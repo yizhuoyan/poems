@@ -134,14 +134,7 @@ body.game-fullscreen #gameTableEL{
 }
 .player.is-done{opacity:.55;border-style:dashed;cursor:default}
 .player.is-waiting{opacity:.7;cursor:default}
-.player.is-speaking{
-  border-color:var(--gold-light);
-  background:linear-gradient(135deg,#6b4b13,#2b1c07);
-  box-shadow:0 0 0 3px rgba(240,217,140,.35),0 14px 30px rgba(0,0,0,.35);
-  transform:translateY(-2px);
-}
-.player.is-skipped{opacity:.4;text-decoration:line-through}
-.player.is-idle{opacity:.82}
+.player.is-idle{opacity:.82;cursor:default}
 .player.role-emperor{background:linear-gradient(135deg,#f0d98c,#c9a227);color:#2b1c07;border-color:transparent}
 .player.role-loyal{background:linear-gradient(135deg,#bfe8d7,#4f9d82);color:#08281e;border-color:transparent}
 .player.role-traitor{background:linear-gradient(135deg,#ffb3b3,#c92a2a);color:#fff;border-color:transparent}
@@ -490,13 +483,8 @@ var game = {
   debateSuccess: null,
   prepareQueue: [],
   prepareIndex: 0,
-  preparePendingBet: null,
   wordQueue: [],
   wordIndex: 0,
-  speakerOrder: [],
-  speakerIndex: 0,
-  speakerCycle: 1,
-  skippedSeats: [],
   guessModalOpen: false,
   guessForced: false,
   guessFlowForced: false,
@@ -823,18 +811,9 @@ function campKnowledgeHtml(seat){
   return '<div class="camp-knowledge">'+
     '<div class="camp-title">你已暗中投靠：<strong>'+campName+'阵营</strong></div>'+
     '<div>你知道：'+escapeHtml(seatList(seats))+'</div>'+
-    '<div class="muted">不得直接点破身份，只能用描述和态度配合。</div>'+
     '</div>';
 }
 
-function openPreparePrivacy(seat){
-  game.preparePendingBet = null;
-  var body = '<div class="privacy-note">请确认只有你一人查看屏幕。看完身份后，下一位玩家再接过设备。</div>'+
-    '<p class="role-goal" style="margin-top:14px;">即将查看：<strong>'+seat+'号玩家</strong>的身份与第一个词。</p>';
-  var footer = '<button class="btn btn-primary" data-action="prepare-show" data-seat="'+seat+'">显示身份</button>'+
-    '<button class="btn btn-ghost" data-action="flow-close">取消</button>';
-  openFlowModal(seat+'号玩家 · 查看身份', body, footer, false);
-}
 function showPrepareRole(seat){
   var p = playerBySeat(seat);
   if(!p) return;
@@ -845,14 +824,14 @@ function showPrepareRole(seat){
   var body = roleBadgeHtml(p.role)+
     '<p class="role-goal">'+ROLE_GOALS[p.role]+'</p>'+
     wordCardHtml(game.turnWord, game.turnCategory)+
-    '<div class="privacy-note">不要直接说出目标词；确认周围没有人偷看。</div>';
+    '<div class="privacy-note">不要直接说出目标词。</div>';
   var footer = '<button class="btn btn-primary" data-action="prepare-done" data-seat="'+seat+'">我记住了</button>';
   openFlowModal(seat+'号玩家 · 身份与第一个词', body, footer, false);
 }
 function showBetStep(seat){
   var body = roleBadgeHtml('eunuch')+
     '<p class="role-goal">'+ROLE_GOALS.eunuch+'</p>'+
-    '<div class="privacy-note">本轮押宝：<strong>皇帝能否胜利？</strong> 确认后不可更改。</div>'+
+    '<div class="privacy-note">本轮押宝：<strong>皇帝能否胜利？</strong> 点选后不可更改。</div>'+
     '<div class="bet-options">'+
     '<button type="button" class="bet-btn" data-action="bet-select" data-seat="'+seat+'" data-bet="win">押皇帝胜</button>'+
     '<button type="button" class="bet-btn" data-action="bet-select" data-seat="'+seat+'" data-bet="lose">押皇帝负</button>'+
@@ -860,21 +839,9 @@ function showBetStep(seat){
   openFlowModal(seat+'号玩家 · 太监押宝', body, '', false);
 }
 function onBetSelect(seat, bet){
-  game.preparePendingBet = bet;
-  var body = roleBadgeHtml('eunuch')+
-    '<p class="role-goal">'+ROLE_GOALS.eunuch+'</p>'+
-    '<div class="bet-selected">你选择了：<strong>皇帝'+(bet === 'win' ? '胜' : '负')+'</strong><br><span class="muted">确认后不可更改</span></div>';
-  var footer = '<button class="btn btn-primary" data-action="bet-confirm" data-seat="'+seat+'">确认押注</button>'+
-    '<button class="btn btn-ghost" data-action="bet-reset" data-seat="'+seat+'">重选</button>';
-  openFlowModal(seat+'号玩家 · 确认押宝', body, footer, false);
-}
-function onBetReset(seat){
-  game.preparePendingBet = null;
-  showBetStep(seat);
-}
-function onBetConfirm(seat){
-  if(!game.preparePendingBet) return;
-  game.eunuchBets[seat] = game.preparePendingBet;
+  var p = playerBySeat(seat);
+  if(!p || p.role !== 'eunuch') return;
+  game.eunuchBets[seat] = bet;
   game.eunuchKnownCamp[seat] = getEunuchKnownSeats(seat);
   if(game.turnEunuchSees[seat] === undefined){
     game.turnEunuchSees[seat] = Math.random()*100 < game.settings.eunuchProbability;
@@ -888,7 +855,7 @@ function showEunuchInfoStep(seat){
     '<div class="bet-selected">你的押注：<strong>皇帝'+(bet === 'win' ? '胜' : '负')+'</strong></div>'+
     campKnowledgeHtml(seat)+
     (game.turnEunuchSees[seat] ? wordCardHtml(game.turnWord, game.turnCategory) : noWordCardHtml())+
-    '<div class="privacy-note">不要直接说出目标词或身份；确认周围没有人偷看。</div>';
+    '<div class="privacy-note">不要直接说出目标词或身份。</div>';
   var footer = '<button class="btn btn-primary" data-action="prepare-done" data-seat="'+seat+'">我记住了</button>';
   openFlowModal(seat+'号玩家 · 太监情报与第一个词', body, footer, false);
 }
@@ -896,16 +863,8 @@ function finishPrepare(seat){
   var p = playerBySeat(seat);
   if(p) p.ready = true;
   game.prepareIndex++;
-  game.preparePendingBet = null;
   closeFlowModal();
   renderGame();
-}
-function openWordPrivacy(seat){
-  var body = '<div class="privacy-note">请确认只有你一人查看屏幕。看完词后，下一位玩家再接过设备。</div>'+
-    '<p class="role-goal" style="margin-top:14px;">即将查看：<strong>'+seat+'号玩家</strong>的目标词。</p>';
-  var footer = '<button class="btn btn-primary" data-action="word-show" data-seat="'+seat+'">显示词语</button>'+
-    '<button class="btn btn-ghost" data-action="flow-close">取消</button>';
-  openFlowModal(seat+'号玩家 · 看词', body, footer, false);
 }
 function showWordModal(seat){
   var p = playerBySeat(seat);
@@ -923,7 +882,7 @@ function showWordModal(seat){
   }else{
     body += wordCardHtml(game.turnWord, game.turnCategory);
   }
-  body += '<div class="privacy-note">不要直接说出目标词或身份；确认周围没有人偷看。</div>';
+  body += '<div class="privacy-note">不要直接说出目标词或身份。</div>';
   var footer = '<button class="btn btn-primary" data-action="word-done" data-seat="'+seat+'">我记住了</button>';
   openFlowModal(seat+'号玩家 · 看词', body, footer, false);
 }
@@ -991,7 +950,6 @@ function beginPrepare(){
   game.phase = 'prepare';
   game.prepareQueue = getSpeakerOrder();
   game.prepareIndex = 0;
-  game.preparePendingBet = null;
   for(var i=0;i<game.players.length;i++){
     game.players[i].ready = false;
     game.players[i].viewed = false;
@@ -1040,10 +998,6 @@ function startTimer(){
   game.phase = 'timer';
   game.turnStartedAt = Date.now();
   game.timerEnd = Date.now() + game.settings.turnSeconds*1000;
-  game.speakerOrder = seats;
-  game.speakerIndex = 0;
-  game.speakerCycle = 1;
-  game.skippedSeats = [];
   game.guessModalOpen = false;
   game.guessForced = false;
   game.guessFlowForced = false;
@@ -1101,32 +1055,6 @@ function beginGuessFlow(){
   renderGame();
   openGuessInput(false);
 }
-function advanceSpeaker(){
-  if(game.phase !== 'timer') return;
-  game.speakerIndex++;
-  if(game.speakerIndex >= game.speakerOrder.length){
-    game.speakerIndex = 0;
-    game.speakerCycle++;
-    game.skippedSeats = [];
-  }
-  renderGame();
-}
-function skipSpeaker(){
-  if(game.phase !== 'timer') return;
-  var seat = game.speakerOrder[game.speakerIndex];
-  if(game.skippedSeats.indexOf(seat) < 0) game.skippedSeats.push(seat);
-  advanceSpeaker();
-}
-function setSpeaker(seat){
-  if(game.phase !== 'timer') return;
-  var idx = game.speakerOrder.indexOf(seat);
-  if(idx < 0) return;
-  game.speakerIndex = idx;
-  var si = game.skippedSeats.indexOf(seat);
-  if(si >= 0) game.skippedSeats.splice(si,1);
-  renderGame();
-}
-
 /* ---------- 猜词 ---------- */
 function openGuessInput(forced){
   if(game.phase !== 'guess') return;
@@ -1690,7 +1618,6 @@ function renderPlayerGrid(){
   var currentSeat = null;
   if(game.phase === 'prepare') currentSeat = game.prepareQueue[game.prepareIndex];
   if(game.phase === 'wordReveal') currentSeat = game.wordQueue[game.wordIndex];
-  if(game.phase === 'timer') currentSeat = game.speakerOrder[game.speakerIndex];
 
   for(var i=0;i<game.players.length;i++){
     var p = game.players[i];
@@ -1709,9 +1636,7 @@ function renderPlayerGrid(){
       else{ cls += ' is-waiting'; sub = '等待中'; }
     }else if(game.phase === 'timer'){
       if(p.seat === game.emperorSeat){ cls += ' is-emperor'; label = '皇帝'; sub = '公开身份'; }
-      else if(game.skippedSeats.indexOf(p.seat) >= 0){ cls += ' is-skipped'; sub = '已跳过'; }
-      else if(p.seat === currentSeat){ cls += ' is-speaking'; sub = '发言中'; }
-      else{ cls += ' is-idle'; sub = '等待'; }
+      else{ cls += ' is-idle'; sub = ''; }
     }else if(game.phase === 'settlement'){
       cls += ' '+roleClass(p.role);
       sub = roleName(p.role);
@@ -1751,9 +1676,7 @@ function renderTableHint(){
       html += '你是 <strong>'+game.wordQueue[game.wordIndex]+'号玩家</strong>，请点击卡片看词。';
     }
   }else if(game.phase === 'timer'){
-    var order = game.speakerOrder.map(function(s){return s+'号';}).join(' → ');
-    html += '发言顺序：'+order+' <span class="muted">（第 '+game.speakerCycle+' 轮发言）</span><br>';
-    html += '当前发言：<strong>'+game.speakerOrder[game.speakerIndex]+'号</strong> · 皇帝可随时猜词。';
+    html += '计时中。';
   }else if(game.phase === 'turnResult'){
     html += '本回合结果已出，等待继续。';
   }else if(game.phase === 'identity'){
@@ -1781,9 +1704,6 @@ function renderTableActions(){
     var all2 = true;
     for(var j=0;j<seats2.length;j++){ if(!playerBySeat(seats2[j]).viewed){ all2 = false; break; } }
     if(all2) html = '<button class="btn btn-primary" data-action="start-timer">开始计时</button>';
-  }else if(game.phase === 'timer'){
-    html = '<button class="btn btn-ghost" data-action="next-speaker">下一位</button>'+
-      '<button class="btn btn-ghost" data-action="skip-speaker">跳过</button>';
   }
   el.innerHTML = html;
 }
@@ -1927,7 +1847,7 @@ function showRules(){
     '<div class="rules-section"><h3>轮与回合</h3><ul>'+
     '<li>每轮默认 3 回合，可设 3-6 回合；每回合默认 3 分钟，可设 60-600 秒。最后 10 秒会有滴答提示音，可在设置页或顶栏“音”按钮关闭。</li>'+
     '<li>每回合系统随机一个目标词。忠臣/奸臣必看；太监每回合独立 50% 概率看到；皇帝不看。</li>'+
-    '<li>除皇帝外所有人看词后，皇帝点“开始计时”。发言按座位顺序循环，皇帝可随时猜词或跳过某人。</li>'+
+    '<li>除皇帝外所有人看词后，皇帝点“开始计时”。发言顺序、跳过、提问由玩家线下自行掌握；皇帝可随时点“猜词”。</li>'+
     '<li>皇帝每回合只有一次猜词机会；猜中、猜错、放弃都会立即结束该回合。时间到必须立即猜，不能再询问。</li>'+
     '<li>皇帝决定猜词后，先输入猜测（锁定），再提交本回合身份表；提交身份表后系统才判定并公开该回合词。</li>'+
     '</ul></div>'+
@@ -1952,7 +1872,7 @@ function showRules(){
     '<div class="rules-section"><h3>桌规</h3><ul>'+
     '<li>描述中不得直接说出目标词、同音字、拆字、外文翻译或书写。违规第一次警告，第二次本轮禁言，严重者皇帝直接胜。</li>'+
     '<li>太监不得直接点破任何人的忠奸身份，只能用描述和态度配合。</li>'+
-    '<li>玩家可以主动“过”；由皇帝点“跳过”记录，App 不单独判定。</li>'+
+    '<li>发言顺序、跳过、提问都在线下完成，App 不记录。</li>'+
     '<li>本工具是游戏助手：描述、提问、讨论、投票都在线下完成；App 只负责随机、私密查看、计时、身份表判定和记录。</li>'+
     '</ul></div>';
   var footer = '<button class="btn btn-ghost" data-action="info-close">关闭</button>';
@@ -2046,17 +1966,14 @@ function handlePlayerClick(e){
       showTips('请先让 '+game.prepareQueue[game.prepareIndex]+'号玩家查看。');
       return;
     }
-    openPreparePrivacy(seat);
+    showPrepareRole(seat);
   }else if(game.phase === 'wordReveal'){
     if(seat === game.emperorSeat) return;
     if(seat !== game.wordQueue[game.wordIndex]){
       showTips('请先让 '+game.wordQueue[game.wordIndex]+'号玩家看词。');
       return;
     }
-    openWordPrivacy(seat);
-  }else if(game.phase === 'timer'){
-    if(seat === game.emperorSeat) return;
-    setSpeaker(seat);
+    showWordModal(seat);
   }
 }
 function handleActionClick(e){
@@ -2076,16 +1993,10 @@ function handleActionClick(e){
     case 'flow-close': closeFlowModal(); break;
     case 'info-close': closeInfoModal(); break;
     case 'tips-ok': hideTips(); break;
-    case 'prepare-show': showPrepareRole(parseInt(el.getAttribute('data-seat'),10)); break;
     case 'bet-select': onBetSelect(parseInt(el.getAttribute('data-seat'),10), el.getAttribute('data-bet')); break;
-    case 'bet-reset': onBetReset(parseInt(el.getAttribute('data-seat'),10)); break;
-    case 'bet-confirm': onBetConfirm(parseInt(el.getAttribute('data-seat'),10)); break;
     case 'prepare-done': finishPrepare(parseInt(el.getAttribute('data-seat'),10)); break;
-    case 'word-show': showWordModal(parseInt(el.getAttribute('data-seat'),10)); break;
     case 'word-done': finishWordView(parseInt(el.getAttribute('data-seat'),10)); break;
     case 'start-timer': startTimer(); break;
-    case 'next-speaker': advanceSpeaker(); break;
-    case 'skip-speaker': skipSpeaker(); break;
     case 'guess-submit': submitGuess(); break;
     case 'guess-giveup': giveUpGuess(); break;
     case 'after-turn': afterTurnResult(); break;
