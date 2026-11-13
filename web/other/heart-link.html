@@ -1,0 +1,2015 @@
+<!doctype html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+        />
+        <meta name="color-scheme" content="dark" />
+        <meta name="theme-color" content="#0a0a0e" />
+        <link
+            rel="icon"
+            href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230a0a0e'/%3E%3Ccircle cx='32' cy='32' r='13' fill='none' stroke='%23e9c57f' stroke-width='3'/%3E%3Ccircle cx='32' cy='32' r='5' fill='%23e9c57f'/%3E%3C/svg%3E"
+        />
+        <title>心有灵犀 · 传手机默契游戏</title>
+        <style>
+            :root {
+                color-scheme: dark;
+                --bg: #0a0a0e;
+                --surface: #15151d;
+                --border: rgba(255, 255, 255, 0.08);
+                --border-strong: rgba(255, 255, 255, 0.14);
+                --text: #f7f0e2;
+                --muted: #a9a193;
+                --muted-2: #918878;
+                --gold: #e9c57f;
+                --gold-bright: #ffe6b0;
+                --gold-dim: rgba(233, 197, 127, 0.12);
+                --red: #e07b6d;
+                --red-dim: rgba(224, 123, 109, 0.12);
+                --radius: 26px;
+                --shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+                --font:
+                    system-ui, -apple-system, "Segoe UI", "PingFang SC",
+                    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+                --serif:
+                    "Songti SC", "STSong", "Noto Serif CJK SC", "SimSun",
+                    serif;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            [hidden] {
+                display: none !important;
+            }
+
+            html {
+                min-height: 100%;
+                background: var(--bg);
+            }
+
+            body {
+                margin: 0;
+                min-height: 100vh;
+                min-height: 100dvh;
+                display: flex;
+                flex-direction: column;
+                padding-top: max(18px, env(safe-area-inset-top, 0px));
+                padding-right: max(18px, env(safe-area-inset-right, 0px));
+                padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+                padding-left: max(18px, env(safe-area-inset-left, 0px));
+                overflow-x: hidden;
+                background:
+                    radial-gradient(
+                        760px 520px at 8% -8%,
+                        rgba(233, 197, 127, 0.14),
+                        transparent 66%
+                    ),
+                    radial-gradient(
+                        620px 460px at 108% 18%,
+                        rgba(224, 123, 109, 0.1),
+                        transparent 68%
+                    ),
+                    radial-gradient(
+                        760px 560px at 50% 112%,
+                        rgba(233, 197, 127, 0.05),
+                        transparent 70%
+                    ),
+                    var(--bg);
+                color: var(--text);
+                font-family: var(--font);
+                -webkit-font-smoothing: antialiased;
+                -webkit-text-size-adjust: 100%;
+                text-size-adjust: 100%;
+                overscroll-behavior-y: contain;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            body.modal-open {
+                overflow: hidden;
+            }
+
+            ::selection {
+                background: rgba(233, 197, 127, 0.28);
+            }
+
+            button,
+            input {
+                font: inherit;
+            }
+
+            button {
+                cursor: pointer;
+            }
+
+            button:disabled {
+                cursor: not-allowed;
+            }
+
+            :focus-visible {
+                outline: 2px solid var(--gold);
+                outline-offset: 3px;
+            }
+
+            .display:focus,
+            .title:focus,
+            .hero-title:focus {
+                outline: none;
+            }
+
+            #app {
+                position: relative;
+                z-index: 1;
+                display: flex;
+                flex: 1;
+                flex-direction: column;
+                width: 100%;
+                max-width: 560px;
+                margin: 0 auto;
+            }
+
+            .topbar {
+                display: flex;
+                align-items: center;
+                min-height: 48px;
+                padding-bottom: 14px;
+            }
+
+            .brand {
+                display: flex;
+                align-items: center;
+                gap: 9px;
+                color: var(--muted);
+                font-size: 13px;
+                font-weight: 700;
+                letter-spacing: 0.18em;
+                white-space: nowrap;
+            }
+
+            .brand-dot {
+                width: 7px;
+                height: 7px;
+                border-radius: 50%;
+                background: var(--gold);
+                box-shadow: 0 0 14px rgba(233, 197, 127, 0.85);
+            }
+
+            #stage {
+                display: flex;
+                flex: 1;
+                flex-direction: column;
+                gap: 14px;
+                min-height: 0;
+                padding: 6px 0 10px;
+            }
+
+            .screen {
+                display: flex;
+                flex: 1;
+                flex-direction: column;
+                justify-content: center;
+                gap: 18px;
+                width: 100%;
+                min-height: 0;
+            }
+
+            .panel {
+                position: relative;
+                width: 100%;
+                padding: 26px 22px;
+                overflow: hidden;
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                background: linear-gradient(
+                    165deg,
+                    rgba(32, 32, 44, 0.94),
+                    rgba(18, 18, 25, 0.97)
+                );
+                box-shadow: var(--shadow);
+                animation: panel-rise 0.24s ease-out;
+            }
+
+            .panel::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                right: 12%;
+                left: 12%;
+                height: 1px;
+                background: linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.22),
+                    transparent
+                );
+                pointer-events: none;
+            }
+
+            @keyframes panel-rise {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: none;
+                }
+            }
+
+            .btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                min-height: 52px;
+                padding: 0 22px;
+                border: 1px solid transparent;
+                border-radius: 16px;
+                background: transparent;
+                color: var(--text);
+                font-size: 16px;
+                font-weight: 700;
+                letter-spacing: 0.02em;
+                line-height: 1.2;
+                text-align: center;
+                touch-action: manipulation;
+                user-select: none;
+                transition:
+                    transform 0.15s ease,
+                    background 0.15s ease,
+                    border-color 0.15s ease,
+                    box-shadow 0.15s ease,
+                    opacity 0.15s ease;
+            }
+
+            .btn:active {
+                transform: translateY(1px) scale(0.995);
+            }
+
+            .btn.primary {
+                background: linear-gradient(
+                    180deg,
+                    #ffe4a8 0%,
+                    #e9c57f 52%,
+                    #d2a653 100%
+                );
+                color: #241b0a;
+                box-shadow:
+                    0 14px 32px rgba(233, 197, 127, 0.2),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+            }
+
+            .btn.secondary {
+                border-color: var(--border-strong);
+                background: rgba(255, 255, 255, 0.055);
+                color: var(--text);
+            }
+
+            .btn.ghost {
+                border-color: var(--border);
+                background: transparent;
+                color: var(--muted);
+            }
+
+            .btn.block {
+                width: 100%;
+            }
+
+            .btn:disabled {
+                opacity: 0.35;
+                transform: none;
+            }
+
+            .eyebrow {
+                margin: 0;
+                color: var(--gold);
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 0.2em;
+                line-height: 1.4;
+                text-transform: uppercase;
+            }
+
+            .display {
+                margin: 0;
+                font-size: clamp(30px, 9vw, 44px);
+                font-weight: 800;
+                letter-spacing: -0.02em;
+                line-height: 1.24;
+                text-align: center;
+                text-wrap: balance;
+            }
+
+            .display .accent {
+                color: var(--gold);
+            }
+
+            .title {
+                margin: 0;
+                font-size: clamp(26px, 7.5vw, 32px);
+                font-weight: 800;
+                letter-spacing: -0.02em;
+                line-height: 1.25;
+                text-wrap: balance;
+            }
+
+            .lede {
+                margin: 0;
+                color: var(--muted);
+                font-size: 14.5px;
+                line-height: 1.7;
+            }
+
+            .note {
+                margin: 0;
+                color: var(--muted-2);
+                font-size: 12.5px;
+                line-height: 1.65;
+                text-align: center;
+            }
+
+            .helper {
+                margin: 0;
+                color: var(--muted-2);
+                font-size: 12.5px;
+                line-height: 1.6;
+            }
+
+            .error {
+                margin: 0;
+                color: #ffb2a8;
+                font-size: 13px;
+                line-height: 1.5;
+            }
+
+            .hero {
+                padding: 8px 4px 2px;
+            }
+
+            .kicker {
+                margin: 0 0 12px;
+                color: var(--gold);
+                font-size: 10.5px;
+                font-weight: 700;
+                letter-spacing: 0.28em;
+            }
+
+            .hero-title {
+                margin: 0;
+                font-family: var(--serif);
+                font-size: clamp(50px, 16vw, 76px);
+                font-weight: 700;
+                letter-spacing: 0.06em;
+                line-height: 1.08;
+                text-wrap: balance;
+                text-shadow: 0 8px 40px rgba(233, 197, 127, 0.12);
+            }
+
+            .hero-title .accent {
+                color: var(--gold);
+            }
+
+            .hero-sub {
+                margin: 14px 0 0;
+                color: var(--muted);
+                font-size: 15px;
+                line-height: 1.7;
+            }
+
+            .hero-dots {
+                display: flex;
+                gap: 7px;
+                margin-top: 18px;
+            }
+
+            .hero-dots span {
+                width: 4px;
+                height: 4px;
+                border-radius: 50%;
+                background: rgba(233, 197, 127, 0.5);
+            }
+
+            .setup-view {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                gap: 22px;
+            }
+
+            .setup-card {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .field {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .field-head {
+                display: flex;
+                align-items: baseline;
+                justify-content: space-between;
+                gap: 12px;
+            }
+
+            .field-label {
+                font-size: 15px;
+                font-weight: 700;
+                letter-spacing: 0.02em;
+            }
+
+            .field-note {
+                color: var(--muted-2);
+                font-size: 12.5px;
+                line-height: 1.5;
+                text-align: right;
+            }
+
+            .setup-note {
+                margin: -6px 0 0;
+                text-align: left;
+            }
+
+            .stepper {
+                display: grid;
+                grid-template-columns: 56px minmax(0, 1fr) 56px;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .step-btn {
+                min-height: 56px;
+                border: 1px solid var(--border-strong);
+                border-radius: 16px;
+                background: rgba(255, 255, 255, 0.05);
+                color: var(--text);
+                font-size: 24px;
+                font-weight: 600;
+                line-height: 1;
+            }
+
+            .step-btn:disabled {
+                opacity: 0.28;
+            }
+
+            .count {
+                color: var(--gold-bright);
+                font-family: var(--serif);
+                font-size: 38px;
+                font-weight: 700;
+                line-height: 1;
+                text-align: center;
+            }
+
+            .rules-link {
+                align-self: center;
+                padding: 8px 4px;
+                border: 0;
+                background: none;
+                color: var(--gold);
+                font-size: 13.5px;
+                font-weight: 600;
+                text-decoration: underline;
+                text-decoration-color: rgba(233, 197, 127, 0.4);
+                text-underline-offset: 4px;
+            }
+
+            .handoff {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 14px;
+                padding: 34px 24px;
+                text-align: center;
+            }
+
+            .handoff .eyebrow,
+            .handoff .lede,
+            .handoff .note {
+                text-align: center;
+            }
+
+            .handoff .btn {
+                margin-top: 6px;
+            }
+
+            .player-orb {
+                display: grid;
+                place-items: center;
+                width: 78px;
+                height: 78px;
+                margin: 2px 0;
+                border: 1px solid rgba(233, 197, 127, 0.32);
+                border-radius: 50%;
+                background: radial-gradient(
+                    circle at 32% 24%,
+                    rgba(255, 255, 255, 0.16),
+                    var(--gold-dim) 68%
+                );
+                color: var(--gold-bright);
+                font-family: var(--serif);
+                font-size: 38px;
+                line-height: 1;
+                box-shadow:
+                    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+                    0 12px 34px rgba(0, 0, 0, 0.28);
+            }
+
+            .input-panel,
+            .guess-panel {
+                display: flex;
+                flex-direction: column;
+                gap: 18px;
+            }
+
+            .input-head {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+            }
+
+            .player-tag {
+                display: inline-flex;
+                align-items: center;
+                min-height: 28px;
+                padding: 3px 10px;
+                border: 1px solid rgba(233, 197, 127, 0.25);
+                border-radius: 999px;
+                background: var(--gold-dim);
+                color: var(--gold);
+                font-size: 11.5px;
+                font-weight: 700;
+                letter-spacing: 0.04em;
+                white-space: nowrap;
+            }
+
+            .answer-card {
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
+                padding: 18px 16px 20px;
+                overflow: hidden;
+                border: 1px solid rgba(233, 197, 127, 0.24);
+                border-radius: 20px;
+                background: linear-gradient(
+                    180deg,
+                    rgba(233, 197, 127, 0.1),
+                    rgba(233, 197, 127, 0.03)
+                );
+                text-align: center;
+            }
+
+            .answer-card::after {
+                content: "";
+                position: absolute;
+                inset: 6px;
+                border: 1px solid rgba(233, 197, 127, 0.08);
+                border-radius: 15px;
+                pointer-events: none;
+            }
+
+            .micro-label {
+                color: var(--gold);
+                font-size: 10.5px;
+                font-weight: 700;
+                letter-spacing: 0.22em;
+            }
+
+            .answer-word {
+                color: var(--gold-bright);
+                font-family: var(--serif);
+                font-size: clamp(34px, 10vw, 46px);
+                font-weight: 700;
+                letter-spacing: 0.14em;
+                line-height: 1.2;
+                text-indent: 0.14em;
+                overflow-wrap: anywhere;
+            }
+
+            .mini-label {
+                margin: 0;
+                color: var(--muted-2);
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 0.16em;
+            }
+
+            .hint-list {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .hint-item {
+                display: flex;
+                align-items: center;
+                gap: 11px;
+                min-height: 52px;
+                padding: 10px 14px;
+                border: 1px solid var(--border);
+                border-radius: 15px;
+                background: linear-gradient(
+                    180deg,
+                    rgba(255, 255, 255, 0.055),
+                    rgba(255, 255, 255, 0.025)
+                );
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            }
+
+            .hint-item.is-extra {
+                border-color: rgba(224, 123, 109, 0.28);
+                background: linear-gradient(
+                    180deg,
+                    rgba(224, 123, 109, 0.1),
+                    rgba(224, 123, 109, 0.03)
+                );
+            }
+
+            .hint-player {
+                display: grid;
+                flex: none;
+                place-items: center;
+                width: 26px;
+                height: 26px;
+                border: 1px solid rgba(233, 197, 127, 0.22);
+                border-radius: 50%;
+                background: var(--gold-dim);
+                color: var(--gold);
+                font-size: 11px;
+                font-weight: 800;
+            }
+
+            .hint-player.extra {
+                border-color: rgba(224, 123, 109, 0.28);
+                background: var(--red-dim);
+                color: #f1a89e;
+            }
+
+            .hint-text {
+                flex: 1;
+                color: #fff8ea;
+                font-size: 20px;
+                font-weight: 700;
+                letter-spacing: 0.16em;
+                line-height: 1.4;
+                text-align: center;
+                text-indent: 0.16em;
+                overflow-wrap: anywhere;
+            }
+
+            .hint-list.compact .hint-item {
+                min-height: 44px;
+                padding: 7px 12px;
+            }
+
+            .hint-list.compact .hint-text {
+                font-size: 16px;
+            }
+
+            .hint-empty {
+                padding: 18px;
+                border: 1px dashed rgba(255, 255, 255, 0.14);
+                border-radius: 15px;
+                background: rgba(255, 255, 255, 0.02);
+                color: var(--muted-2);
+                font-size: 13px;
+                line-height: 1.6;
+                text-align: center;
+            }
+
+            .hint-form {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .label-row {
+                display: flex;
+                align-items: baseline;
+                justify-content: space-between;
+                gap: 12px;
+            }
+
+            .input {
+                width: 100%;
+                min-height: 58px;
+                padding: 0 16px;
+                border: 1px solid var(--border-strong);
+                border-radius: 16px;
+                outline: none;
+                background: #0c0d13;
+                color: var(--text);
+                font-size: 18px;
+                font-weight: 600;
+                letter-spacing: 0.03em;
+                -webkit-appearance: none;
+                appearance: none;
+                transition:
+                    border-color 0.15s ease,
+                    box-shadow 0.15s ease;
+            }
+
+            .input::placeholder {
+                color: var(--muted-2);
+                font-weight: 400;
+                letter-spacing: 0;
+            }
+
+            .input:focus {
+                border-color: rgba(233, 197, 127, 0.6);
+                box-shadow: 0 0 0 3px rgba(233, 197, 127, 0.12);
+            }
+
+            .input.hint {
+                min-height: 66px;
+                font-family: var(--serif);
+                font-size: 29px;
+                letter-spacing: 0.3em;
+                line-height: 1.2;
+                text-align: center;
+                text-indent: 0.3em;
+            }
+
+            .input.hint::placeholder {
+                font-family: var(--font);
+                font-size: 15px;
+                font-weight: 400;
+                letter-spacing: 0;
+                text-indent: 0;
+            }
+
+            .counter {
+                color: var(--muted-2);
+                font-size: 12px;
+                font-variant-numeric: tabular-nums;
+                letter-spacing: 0.03em;
+            }
+
+            .counter.full {
+                color: var(--gold);
+            }
+
+            .actions {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .answer-panel {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 18px;
+                padding: 34px 24px;
+                text-align: center;
+            }
+
+            .answer-panel .answer-card,
+            .answer-panel .actions {
+                width: 100%;
+            }
+
+            .hint-modal {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .modal {
+                position: fixed;
+                inset: 0;
+                z-index: 100;
+                display: flex;
+                align-items: flex-end;
+                justify-content: center;
+                padding: 16px;
+                padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+            }
+
+            .modal-backdrop {
+                position: absolute;
+                inset: 0;
+                background: rgba(4, 4, 7, 0.72);
+                -webkit-backdrop-filter: blur(6px);
+                backdrop-filter: blur(6px);
+            }
+
+            .modal-card {
+                position: relative;
+                z-index: 1;
+                width: 100%;
+                max-width: 430px;
+                max-height: calc(100dvh - 32px);
+                padding: 24px;
+                overflow-y: auto;
+                border: 1px solid var(--border-strong);
+                border-radius: 24px;
+                background: linear-gradient(170deg, #1c1c26, #111118);
+                box-shadow: var(--shadow);
+                animation: modal-rise 0.18s ease-out;
+            }
+
+            @keyframes modal-rise {
+                from {
+                    opacity: 0;
+                    transform: translateY(14px);
+                }
+                to {
+                    opacity: 1;
+                    transform: none;
+                }
+            }
+
+            .modal-title {
+                margin: 0 0 10px;
+                font-size: 21px;
+                font-weight: 800;
+                letter-spacing: -0.01em;
+            }
+
+            .modal-body {
+                color: var(--muted);
+                font-size: 14px;
+                line-height: 1.75;
+            }
+
+            .modal-text {
+                margin: 0 0 14px;
+            }
+
+            .rules {
+                display: grid;
+                gap: 8px;
+                margin: 0;
+                padding-left: 1.15em;
+            }
+
+            .rules li {
+                padding-left: 2px;
+            }
+
+            .rules li::marker {
+                color: var(--gold);
+            }
+
+            .modal-actions {
+                display: flex;
+                gap: 10px;
+                margin-top: 22px;
+            }
+
+            .modal-actions .btn {
+                flex: 1;
+                min-height: 48px;
+                padding: 0 12px;
+                font-size: 14.5px;
+            }
+
+            .noscript {
+                position: fixed;
+                inset: 0;
+                display: grid;
+                place-items: center;
+                padding: 24px;
+                background: var(--bg);
+                color: var(--text);
+                font-family: var(--font);
+                font-size: 16px;
+                text-align: center;
+            }
+
+            @media (min-width: 520px) {
+                .modal {
+                    align-items: center;
+                }
+            }
+
+            @media (max-height: 640px) and (orientation: landscape) {
+                body {
+                    padding-top: max(8px, env(safe-area-inset-top, 0px));
+                    padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+                }
+
+                .topbar {
+                    min-height: 40px;
+                    padding-bottom: 6px;
+                }
+
+                #stage {
+                    padding-top: 2px;
+                }
+
+                .screen {
+                    justify-content: flex-start;
+                    gap: 12px;
+                }
+
+                .panel {
+                    padding: 20px;
+                }
+
+                .setup-view {
+                    display: grid;
+                    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+                    align-items: center;
+                    gap: 24px;
+                }
+
+                .hero {
+                    padding: 0;
+                }
+
+                .hero-title {
+                    font-size: clamp(32px, 6.5vw, 44px);
+                }
+
+                .hero-sub {
+                    margin-top: 10px;
+                    font-size: 13px;
+                }
+
+                .setup-card {
+                    gap: 14px;
+                    padding: 20px;
+                }
+
+                .stepper {
+                    grid-template-columns: 48px minmax(0, 1fr) 48px;
+                    gap: 8px;
+                }
+
+                .step-btn {
+                    min-height: 48px;
+                    font-size: 22px;
+                }
+
+                .count {
+                    font-size: 32px;
+                }
+
+                .handoff,
+                .answer-panel {
+                    gap: 10px;
+                    padding: 22px;
+                }
+
+                .display {
+                    font-size: clamp(24px, 4.5vw, 32px);
+                }
+
+                .player-orb {
+                    width: 60px;
+                    height: 60px;
+                    font-size: 30px;
+                }
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                *,
+                *::before,
+                *::after {
+                    animation-duration: 0.01ms !important;
+                    animation-iteration-count: 1 !important;
+                    scroll-behavior: auto !important;
+                    transition-duration: 0.01ms !important;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <header class="topbar">
+                <div class="brand">
+                    <span class="brand-dot" aria-hidden="true"></span>心有灵犀
+                </div>
+            </header>
+            <main id="stage"></main>
+        </div>
+
+        <div class="modal" id="modal" hidden>
+            <div class="modal-backdrop" id="modal-backdrop"></div>
+            <div
+                class="modal-card"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="modal-title"
+                aria-describedby="modal-body"
+            >
+                <h2 class="modal-title" id="modal-title"></h2>
+                <div class="modal-body" id="modal-body"></div>
+                <div class="modal-actions" id="modal-actions"></div>
+            </div>
+        </div>
+
+        <noscript>
+            <div class="noscript">请启用 JavaScript 后开始游戏。</div>
+        </noscript>
+
+        <script>
+            (function () {
+                "use strict";
+
+                const MIN_PLAYERS = 3;
+                const MAX_PLAYERS = 5;
+                const MAX_HINT_LENGTH = 2;
+                const PLAYER_NAMES = ["A", "B", "C", "D", "E"];
+
+                const WORDS = [
+                                        "画蛇添足", "守株待兔", "掩耳盗铃", "亡羊补牢",
+                    "井底之蛙", "狐假虎威", "对牛弹琴", "刻舟求剑",
+                    "拔苗助长", "滥竽充数", "自相矛盾", "一箭双雕",
+                    "鹤立鸡群", "手忙脚乱", "张牙舞爪", "东张西望",
+                    "挤眉弄眼", "七上八下", "破涕为笑", "前仰后合",
+                    "大步流星", "目瞪口呆", "面红耳赤", "摇头晃脑",
+                    "叶公好龙", "杯弓蛇影", "惊弓之鸟", "南辕北辙",
+                    "买椟还珠", "东施效颦", "邯郸学步", "鹬蚌相争",
+                    "螳螂捕蝉", "螳臂当车", "愚公移山", "精卫填海",
+                    "夸父逐日", "女娲补天", "后羿射日", "嫦娥奔月",
+                    "八仙过海", "塞翁失马", "因祸得福", "曲突徙薪",
+                    "杞人忧天", "望梅止渴", "画饼充饥", "朝三暮四",
+                    "朝秦暮楚", "唇亡齿寒", "图穷匕见", "卧薪尝胆",
+                    "破釜沉舟", "背水一战", "四面楚歌", "纸上谈兵",
+                    "完璧归赵", "负荆请罪", "刎颈之交", "毛遂自荐",
+                    "鸡鸣狗盗", "狡兔三窟", "高枕无忧", "一鸣惊人",
+                    "三令五申", "退避三舍", "一鼓作气", "围魏救赵",
+                    "声东击西", "调虎离山", "抛砖引玉", "金蝉脱壳",
+                    "釜底抽薪", "混水摸鱼", "欲擒故纵", "借刀杀人",
+                    "趁火打劫", "反客为主", "瞒天过海", "笑里藏刀",
+                    "顺手牵羊", "指桑骂槐", "偷梁换柱", "无中生有",
+                    "暗度陈仓", "隔岸观火", "李代桃僵", "打草惊蛇",
+                    "借尸还魂", "擒贼擒王", "关门捉贼", "远交近攻",
+                    "假道伐虢", "以逸待劳", "走马观花", "盲人摸象",
+                    "黔驴技穷", "庞然大物", "害群之马", "老马识途",
+                    "伯乐相马", "按图索骥", "缘木求鱼", "涸泽而渔",
+                    "焚林而猎", "杀鸡取卵", "竭泽而渔", "鱼目混珠",
+                    "鱼龙混杂", "沉鱼落雁", "闭月羞花", "国色天香",
+                    "倾国倾城", "如花似玉", "貌美如花", "亭亭玉立",
+                    "婀娜多姿", "眉清目秀", "明眸皓齿", "唇红齿白",
+                    "面如冠玉", "玉树临风", "风流倜傥", "气宇轩昂",
+                    "神采奕奕", "容光焕发", "精神抖擞", "意气风发",
+                    "英姿飒爽", "威风凛凛", "出类拔萃", "卓尔不群",
+                    "与众不同", "独树一帜", "别具一格", "匠心独运",
+                    "别出心裁", "独具匠心", "巧夺天工", "鬼斧神工",
+                    "美轮美奂", "金碧辉煌", "富丽堂皇", "雕梁画栋",
+                    "古色古香", "鳞次栉比", "错落有致", "井井有条",
+                    "有条不紊", "井然有序", "杂乱无章", "乱七八糟",
+                    "一塌糊涂", "面目全非", "焕然一新", "耳目一新",
+                    "刮目相看", "另眼相看", "不屑一顾", "嗤之以鼻",
+                    "视而不见", "充耳不闻", "熟视无睹", "置若罔闻",
+                    "漠不关心", "无动于衷", "麻木不仁", "冷眼旁观",
+                    "袖手旁观", "坐视不管", "拔刀相助", "见义勇为",
+                    "挺身而出", "奋不顾身", "舍己为人", "助人为乐",
+                    "雪中送炭", "锦上添花", "慷慨解囊", "一毛不拔",
+                    "斤斤计较", "锱铢必较", "宽宏大量", "海纳百川",
+                    "有容乃大", "虚怀若谷", "谦虚谨慎", "不耻下问",
+                    "敏而好学", "博览群书", "学富五车", "才高八斗",
+                    "满腹经纶", "出口成章", "下笔成文", "妙笔生花",
+                    "文思泉涌", "才华横溢", "博古通今", "见多识广",
+                    "无所不知", "神通广大", "三头六臂", "呼风唤雨",
+                    "腾云驾雾", "上天入地", "翻天覆地", "移山倒海",
+                    "排山倒海", "气吞山河", "气势磅礴", "波澜壮阔",
+                    "浩浩荡荡", "万马奔腾", "千军万马", "势如破竹",
+                    "锐不可当", "所向披靡", "战无不胜", "攻无不克",
+                    "百战百胜", "屡战屡败", "屡败屡战", "一败涂地",
+                    "溃不成军", "落荒而逃", "抱头鼠窜", "闻风丧胆",
+                    "胆战心惊", "提心吊胆", "心惊肉跳", "魂飞魄散",
+                    "大惊失色", "面如土色", "呆若木鸡", "瞠目结舌",
+                    "张口结舌", "哑口无言", "无言以对", "理屈词穷",
+                    "强词夺理", "胡言乱语", "胡说八道", "信口开河",
+                    "信口雌黄", "口若悬河", "滔滔不绝", "侃侃而谈",
+                    "喋喋不休", "絮絮叨叨", "吞吞吐吐", "支支吾吾",
+                    "结结巴巴", "语无伦次", "语重心长", "苦口婆心",
+                    "循循善诱", "谆谆教导", "耳提面命", "言传身教",
+                    "潜移默化", "耳濡目染", "以身作则", "身体力行",
+                    "事必躬亲", "一丝不苟", "兢兢业业", "勤勤恳恳",
+                    "任劳任怨", "埋头苦干", "废寝忘食", "夜以继日",
+                    "通宵达旦", "争分夺秒", "分秒必争", "只争朝夕",
+                    "闻鸡起舞", "凿壁偷光", "囊萤映雪", "悬梁刺股",
+                    "手不释卷", "学而不厌", "诲人不倦", "温故知新",
+                    "举一反三", "触类旁通", "融会贯通", "循序渐进",
+                    "持之以恒", "锲而不舍", "水滴石穿", "绳锯木断",
+                    "铁杵成针", "坚持不懈", "百折不挠", "坚韧不拔",
+                    "自强不息", "厚德载物", "上善若水", "心花怒放",
+                    "兴高采烈", "欣喜若狂", "欢天喜地", "手舞足蹈",
+                    "载歌载舞", "谈笑风生", "谈笑自若", "从容不迫",
+                    "泰然自若", "若无其事", "不知所措", "惊慌失措",
+                    "春暖花开", "春意盎然", "春色满园", "春光明媚",
+                    "春风化雨", "春风得意", "满面春风", "鸟语花香",
+                    "花团锦簇", "花枝招展", "百花齐放", "百花争艳",
+                    "万紫千红", "姹紫嫣红", "五颜六色", "五彩缤纷",
+                    "绚丽多彩", "色彩斑斓", "绿意盎然", "绿树成荫",
+                    "枝繁叶茂", "郁郁葱葱", "苍翠欲滴", "层林尽染",
+                    "漫山遍野", "山清水秀", "湖光山色", "山明水秀",
+                    "青山绿水", "依山傍水", "崇山峻岭", "悬崖峭壁",
+                    "怪石嶙峋", "峰峦叠嶂", "连绵起伏", "一望无际",
+                    "广阔无垠", "无边无际", "浩瀚无垠", "波光粼粼",
+                    "碧波荡漾", "水波不兴", "风平浪静", "波涛汹涌",
+                    "惊涛骇浪", "汹涌澎湃", "一泻千里", "奔流不息",
+                    "川流不息", "细水长流", "源远流长", "滴水不漏",
+                    "水泄不通", "车水马龙", "门庭若市", "熙熙攘攘",
+                    "人山人海", "人声鼎沸", "络绎不绝", "摩肩接踵",
+                    "万人空巷", "座无虚席", "高朋满座", "宾朋满座",
+                    "济济一堂", "欢聚一堂", "不期而遇", "萍水相逢",
+                    "一见如故", "一见钟情", "青梅竹马", "两小无猜",
+                    "情投意合", "志同道合", "形影不离", "朝夕相处",
+                    "相敬如宾", "举案齐眉", "白头偕老", "永结同心",
+                    "比翼双飞", "心心相印", "心有灵犀", "一往情深",
+                    "情深似海", "恩重如山", "血浓于水", "骨肉相连",
+                    "手足情深", "舐犊情深", "望子成龙", "望女成凤",
+                    "孟母三迁", "岳母刺字", "画荻教子", "言而有信",
+                    "一诺千金", "一言九鼎", "君子一言", "驷马难追",
+                    "言出必行", "说到做到", "表里如一", "言行一致",
+                    "光明磊落", "堂堂正正", "光明正大", "大公无私",
+                    "铁面无私", "两袖清风", "刚正不阿", "疾恶如仇",
+                    "仗义执言", "打抱不平", "路见不平", "为民除害",
+                    "除暴安良", "劫富济贫", "替天行道", "忠肝义胆",
+                    "赤胆忠心", "忠心耿耿", "精忠报国", "鞠躬尽瘁",
+                    "死而后已", "舍生取义", "杀身成仁", "视死如归",
+                    "临危不惧", "宁死不屈", "大义凛然", "气壮山河",
+                    "顶天立地", "高风亮节", "德高望重", "众望所归",
+                    "深得人心", "人心所向", "有口皆碑", "名垂青史",
+                    "流芳百世", "永垂不朽", "遗臭万年", "臭名昭著",
+                    "声名狼藉", "身败名裂", "一落千丈", "一蹶不振",
+                    "东山再起", "卷土重来", "重整旗鼓", "发愤图强",
+                    "奋发图强", "励精图治", "呕心沥血", "披荆斩棘",
+                    "乘风破浪", "勇往直前", "义无反顾", "前赴后继",
+                    "继往开来", "承前启后", "开天辟地", "改天换地",
+                    "战天斗地", "人定胜天", "众志成城", "齐心协力",
+                    "同心同德", "同舟共济", "患难与共", "风雨同舟",
+                    "和衷共济", "团结一致", "万众一心", "群策群力",
+                    "集思广益", "博采众长", "取长补短", "扬长避短",
+                    "互通有无", "相辅相成", "相得益彰", "交相辉映",
+                    "相映成趣", "如虎添翼", "雨后春笋", "层出不穷",
+                    "不胜枚举", "数不胜数", "举不胜举", "琳琅满目",
+                    "目不暇接", "应有尽有", "一应俱全", "包罗万象",
+                    "五花八门", "形形色色", "各式各样", "千姿百态",
+                    "千变万化", "变化多端", "变幻莫测", "瞬息万变",
+                    "日新月异", "与日俱增", "蒸蒸日上", "欣欣向荣",
+                    "繁荣昌盛", "国泰民安", "安居乐业", "丰衣足食",
+                    "五谷丰登", "六畜兴旺", "风调雨顺", "太平盛世",
+                    "歌舞升平", "天下太平", "四海升平", "政通人和",
+                    "百废俱兴", "百业兴旺", "日积月累", "积少成多",
+                    "聚沙成塔", "集腋成裘", "滴水成冰", "千锤百炼",
+                    "百炼成钢", "精益求精", "画龙点睛", "点石成金",
+                    "妙手回春", "药到病除", "手到擒来", "轻而易举",
+                    "易如反掌", "唾手可得", "探囊取物", "瓮中捉鳖",
+                    "十拿九稳", "万无一失", "稳操胜券", "胜券在握",
+                    "胸有成竹", "心中有数", "了如指掌", "一目了然",
+                    "一清二楚", "明明白白", "显而易见", "不言而喻",
+                    "可想而知", "理所当然", "顺理成章", "名正言顺",
+                    "天经地义", "不容置疑", "毋庸置疑", "千真万确",
+                    "实事求是", "名副其实", "名不虚传", "货真价实",
+                    "童叟无欺", "心口如一", "说一不二", "板上钉钉",
+                    "铁证如山", "有据可查", "铁案如山", "盖棺定论",
+                    "水落石出", "真相大白", "原形毕露", "暴露无遗",
+                    "昭然若揭", "欲盖弥彰", "掩人耳目", "自欺欺人",
+                    "自圆其说", "无理取闹", "胡搅蛮缠", "蛮不讲理",
+                    "不可理喻", "莫名其妙", "不可思议", "匪夷所思",
+                    "难以置信", "出乎意料", "出乎意外", "始料不及",
+                    "措手不及", "防不胜防", "猝不及防", "突如其来",
+                    "从天而降", "不速之客", "不请自来", "不约而同",
+                    "异口同声", "众口一词", "千篇一律", "如出一辙",
+                    "大同小异", "截然不同", "天壤之别", "大相径庭",
+                    "相去甚远", "迥然不同", "黑白分明", "泾渭分明",
+                    "是非分明", "爱憎分明", "赏罚分明", "一分为二",
+                    "半斤八两", "不相上下", "旗鼓相当", "势均力敌",
+                    "平分秋色", "各有千秋", "各有所长", "各得其所",
+                    "各抒己见", "畅所欲言", "百家争鸣", "推陈出新",
+                    "革故鼎新", "标新立异", "独辟蹊径", "别开生面",
+                    "另辟蹊径", "别具匠心", "不落窠臼", "不落俗套",
+                    "面目一新", "一年四季", "春夏秋冬", "寒来暑往",
+                    "秋高气爽", "秋色宜人", "硕果累累", "冰天雪地",
+                    "天寒地冻", "寒风刺骨", "寒风凛冽", "大雪纷飞",
+                    "鹅毛大雪", "银装素裹", "万里雪飘", "千里冰封",
+                    "冰消雪融", "烈日炎炎", "骄阳似火", "汗流浃背",
+                    "挥汗如雨", "大汗淋漓", "口干舌燥", "暑气逼人",
+                    "金风送爽", "丹桂飘香", "落叶知秋", "一叶知秋",
+                    "漫山红遍", "寒风萧瑟", "万物复苏", "春回大地",
+                    "大地回春", "生机勃勃", "生机盎然", "朝气蓬勃",
+                    "草长莺飞", "柳暗花明", "桃红柳绿", "花红柳绿",
+                    "绿肥红瘦", "繁花似锦", "落英缤纷", "遍地花开",
+                    "含苞待放", "争奇斗艳", "竞相开放", "五光十色",
+                    "光彩夺目", "金光闪闪", "银光闪闪", "光芒万丈",
+                    "熠熠生辉", "闪闪发光", "灯火通明", "万家灯火",
+                    "张灯结彩", "火树银花", "流光溢彩", "五彩斑斓",
+                    "色彩缤纷", "绚丽多姿", "山高水长", "山重水复",
+                    "山穷水尽", "峰回路转", "曲径通幽", "别有洞天",
+                    "世外桃源", "人间仙境", "风景如画", "景色宜人",
+                    "美不胜收", "引人入胜", "流连忘返", "乐不思蜀",
+                    "心旷神怡", "赏心悦目", "沁人心脾", "莺歌燕舞",
+                    "蝶舞蜂飞", "蜻蜓点水", "鱼跃龙门", "龙飞凤舞",
+                    "龙腾虎跃", "虎虎生威", "生龙活虎", "活蹦乱跳",
+                    "欢蹦乱跳", "摇头摆尾", "锣鼓喧天", "鞭炮齐鸣",
+                    "震耳欲聋", "响彻云霄", "鸦雀无声", "万籁俱寂",
+                    "寂静无声", "悄无声息", "无声无息", "一言不发",
+                    "沉默寡言", "默不作声", "闷闷不乐", "郁郁寡欢",
+                    "愁眉苦脸", "愁眉不展", "忧心忡忡", "心事重重",
+                    "心急如焚", "迫不及待", "急不可待", "归心似箭",
+                    "望眼欲穿", "望穿秋水", "度日如年", "一日三秋",
+                    "光阴似箭", "日月如梭", "时光荏苒", "岁月如流",
+                    "白驹过隙", "转瞬即逝", "昙花一现", "稍纵即逝",
+                    "弹指之间", "转眼之间", "久而久之", "天长地久",
+                    "地久天长", "海枯石烂", "天荒地老", "沧海桑田",
+                    "斗转星移", "物是人非", "今非昔比", "时过境迁",
+                    "事过境迁", "一如既往", "一成不变", "原封不动",
+                    "依然如故", "依然故我", "始终如一", "善始善终",
+                    "有始有终", "有始无终", "半途而废", "虎头蛇尾",
+                    "前功尽弃", "功亏一篑", "功成名就", "马到成功",
+                    "大功告成", "水到渠成", "瓜熟蒂落", "顺其自然",
+                    "听天由命", "随遇而安", "入乡随俗", "客随主便",
+                    "随机应变", "见机行事", "当机立断", "斩钉截铁",
+                    "雷厉风行", "干脆利落", "优柔寡断", "犹豫不决",
+                    "举棋不定", "瞻前顾后", "畏首畏尾", "畏缩不前",
+                    "停滞不前", "故步自封", "墨守成规", "循规蹈矩",
+                    "安分守己", "按部就班", "四平八稳", "稳扎稳打",
+                    "脚踏实地", "吃苦耐劳", "艰苦朴素", "勤俭持家",
+                    "省吃俭用", "节衣缩食", "粗茶淡饭", "家常便饭",
+                    "风餐露宿", "饥寒交迫", "饥不择食", "狼吞虎咽",
+                    "细嚼慢咽", "津津有味", "回味无穷", "垂涎三尺",
+                    "垂涎欲滴", "秀色可餐", "山珍海味", "美味佳肴",
+                    "珍馐美馔", "大鱼大肉", "粗制滥造", "偷工减料",
+                    "缺斤短两", "以次充好", "物美价廉", "挥金如土",
+                    "一掷千金", "铺张浪费", "勤俭节约", "开源节流",
+                    "精打细算", "量入为出", "入不敷出", "捉襟见肘",
+                    "囊中羞涩", "一贫如洗", "家徒四壁", "身无分文",
+                    "两手空空", "一无所有", "富可敌国", "腰缠万贯",
+                    "财大气粗", "锦衣玉食", "养尊处优", "穷困潦倒",
+                    "穷途末路", "走投无路", "绝处逢生", "死里逃生",
+                    "九死一生", "劫后余生", "大难不死", "转危为安",
+                    "化险为夷", "逢凶化吉", "遇难成祥", "安然无恙",
+                    "平安无事", "万事大吉", "一路平安", "一帆风顺",
+                    "顺风顺水", "顺顺利利", "万事如意", "心想事成",
+                    "如愿以偿", "天从人愿", "称心如意", "心满意足",
+                    "志得意满", "得意洋洋", "得意忘形", "忘乎所以",
+                    "自鸣得意", "自命不凡", "自高自大", "目中无人",
+                    "目空一切", "狂妄自大", "骄傲自满", "夜郎自大",
+                    "妄自尊大", "自惭形秽", "自愧不如", "妄自菲薄",
+                    "自暴自弃", "破罐破摔", "得过且过", "苟且偷生",
+                    "浑浑噩噩", "碌碌无为", "无所作为", "一事无成",
+                    "虚度光阴", "蹉跎岁月", "勤能补拙", "笨鸟先飞",
+                    "专心致志", "全神贯注", "聚精会神", "一心一意",
+                    "心无旁骛", "心不在焉", "三心二意", "心猿意马",
+                    "魂不守舍", "半信半疑", "将信将疑", "深信不疑",
+                    "信以为真", "浅尝辄止", "不求甚解", "囫囵吞枣",
+                    "生吞活剥", "一知半解", "似懂非懂", "不懂装懂",
+                    "装腔作势", "装模作样", "矫揉造作", "扭扭捏捏",
+                    "大大方方", "落落大方", "彬彬有礼", "温文尔雅",
+                    "文质彬彬", "知书达理", "通情达理", "善解人意",
+                    "和蔼可亲", "平易近人", "和颜悦色", "和风细雨",
+                    "心平气和", "平心静气", "息事宁人", "以和为贵",
+                    "和气生财", "和睦相处", "亲密无间", "情同手足",
+                    "称兄道弟", "义结金兰", "八拜之交", "莫逆之交",
+                    "忘年之交", "一面之缘", "泛泛之交", "点头之交",
+                    "素不相识", "非亲非故", "不共戴天", "势不两立",
+                    "水火不容", "针锋相对", "唇枪舌剑", "明争暗斗",
+                    "勾心斗角", "尔虞我诈", "同室操戈", "自相残杀",
+                    "两败俱伤", "你死我活", "鱼死网破", "玉石俱焚",
+                    "同归于尽", "反目成仇", "恩断义绝", "分道扬镳",
+                ];
+
+                const appEl = document.getElementById("app");
+                const stageEl = document.getElementById("stage");
+                const modalEl = document.getElementById("modal");
+                const modalBackdropEl = document.getElementById("modal-backdrop");
+                const modalTitleEl = document.getElementById("modal-title");
+                const modalBodyEl = document.getElementById("modal-body");
+                const modalActionsEl = document.getElementById("modal-actions");
+
+                const state = {
+                    screen: "setup",
+                    playerCount: 4,
+                    answer: "",
+                    hints: [],
+                    hinterIndex: 0,
+                };
+
+                let lastFocused = null;
+
+                function el(tag, className, text) {
+                    const node = document.createElement(tag);
+                    if (className) node.className = className;
+                    if (text !== undefined && text !== null) {
+                        node.textContent = String(text);
+                    }
+                    return node;
+                }
+
+                function append(parent, ...children) {
+                    for (const child of children) {
+                        if (child === null || child === undefined || child === false) {
+                            continue;
+                        }
+                        parent.append(child);
+                    }
+                    return parent;
+                }
+
+                function button(label, variant, onClick) {
+                    const node = el("button", "btn" + (variant ? " " + variant : ""), label);
+                    node.type = "button";
+                    if (onClick) node.addEventListener("click", onClick);
+                    return node;
+                }
+
+                function hinterCount() {
+                    return state.playerCount - 1;
+                }
+
+                function guesserName() {
+                    return PLAYER_NAMES[state.playerCount - 1];
+                }
+
+                function validateHint(raw) {
+                    if (!raw) return "请输入提示词。";
+                    if (!/^\p{Script=Han}+$/u.test(raw)) {
+                        return "提示只能是汉字。";
+                    }
+                    if ([...raw].length > MAX_HINT_LENGTH) {
+                        return "提示最多 " + MAX_HINT_LENGTH + " 个汉字。";
+                    }
+                    for (const char of state.answer) {
+                        if (raw.includes(char)) {
+                            return "提示不能包含成语中的字。";
+                        }
+                    }
+                    return "";
+                }
+
+                function pickWord() {
+                    let word = WORDS[Math.floor(Math.random() * WORDS.length)];
+                    if (WORDS.length > 1 && word === state.answer) {
+                        word = WORDS[(WORDS.indexOf(word) + 1) % WORDS.length];
+                    }
+                    return word;
+                }
+
+                function startGame() {
+                    state.answer = pickWord();
+                    state.hints = [];
+                    state.hinterIndex = 0;
+                    state.screen = "handoff";
+                    render();
+                }
+
+                function goHome() {
+                    state.screen = "setup";
+                    state.answer = "";
+                    state.hints = [];
+                    state.hinterIndex = 0;
+                    render();
+                }
+
+                function submitHint(raw) {
+                    const player = PLAYER_NAMES[state.hinterIndex];
+                    state.hints.push({ player: player, text: raw, extra: false });
+                    state.hinterIndex += 1;
+                    state.screen =
+                        state.hinterIndex < hinterCount()
+                            ? "handoff"
+                            : "guesser-handoff";
+                    render();
+                }
+
+                function showAnswer() {
+                    state.screen = "answer";
+                    render();
+                }
+
+                function render() {
+                    window.scrollTo(0, 0);
+                    stageEl.replaceChildren();
+
+                    let view;
+                    switch (state.screen) {
+                        case "setup":
+                            view = setupView();
+                            break;
+                        case "handoff":
+                            view = handoffView();
+                            break;
+                        case "hint-input":
+                            view = hintInputView();
+                            break;
+                        case "guesser-handoff":
+                            view = guesserHandoffView();
+                            break;
+                        case "guess":
+                            view = guessView();
+                            break;
+                        case "answer":
+                            view = answerView();
+                            break;
+                        default:
+                            view = el("section", "panel");
+                    }
+
+                    const screen = el("div", "screen");
+                    screen.append(view);
+                    stageEl.append(screen);
+
+                    requestAnimationFrame(() => {
+                        const target = stageEl.querySelector(
+                            '[data-autofocus="true"]',
+                        );
+                        if (target) target.focus({ preventScroll: true });
+                    });
+                }
+
+                function setupView() {
+                    const wrap = el("div", "setup-view");
+                    const hero = el("section", "hero");
+                    const sub = el("p", "hero-sub");
+                    sub.append(
+                        "一个成语，几句提示。",
+                        el("br"),
+                        "一台手机，轮流传阅。",
+                    );
+                    const dots = el("div", "hero-dots");
+                    dots.setAttribute("aria-hidden", "true");
+                    for (let index = 0; index < 3; index += 1) {
+                        dots.append(el("span"));
+                    }
+                    append(
+                        hero,
+                        el("p", "kicker", "HEART LINK · 默契挑战"),
+                        el("h1", "hero-title", "心有灵犀"),
+                        sub,
+                        dots,
+                    );
+
+                    const card = el("section", "panel setup-card");
+
+                    const head = el("div", "field-head");
+                    append(
+                        head,
+                        el("span", "field-label", "玩家人数"),
+                        el(
+                            "span",
+                            "field-note",
+                            MIN_PLAYERS + "–" + MAX_PLAYERS + " 人",
+                        ),
+                    );
+
+                    const countEl = el("div", "count", state.playerCount);
+                    countEl.setAttribute("aria-live", "polite");
+                    countEl.setAttribute("aria-atomic", "true");
+
+                    const minus = el("button", "step-btn", "−");
+                    minus.type = "button";
+                    minus.setAttribute("aria-label", "减少一位玩家");
+
+                    const plus = el("button", "step-btn", "+");
+                    plus.type = "button";
+                    plus.setAttribute("aria-label", "增加一位玩家");
+
+                    const updatePlayers = (delta) => {
+                        const next = Math.min(
+                            MAX_PLAYERS,
+                            Math.max(MIN_PLAYERS, state.playerCount + delta),
+                        );
+                        if (next === state.playerCount) return;
+                        state.playerCount = next;
+                        countEl.textContent = String(next);
+                        minus.disabled = next <= MIN_PLAYERS;
+                        plus.disabled = next >= MAX_PLAYERS;
+                    };
+
+                    minus.disabled = state.playerCount <= MIN_PLAYERS;
+                    plus.disabled = state.playerCount >= MAX_PLAYERS;
+                    minus.addEventListener("click", () => updatePlayers(-1));
+                    plus.addEventListener("click", () => updatePlayers(1));
+
+                    const stepper = el("div", "stepper");
+                    append(stepper, minus, countEl, plus);
+
+                    const setupNote = el(
+                        "p",
+                        "field-note setup-note",
+                        "最后一位玩家猜词，前面的人依次提示。",
+                    );
+
+                    const start = button("开始游戏", "primary block", startGame);
+
+                    append(card, head, stepper, setupNote, start);
+
+                    const rulesLink = button("游戏说明", "rules-link", openRules);
+
+                    append(wrap, hero, card, rulesLink);
+                    return wrap;
+                }
+
+                function handoffView() {
+                    const isFirst = state.hinterIndex === 0;
+                    const player = PLAYER_NAMES[state.hinterIndex];
+                    const panel = el("section", "panel handoff");
+
+                    const eyebrowText = isFirst
+                        ? "第一位提示者"
+                        : "下一位提示者";
+
+                    const title = el("h1", "display");
+                    title.append(
+                        "请把手机交给",
+                        el("br"),
+                        el("span", "accent", "玩家 " + player),
+                    );
+
+                    const orb = el("div", "player-orb", player);
+                    orb.setAttribute("aria-hidden", "true");
+
+                    const lede = el(
+                        "p",
+                        "lede",
+                        isFirst
+                            ? "由你查看成语，并给出第一个提示。其他玩家请回避屏幕。"
+                            : "已有 " +
+                                  state.hints.length +
+                                  " 条提示，请补上你的提示。其他玩家请回避屏幕。",
+                    );
+
+                    const action = button(
+                        isFirst
+                            ? "我是玩家 " + player + "，查看成语"
+                            : "我是玩家 " + player + "，继续提示",
+                        "primary block",
+                        () => {
+                            state.screen = "hint-input";
+                            render();
+                        },
+                    );
+                    action.dataset.autofocus = "true";
+
+                    append(
+                        panel,
+                        el("p", "eyebrow", eyebrowText),
+                        title,
+                        orb,
+                        lede,
+                        action,
+                        el("p", "note", "提示期间请勿讨论。"),
+                    );
+                    return panel;
+                }
+
+                function answerCard() {
+                    const card = el("div", "answer-card");
+                    append(
+                        card,
+                        el("span", "micro-label", "本轮成语"),
+                        el("div", "answer-word", state.answer),
+                    );
+                    return card;
+                }
+
+                function hintList(hints, options) {
+                    const settings = options || {};
+                    if (hints.length === 0) {
+                        return el("div", "hint-empty", "暂时还没有提示。");
+                    }
+                    const list = el(
+                        "div",
+                        "hint-list" + (settings.compact ? " compact" : ""),
+                    );
+                    list.setAttribute("aria-label", settings.label || "提示词");
+                    for (const hint of hints) {
+                        const item = el(
+                            "div",
+                            "hint-item" + (hint.extra ? " is-extra" : ""),
+                        );
+                        const badge = el(
+                            "span",
+                            "hint-player" + (hint.extra ? " extra" : ""),
+                            hint.extra ? "补" : hint.player,
+                        );
+                        badge.setAttribute(
+                            "aria-label",
+                            hint.extra
+                                ? "追加提示"
+                                : "玩家 " + hint.player + " 的提示",
+                        );
+                        const text = el("span", "hint-text", hint.text);
+                        item.append(badge, text);
+                        list.append(item);
+                    }
+                    return list;
+                }
+
+                function hintInputView() {
+                    const player = PLAYER_NAMES[state.hinterIndex];
+                    const isFirst = state.hinterIndex === 0;
+                    const panel = el("section", "panel input-panel");
+
+                    const head = el("div", "input-head");
+                    append(
+                        head,
+                        el(
+                            "p",
+                            "eyebrow",
+                            "提示 " +
+                                (state.hinterIndex + 1) +
+                                " / " +
+                                hinterCount(),
+                        ),
+                        el(
+                            "span",
+                            "player-tag",
+                            isFirst
+                                ? "玩家 " + player + " · 第一位"
+                                : "玩家 " + player,
+                        ),
+                    );
+
+                    const form = el("form", "hint-form");
+                    form.noValidate = true;
+
+                    const labelRow = el("div", "label-row");
+                    const label = el("label", "field-label", "你的提示");
+                    label.htmlFor = "hint-input";
+                    const counter = el("span", "counter", "0 / " + MAX_HINT_LENGTH);
+                    append(labelRow, label, counter);
+
+                    const input = el("input", "input hint");
+                    input.id = "hint-input";
+                    input.type = "text";
+                    input.maxLength = MAX_HINT_LENGTH;
+                    input.placeholder = "输入 1–2 个汉字";
+                    input.autocomplete = "off";
+                    input.setAttribute("autocapitalize", "off");
+                    input.setAttribute("autocorrect", "off");
+                    input.setAttribute("spellcheck", "false");
+                    input.setAttribute("enterkeyhint", "done");
+
+                    const error = el("p", "error");
+                    error.hidden = true;
+                    error.setAttribute("role", "alert");
+
+                    const helper = el(
+                        "p",
+                        "helper",
+                        "最多 " +
+                            MAX_HINT_LENGTH +
+                            " 个汉字，不能包含成语中的字。",
+                    );
+                    const submit = el("button", "btn primary block", "提交提示");
+                    submit.type = "submit";
+
+                    append(form, labelRow, input, error, helper, submit);
+
+                    input.addEventListener("input", () => {
+                        error.hidden = true;
+                        const length = [...input.value].length;
+                        counter.textContent =
+                            length + " / " + MAX_HINT_LENGTH;
+                        counter.classList.toggle(
+                            "full",
+                            length >= MAX_HINT_LENGTH,
+                        );
+                    });
+
+                    form.addEventListener("submit", (event) => {
+                        event.preventDefault();
+                        const raw = input.value.trim();
+                        const message = validateHint(raw);
+                        if (message) {
+                            error.textContent = message;
+                            error.hidden = false;
+                            input.focus();
+                            return;
+                        }
+                        submitHint(raw);
+                    });
+
+                    append(panel, head, answerCard());
+                    if (state.hints.length > 0) {
+                        panel.append(el("p", "mini-label", "已有提示"));
+                        panel.append(
+                            hintList(state.hints, { compact: true }),
+                        );
+                    }
+                    panel.append(
+                        form,
+                        el("p", "note", "提交后请把手机交给下一位。"),
+                    );
+                    input.dataset.autofocus = "true";
+                    return panel;
+                }
+
+                function guesserHandoffView() {
+                    const player = guesserName();
+                    const panel = el("section", "panel handoff");
+                    const title = el("h1", "display");
+                    title.append(
+                        "请把手机交给",
+                        el("br"),
+                        el("span", "accent", "玩家 " + player),
+                    );
+                    const orb = el("div", "player-orb", player);
+                    orb.setAttribute("aria-hidden", "true");
+                    const action = button(
+                        "我是玩家 " + player + "，查看提示",
+                        "primary block",
+                        () => {
+                            state.screen = "guess";
+                            render();
+                        },
+                    );
+                    action.dataset.autofocus = "true";
+                    append(
+                        panel,
+                        el("p", "eyebrow", "提示已集齐"),
+                        title,
+                        orb,
+                        el(
+                            "p",
+                            "lede",
+                            "你是本轮猜词人。只能看到提示，看不到成语。",
+                        ),
+                        action,
+                        el(
+                            "p",
+                            "note",
+                            "口头说出答案；需要时让其他玩家追加提示。",
+                        ),
+                    );
+                    return panel;
+                }
+
+                function guessView() {
+                    const panel = el("section", "panel guess-panel");
+                    const head = el("div", "input-head");
+                    append(
+                        head,
+                        el("p", "eyebrow", "共 " + state.hints.length + " 条提示"),
+                        el("span", "player-tag", "玩家 " + guesserName()),
+                    );
+                    const title = el("h1", "title", "根据提示，猜出成语");
+                    title.tabIndex = -1;
+                    title.dataset.autofocus = "true";
+
+                    panel.append(
+                        head,
+                        title,
+                        hintList(state.hints, { label: "本轮提示词" }),
+                    );
+
+                    const add = button(
+                        "追加提示词",
+                        "primary block",
+                        openAddHintModal,
+                    );
+                    const reveal = button("查看答案", "secondary block", showAnswer);
+
+                    const actions = el("div", "actions");
+                    append(actions, add, reveal);
+
+                    panel.append(
+                        actions,
+                        el(
+                            "p",
+                            "note",
+                            "App 只负责记录和展示，不判断对错。",
+                        ),
+                    );
+                    return panel;
+                }
+
+                function answerView() {
+                    const panel = el("section", "panel answer-panel");
+                    const title = el("h1", "title", "本轮答案");
+                    title.tabIndex = -1;
+                    title.dataset.autofocus = "true";
+
+                    const actions = el("div", "actions");
+                    append(
+                        actions,
+                        button("再来一轮", "primary block", startGame),
+                        button("返回首页", "secondary block", goHome),
+                    );
+
+                    append(panel, title, answerCard(), actions);
+                    return panel;
+                }
+
+                function openModal(options) {
+                    lastFocused = document.activeElement;
+                    modalTitleEl.textContent = options.title || "";
+                    modalBodyEl.replaceChildren();
+                    if (options.text) {
+                        modalBodyEl.append(el("p", "modal-text", options.text));
+                    }
+                    if (options.list) {
+                        const list = el("ul", "rules");
+                        for (const item of options.list) {
+                            list.append(el("li", "", item));
+                        }
+                        modalBodyEl.append(list);
+                    }
+                    if (options.content) {
+                        modalBodyEl.append(options.content);
+                    }
+                    modalActionsEl.replaceChildren();
+
+                    const actionButtons = [];
+                    for (const action of options.actions || []) {
+                        const node = button(
+                            action.label,
+                            action.variant || "secondary",
+                            () => {
+                                const result = action.onSelect
+                                    ? action.onSelect()
+                                    : undefined;
+                                if (result === false) return;
+                                closeModal();
+                                if (action.afterClose) action.afterClose();
+                            },
+                        );
+                        modalActionsEl.append(node);
+                        actionButtons.push(node);
+                    }
+
+                    modalEl.hidden = false;
+                    appEl.inert = true;
+                    document.body.classList.add("modal-open");
+                    document.addEventListener("keydown", onModalKeydown);
+
+                    requestAnimationFrame(() => {
+                        const preferred = options.focusSelector
+                            ? modalEl.querySelector(options.focusSelector)
+                            : null;
+                        if (preferred) {
+                            preferred.focus({ preventScroll: true });
+                        } else if (actionButtons.length > 0) {
+                            actionButtons[0].focus({ preventScroll: true });
+                        }
+                    });
+                }
+
+                function closeModal() {
+                    if (modalEl.hidden) return;
+                    modalEl.hidden = true;
+                    appEl.inert = false;
+                    document.body.classList.remove("modal-open");
+                    document.removeEventListener("keydown", onModalKeydown);
+                    modalTitleEl.textContent = "";
+                    modalBodyEl.replaceChildren();
+                    modalActionsEl.replaceChildren();
+
+                    const target = lastFocused;
+                    lastFocused = null;
+                    if (
+                        target &&
+                        typeof target.focus === "function" &&
+                        document.contains(target)
+                    ) {
+                        target.focus({ preventScroll: true });
+                    }
+                }
+
+                function onModalKeydown(event) {
+                    if (event.key === "Escape") {
+                        event.preventDefault();
+                        closeModal();
+                        return;
+                    }
+                    if (event.key !== "Tab") return;
+
+                    const focusables = Array.from(
+                        modalEl.querySelectorAll(
+                            "button:not([disabled]), input:not([disabled])",
+                        ),
+                    );
+                    if (focusables.length === 0) return;
+                    const first = focusables[0];
+                    const last = focusables[focusables.length - 1];
+                    if (event.shiftKey && document.activeElement === first) {
+                        event.preventDefault();
+                        last.focus();
+                    } else if (
+                        !event.shiftKey &&
+                        document.activeElement === last
+                    ) {
+                        event.preventDefault();
+                        first.focus();
+                    }
+                }
+
+                function tryAddExtraHint() {
+                    const input = document.getElementById("extra-hint-input");
+                    const error = document.getElementById("extra-hint-error");
+                    if (!input || !error) return false;
+                    const raw = input.value.trim();
+                    const message = validateHint(raw);
+                    if (message) {
+                        error.textContent = message;
+                        error.hidden = false;
+                        input.focus();
+                        return false;
+                    }
+                    state.hints.push({
+                        player: "补",
+                        text: raw,
+                        extra: true,
+                    });
+                    return true;
+                }
+
+                function openAddHintModal() {
+                    const content = el("div", "hint-modal");
+
+                    const labelRow = el("div", "label-row");
+                    const label = el("label", "field-label", "提示词");
+                    label.htmlFor = "extra-hint-input";
+                    const counter = el("span", "counter", "0 / " + MAX_HINT_LENGTH);
+                    append(labelRow, label, counter);
+
+                    const input = el("input", "input hint");
+                    input.id = "extra-hint-input";
+                    input.type = "text";
+                    input.maxLength = MAX_HINT_LENGTH;
+                    input.placeholder = "输入 1–2 个汉字";
+                    input.autocomplete = "off";
+                    input.setAttribute("autocapitalize", "off");
+                    input.setAttribute("autocorrect", "off");
+                    input.setAttribute("spellcheck", "false");
+                    input.setAttribute("enterkeyhint", "done");
+
+                    const error = el("p", "error");
+                    error.id = "extra-hint-error";
+                    error.hidden = true;
+                    error.setAttribute("role", "alert");
+
+                    const helper = el(
+                        "p",
+                        "helper",
+                        "1～2 个汉字；不能包含成语中的字。",
+                    );
+
+                    append(content, labelRow, input, error, helper);
+
+                    input.addEventListener("input", () => {
+                        error.hidden = true;
+                        const length = [...input.value].length;
+                        counter.textContent =
+                            length + " / " + MAX_HINT_LENGTH;
+                        counter.classList.toggle(
+                            "full",
+                            length >= MAX_HINT_LENGTH,
+                        );
+                    });
+
+                    input.addEventListener("keydown", (event) => {
+                        if (event.key !== "Enter") return;
+                        event.preventDefault();
+                        if (tryAddExtraHint()) {
+                            closeModal();
+                            render();
+                        }
+                    });
+
+                    openModal({
+                        title: "追加提示词",
+                        text: "请其他玩家输入，次数不限。",
+                        content: content,
+                        focusSelector: "#extra-hint-input",
+                        actions: [
+                            { label: "取消", variant: "ghost" },
+                            {
+                                label: "添加提示",
+                                variant: "primary",
+                                onSelect: tryAddExtraHint,
+                                afterClose: render,
+                            },
+                        ],
+                    });
+                }
+
+                function openRules() {
+                    openModal({
+                        title: "游戏说明",
+                        list: [
+                            "每局 3～5 人，最后一位玩家猜词，前面的人依次给提示。",
+                            "玩家 A 先查看成语并给出第一个提示；之后每位提示者都能看到成语和前面所有提示。",
+                            "每条提示 1～2 个汉字，不能出现成语中的字；重复提示允许。",
+                            "猜词人只看提示词列表，口头说出答案。",
+                            "需要时点「追加提示词」，由其他玩家输入，次数不限。",
+                            "点「查看答案」显示本轮成语；App 不判断对错，也不记录结果。",
+                        ],
+                        actions: [{ label: "知道了", variant: "primary" }],
+                    });
+                }
+
+                modalBackdropEl.addEventListener("click", closeModal);
+                render();
+            })();
+        </script>
+    </body>
+</html>
