@@ -969,6 +969,7 @@
 
                 const MIN_PLAYERS = 3;
                 const MAX_PLAYERS = 10;
+                const MAX_HINT_LENGTH = 4;
                 const SETTINGS_KEY = "just-one:settings:v1";
 
                 const WORDS = [
@@ -1333,7 +1334,8 @@
 
                 function validateHint(raw) {
                     if (!raw) return "请输入一个提示词。";
-                    if ([...raw].length > 12) return "提示最多 12 个字。";
+                    if ([...raw].length > MAX_HINT_LENGTH)
+                        return "提示最多 " + MAX_HINT_LENGTH + " 个字。";
                     if (!normalizeHint(raw)) return "提示需要包含文字。";
                     if (raw === state.answer) return "提示不能与谜底相同。";
                     for (const char of state.answer) {
@@ -1577,13 +1579,13 @@
                     append(
                         labelRow,
                         label,
-                        el("span", "field-note", "1–12 字"),
+                        el("span", "field-note", "1–" + MAX_HINT_LENGTH + " 字"),
                     );
 
                     const input = el("input", "input");
                     input.id = "hint-input";
                     input.type = "text";
-                    input.maxLength = 12;
+                    input.maxLength = MAX_HINT_LENGTH;
                     input.placeholder = "输入一个词";
                     input.autocomplete = "off";
                     input.setAttribute("autocapitalize", "off");
@@ -1848,7 +1850,9 @@
                         title: "玩法",
                         list: [
                             "每轮一名猜词人，其他玩家依次传阅手机，各写一个词作为提示。",
-                            "提示不能为空，最多 12 字；不能与谜底相同，也不能出现谜底中的字。",
+                            "提示不能为空，最多 " +
+                                MAX_HINT_LENGTH +
+                                " 字；不能与谜底相同，也不能出现谜底中的字。",
                             "相同的提示全部作废；猜词人只看到没有重复的提示。",
                             "猜词人口头猜答案，由其他玩家直接告知谜底；顶部「结束」可随时结束本局。",
                         ],
