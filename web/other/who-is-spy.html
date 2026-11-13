@@ -1423,6 +1423,7 @@
                     <ol class="rules-list">
                         <li>每人依次<strong>点击卡片</strong>查看内容，确认后自动进入下一位。</li>
                         <li>大多数人拿到<strong>同一个地点</strong>；1 人是间谍，不知道地点。</li>
+                        <li>开启身份设定时，间谍会拿到一个<strong>模糊的伪装身份</strong>，用来编提问和回答。</li>
                         <li>轮流提问回答，不能直接说出地点。回答要像知道，但别太具体。</li>
                     </ol>
                 </section>
@@ -1651,6 +1652,7 @@
                 var LOCATIONS = [
                     {
                         name: "飞机",
+                        spyRole: "旅客",
                         roles: [
                             "机长",
                             "副驾驶",
@@ -1666,6 +1668,7 @@
                     },
                     {
                         name: "机场",
+                        spyRole: "临时工",
                         roles: [
                             "值机员",
                             "安检员",
@@ -1681,6 +1684,7 @@
                     },
                     {
                         name: "火车站",
+                        spyRole: "值班员",
                         roles: [
                             "站长",
                             "售票员",
@@ -1696,6 +1700,7 @@
                     },
                     {
                         name: "地铁",
+                        spyRole: "通勤的上班族",
                         roles: [
                             "地铁司机",
                             "站务员",
@@ -1711,6 +1716,7 @@
                     },
                     {
                         name: "邮轮",
+                        spyRole: "度假的游客",
                         roles: [
                             "船长",
                             "大副",
@@ -1726,6 +1732,7 @@
                     },
                     {
                         name: "海滩",
+                        spyRole: "拍照的人",
                         roles: [
                             "救生员",
                             "游客",
@@ -1741,6 +1748,7 @@
                     },
                     {
                         name: "酒店",
+                        spyRole: "出差的人",
                         roles: [
                             "前台",
                             "客房服务员",
@@ -1756,6 +1764,7 @@
                     },
                     {
                         name: "餐厅",
+                        spyRole: "常客",
                         roles: [
                             "厨师",
                             "服务员",
@@ -1771,6 +1780,7 @@
                     },
                     {
                         name: "电影院",
+                        spyRole: "约会的人",
                         roles: [
                             "放映员",
                             "售票员",
@@ -1786,6 +1796,7 @@
                     },
                     {
                         name: "剧院",
+                        spyRole: "艺术爱好者",
                         roles: [
                             "演员",
                             "导演",
@@ -1801,6 +1812,7 @@
                     },
                     {
                         name: "博物馆",
+                        spyRole: "参观者",
                         roles: [
                             "馆长",
                             "讲解员",
@@ -1816,6 +1828,7 @@
                     },
                     {
                         name: "图书馆",
+                        spyRole: "找资料的人",
                         roles: [
                             "管理员",
                             "读者",
@@ -1831,6 +1844,7 @@
                     },
                     {
                         name: "学校",
+                        spyRole: "访客",
                         roles: [
                             "校长",
                             "老师",
@@ -1846,6 +1860,7 @@
                     },
                     {
                         name: "大学实验室",
+                        spyRole: "送快递的人",
                         roles: [
                             "教授",
                             "研究生",
@@ -1861,6 +1876,7 @@
                     },
                     {
                         name: "医院",
+                        spyRole: "来探望的人",
                         roles: [
                             "医生",
                             "护士",
@@ -1876,6 +1892,7 @@
                     },
                     {
                         name: "银行",
+                        spyRole: "来办手续的人",
                         roles: [
                             "柜员",
                             "经理",
@@ -1891,6 +1908,7 @@
                     },
                     {
                         name: "警察局",
+                        spyRole: "来办事的市民",
                         roles: [
                             "警察",
                             "局长",
@@ -1906,6 +1924,7 @@
                     },
                     {
                         name: "监狱",
+                        spyRole: "来送东西的人",
                         roles: [
                             "狱警",
                             "囚犯",
@@ -1921,6 +1940,7 @@
                     },
                     {
                         name: "赌场",
+                        spyRole: "看热闹的人",
                         roles: [
                             "荷官",
                             "赌客",
@@ -1936,6 +1956,7 @@
                     },
                     {
                         name: "马戏团",
+                        spyRole: "带孩子的人",
                         roles: [
                             "团长",
                             "小丑",
@@ -1951,6 +1972,7 @@
                     },
                     {
                         name: "游乐园",
+                        spyRole: "来玩的人",
                         roles: [
                             "售票员",
                             "游客",
@@ -1966,6 +1988,7 @@
                     },
                     {
                         name: "体育馆",
+                        spyRole: "来锻炼的人",
                         roles: [
                             "运动员",
                             "教练",
@@ -1981,6 +2004,7 @@
                     },
                     {
                         name: "婚礼现场",
+                        spyRole: "远房亲戚",
                         roles: [
                             "新郎",
                             "新娘",
@@ -1996,6 +2020,7 @@
                     },
                     {
                         name: "农场",
+                        spyRole: "来帮忙的人",
                         roles: [
                             "农场主",
                             "农夫",
@@ -2011,6 +2036,7 @@
                     },
                     {
                         name: "建筑工地",
+                        spyRole: "路过的人",
                         roles: [
                             "包工头",
                             "建筑工人",
@@ -2026,6 +2052,7 @@
                     },
                     {
                         name: "军事基地",
+                        spyRole: "行政人员",
                         roles: [
                             "指挥官",
                             "士兵",
@@ -2041,6 +2068,7 @@
                     },
                     {
                         name: "北极科考站",
+                        spyRole: "后勤人员",
                         roles: [
                             "科考队长",
                             "气象学家",
@@ -2056,6 +2084,7 @@
                     },
                     {
                         name: "太空站",
+                        spyRole: "技术支持人员",
                         roles: [
                             "指令长",
                             "宇航员",
@@ -2071,6 +2100,7 @@
                     },
                     {
                         name: "潜水艇",
+                        spyRole: "技术员",
                         roles: [
                             "艇长",
                             "大副",
@@ -2086,6 +2116,7 @@
                     },
                     {
                         name: "温泉度假村",
+                        spyRole: "来休息的人",
                         roles: [
                             "经理",
                             "服务员",
@@ -2104,6 +2135,15 @@
                 var STORAGE_KEY = "spyfall_player_count_v1";
                 var ROLES_STORAGE_KEY = "spyfall_use_roles_v1";
                 var CUSTOM_STORAGE_KEY = "spyfall_custom_locations_v1";
+                var SPY_ROLE_POOL = [
+                    "路人",
+                    "游客",
+                    "新来的",
+                    "值班人员",
+                    "来办事的人",
+                    "旁观者",
+                    "工作人员"
+                ];
                 var MIN_PLAYERS = 3;
                 var MAX_PLAYERS = 10;
                 var customLocations = loadCustomLocations();
@@ -2357,7 +2397,7 @@
                         String(!state.useRoles)
                     );
                     els.rolesHint.textContent = state.useRoles
-                        ? "平民会拿到地点内的一个身份。"
+                        ? "平民会拿到地点内的一个身份；间谍会拿到一个模糊的伪装身份。"
                         : "平民只拿到地点，不分配地点内的身份。";
                     if (persist !== false) {
                         saveUseRoles(state.useRoles);
@@ -2569,12 +2609,19 @@
                               state.playerCount - 1
                           )
                         : [];
+                    var spyRole = state.useRoles
+                        ? state.location.spyRole || pickSpyRole()
+                        : "";
                     var roleIndex = 0;
                     state.assignments = [];
 
                     for (var i = 0; i < state.playerCount; i += 1) {
                         if (i === spyIndex) {
-                            state.assignments.push({ spy: true, role: "" });
+                            state.assignments.push({
+                                spy: true,
+                                role: "",
+                                spyRole: spyRole
+                            });
                         } else if (state.useRoles) {
                             state.assignments.push({
                                 spy: false,
@@ -2623,10 +2670,14 @@
                         : state.location.name;
 
                     if (assignment.spy) {
-                        els.identityRoleValue.textContent = "间谍";
+                        els.identityRoleValue.textContent =
+                            assignment.spyRole || "间谍";
                         els.identityHint.hidden = false;
-                        els.identityHint.textContent =
-                            "你知道自己是间谍，但不知道地点。观察大家，别暴露。";
+                        els.identityHint.textContent = assignment.spyRole
+                            ? "你是间谍，不知道地点。用「" +
+                              assignment.spyRole +
+                              "」这个身份编问题和回答，别暴露。"
+                            : "你知道自己是间谍，但不知道地点。观察大家，别暴露。";
                     } else {
                         els.identityRoleValue.textContent = state.useRoles
                             ? assignment.role
@@ -2901,6 +2952,10 @@
 
                     els.locationGrid.textContent = "";
                     els.locationGrid.appendChild(fragment);
+                }
+
+                function pickSpyRole() {
+                    return SPY_ROLE_POOL[Math.floor(Math.random() * SPY_ROLE_POOL.length)];
                 }
 
                 function pickDifferentIndex(length, lastIndex) {
