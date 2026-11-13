@@ -8,6 +8,12 @@
         />
         <meta name="color-scheme" content="dark" />
         <meta name="theme-color" content="#070a11" />
+        <meta
+            http-equiv="Cache-Control"
+            content="no-cache, no-store, must-revalidate"
+        />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
         <title>机密代号 · Codenames</title>
         <style>
             :root {
@@ -22,6 +28,7 @@
                 --red-deep: #b9203d;
                 --blue: #7c9cff;
                 --blue-deep: #2b48b8;
+                --turn-bg: #ff0000;
                 --radius-lg: 24px;
                 --radius-md: 16px;
                 --shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
@@ -47,7 +54,7 @@
                 margin: 0;
                 min-height: 100vh;
                 min-height: 100dvh;
-                background: var(--bg);
+                background-color: var(--turn-bg, var(--bg));
                 color: var(--text);
                 font-family: var(--font);
                 -webkit-font-smoothing: antialiased;
@@ -55,30 +62,6 @@
                 text-size-adjust: 100%;
                 -webkit-tap-highlight-color: transparent;
                 touch-action: manipulation;
-            }
-
-            body::before {
-                content: "";
-                position: fixed;
-                inset: 0;
-                z-index: -1;
-                pointer-events: none;
-                background:
-                    radial-gradient(
-                        620px 420px at 10% -6%,
-                        rgba(255, 77, 109, 0.18),
-                        transparent 68%
-                    ),
-                    radial-gradient(
-                        560px 400px at 104% 8%,
-                        rgba(124, 156, 255, 0.16),
-                        transparent 68%
-                    ),
-                    radial-gradient(
-                        520px 380px at 50% 110%,
-                        rgba(230, 220, 198, 0.07),
-                        transparent 70%
-                    );
             }
 
             body.modal-open {
@@ -138,8 +121,9 @@
 
             .teams {
                 display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 10px;
+                grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+                gap: 8px;
+                align-items: stretch;
             }
 
             .team {
@@ -216,6 +200,34 @@
                     0 12px 28px rgba(0, 0, 0, 0.35);
             }
 
+            .home-icon-btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 48px;
+                min-height: 56px;
+                align-self: stretch;
+                border: 1px solid var(--line);
+                border-radius: var(--radius-md);
+                background: var(--surface);
+                color: var(--muted);
+                cursor: pointer;
+                transition:
+                    color 0.2s ease,
+                    background 0.2s ease;
+            }
+
+            .home-icon-btn:active {
+                color: var(--text);
+                background: rgba(255, 255, 255, 0.08);
+            }
+
+            .home-icon-btn svg {
+                display: block;
+                width: 20px;
+                height: 20px;
+            }
+
             .status {
                 min-height: 19px;
                 margin: -2px 0 0;
@@ -237,10 +249,32 @@
             .board {
                 display: grid;
                 flex: 1 1 auto;
-                grid-template-columns: repeat(5, minmax(0, 1fr));
+                grid-template-columns: repeat(var(--cols, 5), minmax(0, 1fr));
                 grid-auto-rows: minmax(58px, 1fr);
                 gap: clamp(6px, 1.8vw, 10px);
                 min-height: 0;
+            }
+
+            .board.board-6 {
+                grid-auto-rows: minmax(46px, 1fr);
+                gap: clamp(4px, 1.2vw, 8px);
+            }
+
+            .board.board-6 .card {
+                border-radius: 11px;
+                font-size: clamp(11px, 3vw, 14px);
+            }
+
+            .board.board-6 .card.long {
+                font-size: clamp(10px, 2.6vw, 12px);
+            }
+
+            .board.board-6 .card.xlong {
+                font-size: clamp(9px, 2.4vw, 11px);
+            }
+
+            .board.board-4 .card {
+                font-size: clamp(15px, 4.2vw, 20px);
             }
 
             .card {
@@ -296,11 +330,6 @@
 
             .card:active:not(:disabled) {
                 transform: scale(0.965);
-            }
-
-            .card:focus-visible {
-                outline: 2px solid #fff;
-                outline-offset: 2px;
             }
 
             .card.revealed {
@@ -386,9 +415,14 @@
                 transform: scale(0.98);
             }
 
-            .btn:focus-visible {
-                outline: 2px solid #fff;
-                outline-offset: 2px;
+            .btn:disabled {
+                opacity: 0.45;
+                cursor: not-allowed;
+                filter: saturate(0.5);
+            }
+
+            .btn:disabled:active {
+                transform: none;
             }
 
             .btn-primary {
@@ -425,18 +459,7 @@
                 padding-right: max(20px, env(safe-area-inset-right, 0px));
                 padding-bottom: max(24px, env(safe-area-inset-bottom, 0px));
                 padding-left: max(20px, env(safe-area-inset-left, 0px));
-                background:
-                    radial-gradient(
-                        420px 300px at 50% 8%,
-                        rgba(255, 77, 109, 0.14),
-                        transparent 70%
-                    ),
-                    radial-gradient(
-                        420px 300px at 50% 100%,
-                        rgba(124, 156, 255, 0.14),
-                        transparent 70%
-                    ),
-                    var(--bg);
+                background: var(--bg);
                 text-align: center;
             }
 
@@ -458,26 +481,11 @@
                 text-indent: 0.4em;
             }
 
-            .start-team {
-                margin: 6px 0 0;
-                font-size: clamp(38px, 12vw, 54px);
-                font-weight: 800;
-                line-height: 1.05;
-                letter-spacing: 0.02em;
-            }
-
-            .start-team:focus,
-            .end-title:focus {
-                outline: none;
-            }
-
-            .start-team[data-team="red"],
             .end-title[data-team="red"] {
                 color: var(--red);
                 text-shadow: 0 0 36px rgba(255, 77, 109, 0.4);
             }
 
-            .start-team[data-team="blue"],
             .end-title[data-team="blue"] {
                 color: var(--blue);
                 text-shadow: 0 0 36px rgba(124, 156, 255, 0.4);
@@ -496,44 +504,6 @@
                 color: var(--muted);
                 font-size: 12px;
                 line-height: 1.6;
-            }
-
-            .start-rules {
-                margin: 0;
-                padding: 5px 13px;
-                border: 1px solid var(--line);
-                border-radius: 999px;
-                color: var(--muted);
-                font-size: 11px;
-                letter-spacing: 0.08em;
-            }
-
-            .link-btn {
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                min-height: 44px;
-                padding: 4px 14px;
-                border: 0;
-                background: none;
-                color: var(--muted);
-                font-family: inherit;
-                font-size: 13px;
-                letter-spacing: 0.04em;
-                text-decoration: underline;
-                text-decoration-color: rgba(255, 255, 255, 0.25);
-                text-underline-offset: 4px;
-                cursor: pointer;
-            }
-
-            .link-btn:active {
-                color: var(--text);
-            }
-
-            .link-btn:focus-visible {
-                outline: 2px solid #fff;
-                outline-offset: 2px;
-                border-radius: 8px;
             }
 
             .rules-list {
@@ -591,6 +561,276 @@
 
             .screen-actions .btn {
                 margin-top: 0;
+            }
+
+            .home-inner {
+                align-items: stretch;
+                width: min(100%, 430px);
+                text-align: left;
+            }
+
+            .home-head {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                text-align: center;
+            }
+
+            .home-title {
+                margin: 0;
+                font-size: clamp(28px, 8vw, 38px);
+                font-weight: 800;
+                line-height: 1.1;
+                letter-spacing: 0.04em;
+            }
+
+            .home-sub {
+                margin: 0;
+                color: var(--muted);
+                font-size: 13px;
+                line-height: 1.6;
+            }
+
+            .settings-card {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                padding: 14px;
+                border: 1px solid var(--line);
+                border-radius: 18px;
+                background: var(--surface);
+                box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22);
+            }
+
+            .setting-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+            }
+
+            .setting-label {
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+            }
+
+            .setting-label b {
+                font-size: 14px;
+                font-weight: 600;
+            }
+
+            .setting-label span {
+                color: var(--muted);
+                font-size: 11px;
+                line-height: 1.4;
+            }
+
+            .segmented {
+                display: inline-flex;
+                flex-shrink: 0;
+                gap: 2px;
+                padding: 3px;
+                border: 1px solid var(--line);
+                border-radius: 12px;
+                background: rgba(255, 255, 255, 0.03);
+            }
+
+            .seg-btn {
+                min-width: 48px;
+                min-height: 36px;
+                padding: 4px 6px;
+                border: 0;
+                border-radius: 9px;
+                background: transparent;
+                color: var(--muted);
+                font-family: inherit;
+                font-size: 12px;
+                font-weight: 600;
+                line-height: 1.1;
+                cursor: pointer;
+            }
+
+            .seg-btn.is-active {
+                background: rgba(255, 255, 255, 0.13);
+                color: var(--text);
+                box-shadow: inset 0 0 0 1px var(--line-strong);
+            }
+
+            .stepper {
+                display: inline-flex;
+                flex-shrink: 0;
+                align-items: center;
+                gap: 4px;
+            }
+
+            .stepper-btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 38px;
+                height: 38px;
+                border: 1px solid var(--line-strong);
+                border-radius: 11px;
+                background: rgba(255, 255, 255, 0.05);
+                color: var(--text);
+                font-family: inherit;
+                font-size: 20px;
+                line-height: 1;
+                cursor: pointer;
+            }
+
+            .stepper-btn:disabled {
+                opacity: 0.35;
+                cursor: not-allowed;
+            }
+
+            .stepper-value {
+                min-width: 34px;
+                font-size: 18px;
+                font-weight: 700;
+                font-variant-numeric: tabular-nums;
+                text-align: center;
+            }
+
+            .setting-summary {
+                margin: 0;
+                padding: 10px 12px;
+                border-radius: 12px;
+                background: rgba(255, 255, 255, 0.04);
+                color: var(--muted);
+                font-size: 12px;
+                line-height: 1.7;
+                text-align: center;
+            }
+
+            .setting-summary b {
+                color: var(--text);
+                font-weight: 600;
+            }
+
+            .setting-error {
+                margin: 0;
+                color: #ff9db0;
+                font-size: 12px;
+                line-height: 1.5;
+                text-align: center;
+            }
+
+            .rules-link {
+                align-self: center;
+                min-height: 42px;
+                padding: 4px 14px;
+                border: 0;
+                background: none;
+                color: var(--muted);
+                font-family: inherit;
+                font-size: 13px;
+                letter-spacing: 0.04em;
+                text-decoration: underline;
+                text-decoration-color: rgba(255, 255, 255, 0.25);
+                text-underline-offset: 4px;
+                cursor: pointer;
+            }
+
+            .rules-link:active {
+                color: var(--text);
+            }
+
+            .pin-input {
+                width: 100%;
+                min-height: 54px;
+                padding: 10px 14px;
+                border: 1px solid var(--line-strong);
+                border-radius: 14px;
+                background: rgba(255, 255, 255, 0.05);
+                color: var(--text);
+                font-family: inherit;
+                font-size: 24px;
+                font-weight: 700;
+                letter-spacing: 0.45em;
+                text-align: center;
+            }
+
+            .pin-input::placeholder {
+                color: var(--muted);
+                font-size: 13px;
+                font-weight: 500;
+                letter-spacing: 0.08em;
+            }
+
+            .pin-error {
+                margin: 0;
+                color: #ff9db0;
+                font-size: 12px;
+                line-height: 1.5;
+                text-align: center;
+            }
+
+            .spy-inner {
+                width: min(100%, 430px);
+            }
+
+            .spy-title {
+                margin: 0;
+                font-size: clamp(26px, 8vw, 34px);
+                font-weight: 800;
+                line-height: 1.15;
+            }
+
+            .spy-team {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 30px;
+                padding: 4px 14px;
+                border: 1px solid var(--line-strong);
+                border-radius: 999px;
+                font-size: 13px;
+                font-weight: 700;
+                letter-spacing: 0.06em;
+            }
+
+            .spy-team[data-team="red"] {
+                color: var(--red);
+                background: rgba(255, 77, 109, 0.1);
+            }
+
+            .spy-team[data-team="blue"] {
+                color: var(--blue);
+                background: rgba(124, 156, 255, 0.1);
+            }
+
+            .spy-grid {
+                width: 100%;
+            }
+
+            .spy-actions {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                width: 100%;
+                margin-top: 2px;
+            }
+
+            .screen .spy-actions .btn {
+                width: 100%;
+                min-height: 54px;
+                margin-top: 0;
+            }
+
+            .btn-red {
+                border-color: transparent;
+                background: linear-gradient(140deg, #ff5c78, #b9203d);
+                color: #fff;
+                box-shadow: 0 12px 26px rgba(0, 0, 0, 0.35);
+            }
+
+            .btn-blue {
+                border-color: transparent;
+                background: linear-gradient(140deg, #8aa6ff, #2b48b8);
+                color: #fff;
+                box-shadow: 0 12px 26px rgba(0, 0, 0, 0.35);
             }
 
             .end-title {
@@ -676,7 +916,6 @@
                 background: linear-gradient(170deg, #161e2f, #0c1220);
                 box-shadow: var(--shadow);
                 animation: modal-in 0.18s ease-out;
-                outline: none;
             }
 
             .modal-head {
@@ -724,15 +963,28 @@
                 cursor: pointer;
             }
 
-            .icon-btn:focus-visible {
-                outline: 2px solid #fff;
-                outline-offset: 2px;
+            .icon-btn:active {
+                background: rgba(255, 255, 255, 0.08);
             }
 
             .map-grid {
                 display: grid;
-                grid-template-columns: repeat(5, minmax(0, 1fr));
+                grid-template-columns: repeat(var(--cols, 5), minmax(0, 1fr));
                 gap: 5px;
+            }
+
+            .map-grid[data-cols="4"] .map-cell {
+                font-size: 12px;
+            }
+
+            .map-grid[data-cols="6"] {
+                gap: 4px;
+            }
+
+            .map-grid[data-cols="6"] .map-cell {
+                padding: 2px;
+                border-radius: 6px;
+                font-size: 9px;
             }
 
             .map-cell {
@@ -886,6 +1138,12 @@
                     gap: 8px;
                 }
 
+                .home-icon-btn {
+                    width: 42px;
+                    min-height: 42px;
+                    border-radius: 10px;
+                }
+
                 .team {
                     min-height: 42px;
                     padding: 5px 10px;
@@ -947,6 +1205,26 @@
                         </span>
                         <b class="team-count" id="redCount">9</b>
                     </div>
+                    <button
+                        class="home-icon-btn"
+                        id="homeIconBtn"
+                        type="button"
+                        aria-label="结束本局并返回首页"
+                    >
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                        >
+                            <path d="M3 11 12 4l9 7" />
+                            <path d="M5 10v10h14V10" />
+                            <path d="M10 20v-5h4v5" />
+                        </svg>
+                    </button>
                     <div class="team blue" id="teamBlue" data-team="blue">
                         <span class="team-dot" aria-hidden="true"></span>
                         <span class="team-text">
@@ -966,34 +1244,174 @@
                 <button class="btn btn-map" id="mapBtn" type="button">
                     查看地图
                 </button>
-                <button class="btn btn-end" id="endTurnBtn" type="button">
+                <button class="btn" id="endTurnBtn" type="button">
                     结束回合
                 </button>
             </div>
         </div>
 
-        <section class="screen" id="startScreen">
-            <div class="screen-inner">
-                <p class="kicker">机密代号</p>
-                <h2 class="start-team" id="startTeam" tabindex="-1">红队先手</h2>
-                <p class="start-prompt" id="startPrompt">
-                    请把手机交给红队间谍头目
-                </p>
-                <p class="start-rules">先手 9 张 · 后手 8 张</p>
-                <p class="start-hint">确认周围没有人偷看，再打开地图。</p>
-                <button class="btn btn-primary" id="startMapBtn" type="button">
-                    查看地图
+        <section class="screen" id="homeScreen">
+            <div class="screen-inner home-inner">
+                <div class="home-head">
+                    <p class="kicker">机密代号</p>
+                    <h2 class="home-title">准备开局</h2>
+                    <p class="home-sub">
+                        设置本轮地图与特工数量，确认后开始。
+                    </p>
+                </div>
+
+                <div class="settings-card">
+                    <div class="setting-row">
+                        <span class="setting-label">
+                            <b>地图规模</b>
+                            <span>词卡总数</span>
+                        </span>
+                        <div class="segmented" role="group" aria-label="地图规模">
+                            <button
+                                class="seg-btn"
+                                type="button"
+                                data-size="16"
+                            >
+                                4×4
+                            </button>
+                            <button
+                                class="seg-btn is-active"
+                                type="button"
+                                data-size="25"
+                            >
+                                5×5
+                            </button>
+                            <button
+                                class="seg-btn"
+                                type="button"
+                                data-size="36"
+                            >
+                                6×6
+                            </button>
+                        </div>
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">
+                            <b>每队基础特工</b>
+                            <span>先手队自动 +1</span>
+                        </span>
+                        <div
+                            class="stepper"
+                            role="group"
+                            aria-label="每队基础特工数"
+                        >
+                            <button
+                                class="stepper-btn"
+                                id="agentMinus"
+                                type="button"
+                                aria-label="减少特工"
+                            >
+                                −
+                            </button>
+                            <b class="stepper-value" id="agentValue">8</b>
+                            <button
+                                class="stepper-btn"
+                                id="agentPlus"
+                                type="button"
+                                aria-label="增加特工"
+                            >
+                                +
+                            </button>
+                        </div>
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">
+                            <b>刺客数量</b>
+                            <span>翻到刺客立即出局</span>
+                        </span>
+                        <div
+                            class="stepper"
+                            role="group"
+                            aria-label="刺客数量"
+                        >
+                            <button
+                                class="stepper-btn"
+                                id="assassinMinus"
+                                type="button"
+                                aria-label="减少刺客"
+                            >
+                                −
+                            </button>
+                            <b class="stepper-value" id="assassinValue">1</b>
+                            <button
+                                class="stepper-btn"
+                                id="assassinPlus"
+                                type="button"
+                                aria-label="增加刺客"
+                            >
+                                +
+                            </button>
+                        </div>
+                    </div>
+                    <p class="setting-summary" id="settingSummary"></p>
+                    <p class="setting-error" id="settingError" hidden></p>
+                </div>
+
+                <button
+                    class="btn btn-primary"
+                    id="startGameBtn"
+                    type="button"
+                >
+                    开始游戏
                 </button>
-                <button class="link-btn" id="rulesBtn" type="button">
+
+                <button class="rules-link" id="rulesBtn" type="button">
                     游戏说明
                 </button>
+            </div>
+        </section>
+
+        <section class="screen" id="spyScreen" hidden>
+            <div class="screen-inner spy-inner">
+                <p class="kicker">机密代号</p>
+                <h2 class="spy-title" id="spyTitle">
+                    你是头目
+                </h2>
+                <span class="spy-team" id="spyTeam" data-team="red">
+                    红队头目
+                </span>
+                <p class="start-prompt" id="spyPrompt">
+                    这是本轮游戏地图，请记忆。
+                </p>
+                <div class="map-grid spy-grid" id="spyGrid"></div>
+                <ul class="legend">
+                    <li><span class="legend-dot red"></span>红队</li>
+                    <li><span class="legend-dot blue"></span>蓝队</li>
+                    <li><span class="legend-dot neutral"></span>中立</li>
+                    <li><span class="legend-dot assassin"></span>刺客</li>
+                </ul>
+                <p class="start-hint" id="spyHint">
+                    红队头目记住后点红队确认，再把手机交给蓝队头目；先手将在进入游戏时随机揭晓。
+                </p>
+                <div class="spy-actions">
+                    <button
+                        class="btn btn-red"
+                        id="redConfirmBtn"
+                        type="button"
+                    >
+                        红队确认
+                    </button>
+                    <button
+                        class="btn btn-blue"
+                        id="blueConfirmBtn"
+                        type="button"
+                        disabled
+                    >
+                        蓝队确认
+                    </button>
+                </div>
             </div>
         </section>
 
         <section class="screen" id="endScreen" hidden>
             <div class="screen-inner">
                 <p class="kicker">本局结束</p>
-                <h2 class="end-title" id="endTitle" tabindex="-1">红队胜利</h2>
+                <h2 class="end-title" id="endTitle">红队胜利</h2>
                 <p class="end-reason" id="endReason"></p>
                 <div class="end-score">
                     <div class="score red">
@@ -1009,8 +1427,8 @@
                     <button class="btn" id="endMapBtn" type="button">
                         查看终局地图
                     </button>
-                    <button class="btn btn-primary" id="againBtn" type="button">
-                        再来一局
+                    <button class="btn btn-primary" id="homeBtn" type="button">
+                        返回首页
                     </button>
                 </div>
             </div>
@@ -1023,7 +1441,6 @@
                 aria-modal="true"
                 aria-labelledby="mapTitle"
                 aria-describedby="mapHint"
-                tabindex="-1"
             >
                 <div class="modal-head">
                     <div class="modal-head-text">
@@ -1059,7 +1476,6 @@
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="confirmTitle"
-                tabindex="-1"
             >
                 <h2 class="modal-title confirm-copy" id="confirmTitle">
                     翻开这张牌？
@@ -1088,7 +1504,6 @@
                 aria-modal="true"
                 aria-labelledby="endTurnTitle"
                 aria-describedby="endTurnHint"
-                tabindex="-1"
             >
                 <h2 class="modal-title" id="endTurnTitle">结束回合？</h2>
                 <p class="modal-hint" id="endTurnHint"></p>
@@ -1114,7 +1529,6 @@
                 aria-modal="true"
                 aria-labelledby="finalTitle"
                 aria-describedby="finalHint"
-                tabindex="-1"
             >
                 <div class="modal-head">
                     <div class="modal-head-text">
@@ -1146,13 +1560,50 @@
             </div>
         </div>
 
+        <div class="overlay" id="pinOverlay" hidden>
+            <div
+                class="modal"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="pinTitle"
+                aria-describedby="pinHint"
+            >
+                <h2 class="modal-title" id="pinTitle">设置地图密码</h2>
+                <p class="modal-hint" id="pinHint"></p>
+                <input
+                    class="pin-input"
+                    id="pinInput"
+                    type="password"
+                    inputmode="numeric"
+                    maxlength="4"
+                    autocomplete="off"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    spellcheck="false"
+                    placeholder="4 位数字"
+                />
+                <p class="pin-error" id="pinError" hidden></p>
+                <div class="modal-actions">
+                    <button class="btn" id="pinCancelBtn" type="button">
+                        取消
+                    </button>
+                    <button
+                        class="btn btn-primary"
+                        id="pinConfirmBtn"
+                        type="button"
+                    >
+                        确认
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <div class="overlay" id="rulesOverlay" hidden>
             <div
                 class="modal"
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="rulesTitle"
-                tabindex="-1"
             >
                 <div class="modal-head">
                     <div class="modal-head-text">
@@ -1172,44 +1623,50 @@
                         <span class="rules-num" aria-hidden="true">1</span>
                         <span>
                             <b>目标</b>
-                            场上的 25 个词是 25 个人的代号：红队特工、蓝队特工、中立平民和刺客。先手队有 9
-                            名己方特工，后手队 8 名，另有 7 名中立平民和 1
-                            名刺客；先找出全部己方特工的一队获胜。
+                            场上的词是红蓝特工、中立平民和刺客的代号。先找出全部己方特工的一队获胜。
                         </span>
                     </li>
                     <li>
                         <span class="rules-num" aria-hidden="true">2</span>
                         <span>
-                            <b>颜色</b>
-                            红色是红队特工，蓝色是蓝队特工，米白是中立平民，黑色是刺客；谁翻开刺客，哪队立即输。颜色只有间谍头目能看到，其他人只看到代号。
+                            <b>地图</b>
+                            首页可设置棋盘规模、每队基础特工数和刺客数。先手队自动多 1
+                            名特工，剩余位置为中立平民。
                         </span>
                     </li>
                     <li>
                         <span class="rules-num" aria-hidden="true">3</span>
+                        <span>
+                            <b>颜色</b>
+                            红色是红队特工，蓝色是蓝队特工，米白是中立平民，黑色是刺客；谁翻开刺客，哪队立即输。颜色只有间谍头目能看到。
+                        </span>
+                    </li>
+                    <li>
+                        <span class="rules-num" aria-hidden="true">4</span>
                         <span>
                             <b>分工</b>
                             每队一名间谍头目，其余玩家负责猜词。头目看颜色、给线索；其他人按线索翻词。
                         </span>
                     </li>
                     <li>
-                        <span class="rules-num" aria-hidden="true">4</span>
-                        <span>
-                            <b>线索</b>
-                            头目每回合说「一个词 + 一个数字」，表示场上有几个己方特工与它有关。比如本队有「老虎」「熊猫」「企鹅」，可以说「动物 3」。不能说出场上已有的词。
-                        </span>
-                    </li>
-                    <li>
                         <span class="rules-num" aria-hidden="true">5</span>
                         <span>
-                            <b>猜词</b>
-                            其他玩家按线索翻词卡。线索说「动物 3」，本回合最多翻 4 张（数字 + 1），也可以提前结束回合。翻到己方特工可继续；翻到对方特工或中立平民，本回合结束；翻到刺客，本队立即输。
+                            <b>线索</b>
+                            头目每回合说「一个词 + 一个数字」，表示场上有几个己方特工与它有关。不能说出场上已有的词。
                         </span>
                     </li>
                     <li>
                         <span class="rules-num" aria-hidden="true">6</span>
                         <span>
-                            <b>轮换</b>
-                            猜错、猜完额度或主动结束后，换对方行动。双方轮流给线索、猜词，直到一队找出全部己方特工。
+                            <b>猜词与轮换</b>
+                            线索说「动物 3」，本回合最多翻 4 张（数字 + 1），也可以提前结束回合。翻到己方特工可继续；翻到对方特工或中立平民，本回合结束；翻到刺客，本队立即输。之后换对方行动。
+                        </span>
+                    </li>
+                    <li>
+                        <span class="rules-num" aria-hidden="true">7</span>
+                        <span>
+                            <b>先手确认</b>
+                            开局后手机先显示完整地图。红队头目确认后交给蓝队头目，蓝队确认后进入游戏，并随机揭晓先手队伍。游戏顶部中间的首页按钮可结束本局并返回首页。
                         </span>
                     </li>
                 </ol>
@@ -1277,6 +1734,14 @@
                     assassin: "刺客",
                 };
 
+                var SIZE_META = {
+                    16: { base: 5 },
+                    25: { base: 8 },
+                    36: { base: 12 },
+                };
+                var ASSASSIN_MAX = 3;
+                var settings = { size: 25, base: 8, assassins: 1 };
+
                 var el = {
                     game: document.getElementById("game"),
                     board: document.getElementById("board"),
@@ -1290,17 +1755,45 @@
                     blueMeta: document.getElementById("blueMeta"),
                     mapBtn: document.getElementById("mapBtn"),
                     endTurnBtn: document.getElementById("endTurnBtn"),
-                    startScreen: document.getElementById("startScreen"),
-                    startTeam: document.getElementById("startTeam"),
-                    startPrompt: document.getElementById("startPrompt"),
-                    startMapBtn: document.getElementById("startMapBtn"),
+                    homeIconBtn: document.getElementById("homeIconBtn"),
+                    pinOverlay: document.getElementById("pinOverlay"),
+                    pinTitle: document.getElementById("pinTitle"),
+                    pinHint: document.getElementById("pinHint"),
+                    pinInput: document.getElementById("pinInput"),
+                    pinError: document.getElementById("pinError"),
+                    pinCancelBtn: document.getElementById("pinCancelBtn"),
+                    pinConfirmBtn: document.getElementById("pinConfirmBtn"),
+                    homeScreen: document.getElementById("homeScreen"),
+                    startGameBtn: document.getElementById("startGameBtn"),
+                    agentMinus: document.getElementById("agentMinus"),
+                    agentPlus: document.getElementById("agentPlus"),
+                    agentValue: document.getElementById("agentValue"),
+                    assassinMinus: document.getElementById("assassinMinus"),
+                    assassinPlus: document.getElementById("assassinPlus"),
+                    assassinValue: document.getElementById("assassinValue"),
+                    settingSummary: document.getElementById("settingSummary"),
+                    settingError: document.getElementById("settingError"),
+                    rulesBtn: document.getElementById("rulesBtn"),
+                    rulesOverlay: document.getElementById("rulesOverlay"),
+                    rulesCloseBtn: document.getElementById("rulesCloseBtn"),
+                    rulesCloseBtnBottom: document.getElementById(
+                        "rulesCloseBtnBottom"
+                    ),
+                    spyScreen: document.getElementById("spyScreen"),
+                    spyTitle: document.getElementById("spyTitle"),
+                    spyTeam: document.getElementById("spyTeam"),
+                    spyPrompt: document.getElementById("spyPrompt"),
+                    spyGrid: document.getElementById("spyGrid"),
+                    spyHint: document.getElementById("spyHint"),
+                    redConfirmBtn: document.getElementById("redConfirmBtn"),
+                    blueConfirmBtn: document.getElementById("blueConfirmBtn"),
                     endScreen: document.getElementById("endScreen"),
                     endTitle: document.getElementById("endTitle"),
                     endReason: document.getElementById("endReason"),
                     endRed: document.getElementById("endRed"),
                     endBlue: document.getElementById("endBlue"),
                     endMapBtn: document.getElementById("endMapBtn"),
-                    againBtn: document.getElementById("againBtn"),
+                    homeBtn: document.getElementById("homeBtn"),
                     mapOverlay: document.getElementById("mapOverlay"),
                     mapTitle: document.getElementById("mapTitle"),
                     mapHint: document.getElementById("mapHint"),
@@ -1324,19 +1817,13 @@
                     finalCloseBtnBottom: document.getElementById(
                         "finalCloseBtnBottom"
                     ),
-                    rulesBtn: document.getElementById("rulesBtn"),
-                    rulesOverlay: document.getElementById("rulesOverlay"),
-                    rulesCloseBtn: document.getElementById("rulesCloseBtn"),
-                    rulesCloseBtnBottom: document.getElementById(
-                        "rulesCloseBtnBottom"
-                    ),
                 };
 
                 var state = null;
                 var pendingIndex = -1;
-                var intro = false;
+                var spy = { red: false, blue: false };
+                var pinMode = null;
                 var activeOverlay = null;
-                var restoreFocus = null;
 
                 function shuffle(list) {
                     var copy = list.slice();
@@ -1366,10 +1853,279 @@
                     }
                 }
 
+                function maxBaseAgents() {
+                    return Math.max(
+                        1,
+                        Math.floor(
+                            (settings.size - 1 - settings.assassins) / 2
+                        )
+                    );
+                }
+
+                function neutralCount() {
+                    return (
+                        settings.size -
+                        (settings.base * 2 + 1) -
+                        settings.assassins
+                    );
+                }
+
+                function renderSettings() {
+                    var maxBase = maxBaseAgents();
+                    if (settings.base > maxBase) {
+                        settings.base = maxBase;
+                    }
+                    if (settings.base < 1) {
+                        settings.base = 1;
+                    }
+                    var neutral = neutralCount();
+                    var sizeButtons = document.querySelectorAll(
+                        ".seg-btn[data-size]"
+                    );
+                    for (var i = 0; i < sizeButtons.length; i += 1) {
+                        var button = sizeButtons[i];
+                        var active =
+                            Number(button.dataset.size) === settings.size;
+                        button.classList.toggle("is-active", active);
+                        button.setAttribute("aria-pressed", String(active));
+                    }
+                    el.agentValue.textContent = String(settings.base);
+                    el.assassinValue.textContent = String(
+                        settings.assassins
+                    );
+                    el.agentMinus.disabled = settings.base <= 1;
+                    el.agentPlus.disabled = settings.base >= maxBase;
+                    el.assassinMinus.disabled = settings.assassins <= 0;
+                    el.assassinPlus.disabled =
+                        settings.assassins >= ASSASSIN_MAX;
+                    el.settingSummary.innerHTML =
+                        "先手方 <b>" +
+                        (settings.base + 1) +
+                        "</b> 名特工 · 后手方 <b>" +
+                        settings.base +
+                        "</b> 名特工<br>中立平民 <b>" +
+                        neutral +
+                        "</b> 名 · 刺客 <b>" +
+                        settings.assassins +
+                        "</b> 名<br>先手队伍在两位头目确认地图后随机揭晓";
+                    var invalid = neutral < 0;
+                    el.settingError.hidden = !invalid;
+                    el.settingError.textContent = invalid
+                        ? "词数不足：请减少特工或刺客数量。"
+                        : "";
+                    el.startGameBtn.disabled = invalid;
+                }
+
+                function readSettings() {
+                    if (neutralCount() < 0) {
+                        renderSettings();
+                        return null;
+                    }
+                    return {
+                        size: settings.size,
+                        base: settings.base,
+                        assassins: settings.assassins,
+                    };
+                }
+
                 function showScreen(name) {
-                    el.startScreen.hidden = name !== "start";
+                    el.homeScreen.hidden = name !== "home";
+                    el.spyScreen.hidden = name !== "spy";
                     el.game.hidden = name !== "game";
                     el.endScreen.hidden = name !== "end";
+                }
+
+                function renderSpy() {
+                    var team = spy.red ? "blue" : "red";
+                    el.spyTeam.textContent = teamName(team) + "头目";
+                    el.spyTeam.dataset.team = team;
+                    el.spyPrompt.textContent =
+                        "你是" +
+                        teamName(team) +
+                        "头目，这是本轮游戏地图，请记忆。";
+                    el.redConfirmBtn.disabled = spy.red;
+                    el.redConfirmBtn.textContent = spy.red
+                        ? "红队已确认"
+                        : "红队确认";
+                    el.blueConfirmBtn.disabled = !spy.red || spy.blue;
+                    el.blueConfirmBtn.textContent = spy.blue
+                        ? "蓝队已确认"
+                        : "蓝队确认";
+                    if (spy.blue) {
+                        el.spyHint.textContent = "蓝队已确认，正在进入游戏。";
+                    } else if (spy.red) {
+                        el.spyHint.textContent =
+                            "请把手机交给蓝队头目，确认周围无人偷看后点蓝队确认并设置密码。";
+                    } else {
+                        el.spyHint.textContent =
+                            "红队头目记住后点红队确认并设置密码，再把手机交给蓝队头目；先手将在进入游戏时随机揭晓。";
+                    }
+                    renderMapInto(el.spyGrid);
+                }
+
+                function beginRound() {
+                    var config = readSettings();
+                    if (!config) {
+                        return;
+                    }
+                    pendingIndex = -1;
+                    closeModal();
+                    el.spyGrid.replaceChildren();
+                    el.finalGrid.replaceChildren();
+                    el.mapGrid.replaceChildren();
+
+                    var total = config.size;
+                    var first =
+                        Math.random() < 0.5 ? "red" : "blue";
+                    var second = otherTeam(first);
+                    var firstCount = config.base + 1;
+                    var secondCount = config.base;
+                    var neutral =
+                        total -
+                        firstCount -
+                        secondCount -
+                        config.assassins;
+                    var colors = shuffle(
+                        Array(firstCount)
+                            .fill(first)
+                            .concat(Array(secondCount).fill(second))
+                            .concat(Array(neutral).fill("neutral"))
+                            .concat(Array(config.assassins).fill("assassin"))
+                    );
+                    var words = shuffle(POOL).slice(0, total);
+
+                    state = {
+                        words: words,
+                        colors: colors,
+                        revealed: Array(total).fill(false),
+                        turn: first,
+                        first: first,
+                        remaining: { red: 0, blue: 0 },
+                        passwords: { red: "", blue: "" },
+                        round: 1,
+                        over: false,
+                        cols: Math.round(Math.sqrt(total)),
+                    };
+                    state.remaining[first] = firstCount;
+                    state.remaining[second] = secondCount;
+                    spy = { red: false, blue: false };
+                    pinMode = null;
+
+                    createBoard(words);
+                    renderBoard();
+                    renderTeams();
+                    setStatus("", "");
+                    renderSpy();
+                    showScreen("spy");
+                }
+
+                function confirmRed() {
+                    if (!state || spy.red) {
+                        return;
+                    }
+                    openPin("set-red");
+                }
+
+                function confirmBlue() {
+                    if (!state || !spy.red || spy.blue) {
+                        return;
+                    }
+                    openPin("set-blue");
+                }
+
+                function startPlay() {
+                    showScreen("game");
+                    renderTeams();
+                    setStatus(
+                        teamName(state.turn) + "先手，请开始猜词。",
+                        "good"
+                    );
+                }
+
+                function openPin(mode) {
+                    if (!state) {
+                        return;
+                    }
+                    pinMode = mode;
+                    el.pinInput.value = "";
+                    el.pinError.hidden = true;
+                    if (mode === "set-red" || mode === "set-blue") {
+                        var team = mode === "set-red" ? "red" : "blue";
+                        el.pinTitle.textContent =
+                            "设置" + teamName(team) + "地图密码";
+                        el.pinHint.textContent =
+                            "请设置 4 位数字密码。本队头目记住，游戏中查看地图时需要输入。";
+                        el.pinConfirmBtn.textContent = "确认密码";
+                    } else {
+                        el.pinTitle.textContent =
+                            "查看" + teamName(state.turn) + "地图";
+                        el.pinHint.textContent =
+                            "请输入" +
+                            teamName(state.turn) +
+                            "头目设置的地图密码。";
+                        el.pinConfirmBtn.textContent = "查看地图";
+                    }
+                    openModal(el.pinOverlay);
+                    el.pinInput.focus();
+                }
+
+                function confirmPin() {
+                    if (!state || !pinMode) {
+                        return;
+                    }
+                    var pin = el.pinInput.value.trim();
+                    if (!/^\d{4}$/.test(pin)) {
+                        el.pinError.textContent = "请输入 4 位数字密码。";
+                        el.pinError.hidden = false;
+                        el.pinInput.value = "";
+                        el.pinInput.focus();
+                        return;
+                    }
+                    if (pinMode === "set-red") {
+                        state.passwords.red = pin;
+                        closeModal();
+                        spy.red = true;
+                        renderSpy();
+                        return;
+                    }
+                    if (pinMode === "set-blue") {
+                        state.passwords.blue = pin;
+                        closeModal();
+                        spy.blue = true;
+                        renderSpy();
+                        startPlay();
+                        return;
+                    }
+                    if (pin !== state.passwords[state.turn]) {
+                        el.pinError.textContent = "密码错误，请重试。";
+                        el.pinError.hidden = false;
+                        el.pinInput.value = "";
+                        el.pinInput.focus();
+                        return;
+                    }
+                    closeModal();
+                    openMap();
+                }
+
+                function askMapPassword() {
+                    if (!state || state.over) {
+                        return;
+                    }
+                    openPin("verify");
+                }
+
+                function goHome() {
+                    pendingIndex = -1;
+                    closeModal();
+                    el.spyGrid.replaceChildren();
+                    el.finalGrid.replaceChildren();
+                    el.mapGrid.replaceChildren();
+                    state = null;
+                    spy = { red: false, blue: false };
+                    pinMode = null;
+                    setTurnColor("red");
+                    showScreen("home");
+                    renderSettings();
                 }
 
                 function setTurnColor(team) {
@@ -1381,9 +2137,17 @@
                         "--turn-deep",
                         team === "red" ? "#b9203d" : "#2b48b8"
                     );
+                    document.documentElement.style.setProperty(
+                        "--turn-bg",
+                        team === "red" ? "#ff0000" : "#0000ff"
+                    );
                 }
 
                 function createBoard(words) {
+                    var cols = Math.round(Math.sqrt(words.length));
+                    el.board.style.setProperty("--cols", String(cols));
+                    el.board.classList.toggle("board-4", cols === 4);
+                    el.board.classList.toggle("board-6", cols === 6);
                     var fragment = document.createDocumentFragment();
                     words.forEach(function (word, index) {
                         var card = document.createElement("button");
@@ -1479,14 +2243,12 @@
                         closeModal();
                     }
                     activeOverlay = overlay;
-                    restoreFocus = document.activeElement;
                     overlay.hidden = false;
                     document.body.classList.add("modal-open");
                     el.game.inert = true;
-                    el.startScreen.inert = true;
+                    el.homeScreen.inert = true;
+                    el.spyScreen.inert = true;
                     el.endScreen.inert = true;
-                    var dialog = overlay.querySelector(".modal");
-                    dialog.focus();
                 }
 
                 function closeModal() {
@@ -1497,21 +2259,14 @@
                     activeOverlay = null;
                     document.body.classList.remove("modal-open");
                     el.game.inert = false;
-                    el.startScreen.inert = false;
+                    el.homeScreen.inert = false;
+                    el.spyScreen.inert = false;
                     el.endScreen.inert = false;
-                    var target = restoreFocus;
-                    restoreFocus = null;
-                    if (
-                        target &&
-                        typeof target.focus === "function" &&
-                        document.contains(target) &&
-                        !target.disabled
-                    ) {
-                        target.focus();
-                    }
                 }
 
                 function renderMapInto(grid) {
+                    grid.style.setProperty("--cols", String(state.cols));
+                    grid.dataset.cols = String(state.cols);
                     var fragment = document.createDocumentFragment();
                     state.words.forEach(function (word, index) {
                         var cell = document.createElement("div");
@@ -1547,12 +2302,6 @@
                     }
                     el.mapGrid.replaceChildren();
                     closeModal();
-                    if (intro) {
-                        intro = false;
-                        showScreen("game");
-                        setStatus(teamName(state.turn) + "回合，请开始猜词。", "");
-                        el.mapBtn.focus();
-                    }
                 }
 
                 function openFinalMap() {
@@ -1569,7 +2318,7 @@
                 }
 
                 function askEndTurn() {
-                    if (!state || state.over || intro) {
+                    if (!state || state.over) {
                         return;
                     }
                     el.endTurnTitle.textContent =
@@ -1593,7 +2342,7 @@
                 }
 
                 function askFlip(index) {
-                    if (!state || state.over || intro || state.revealed[index]) {
+                    if (!state || state.over || state.revealed[index]) {
                         return;
                     }
                     pendingIndex = index;
@@ -1616,8 +2365,6 @@
 
                 function finishGame(winner, reason) {
                     state.over = true;
-                    state.winner = winner;
-                    state.reason = reason;
                     renderTeams();
                     renderBoard();
                     setTurnColor(winner);
@@ -1630,7 +2377,6 @@
                     el.endRed.textContent = String(state.remaining.red);
                     el.endBlue.textContent = String(state.remaining.blue);
                     showScreen("end");
-                    el.endTitle.focus();
                 }
 
                 function revealCard(index) {
@@ -1688,51 +2434,76 @@
                     revealCard(index);
                 }
 
-                function newGame() {
-                    pendingIndex = -1;
-                    closeModal();
-                    el.mapGrid.replaceChildren();
-                    el.finalGrid.replaceChildren();
-                    intro = true;
+                document.querySelectorAll(".seg-btn[data-size]").forEach(
+                    function (button) {
+                        button.addEventListener("click", function () {
+                            var size = Number(button.dataset.size);
+                            if (!SIZE_META[size]) {
+                                return;
+                            }
+                            settings.size = size;
+                            settings.base = SIZE_META[size].base;
+                            renderSettings();
+                        });
+                    }
+                );
 
-                    var first = Math.random() < 0.5 ? "red" : "blue";
-                    var second = otherTeam(first);
-                    var colors = shuffle(
-                        Array(9)
-                            .fill(first)
-                            .concat(Array(8).fill(second))
-                            .concat(Array(7).fill("neutral"))
-                            .concat(["assassin"])
+                el.agentMinus.addEventListener("click", function () {
+                    settings.base = Math.max(1, settings.base - 1);
+                    renderSettings();
+                });
+
+                el.agentPlus.addEventListener("click", function () {
+                    settings.base = Math.min(
+                        maxBaseAgents(),
+                        settings.base + 1
                     );
-                    var words = shuffle(POOL).slice(0, 25);
+                    renderSettings();
+                });
 
-                    state = {
-                        words: words,
-                        colors: colors,
-                        revealed: Array(25).fill(false),
-                        turn: first,
-                        first: first,
-                        remaining: { red: 0, blue: 0 },
-                        round: 1,
-                        over: false,
-                        winner: null,
-                        reason: "",
-                    };
-                    state.remaining[first] = 9;
-                    state.remaining[second] = 8;
+                el.assassinMinus.addEventListener("click", function () {
+                    settings.assassins = Math.max(
+                        0,
+                        settings.assassins - 1
+                    );
+                    renderSettings();
+                });
 
-                    createBoard(words);
-                    renderBoard();
-                    renderTeams();
-                    setStatus("", "");
+                el.assassinPlus.addEventListener("click", function () {
+                    settings.assassins = Math.min(
+                        ASSASSIN_MAX,
+                        settings.assassins + 1
+                    );
+                    renderSettings();
+                });
 
-                    el.startTeam.textContent = teamName(first) + "先手";
-                    el.startTeam.dataset.team = first;
-                    el.startPrompt.textContent =
-                        "请把手机交给" + teamName(first) + "间谍头目";
-                    showScreen("start");
-                    el.startTeam.focus();
-                }
+                el.startGameBtn.addEventListener("click", beginRound);
+                el.rulesBtn.addEventListener("click", function () {
+                    openModal(el.rulesOverlay);
+                });
+                el.rulesCloseBtn.addEventListener("click", closeModal);
+                el.rulesCloseBtnBottom.addEventListener("click", closeModal);
+                el.rulesOverlay.addEventListener("click", function (event) {
+                    if (event.target === el.rulesOverlay) {
+                        closeModal();
+                    }
+                });
+                el.pinCancelBtn.addEventListener("click", closeModal);
+                el.pinConfirmBtn.addEventListener("click", confirmPin);
+                el.pinInput.addEventListener("input", function () {
+                    el.pinInput.value = el.pinInput.value
+                        .replace(/\D/g, "")
+                        .slice(0, 4);
+                    el.pinError.hidden = true;
+                });
+                el.pinOverlay.addEventListener("click", function (event) {
+                    if (event.target === el.pinOverlay) {
+                        closeModal();
+                    }
+                });
+                el.redConfirmBtn.addEventListener("click", confirmRed);
+                el.blueConfirmBtn.addEventListener("click", confirmBlue);
+                el.homeBtn.addEventListener("click", goHome);
 
                 el.board.addEventListener("click", function (event) {
                     var card = event.target.closest(".card");
@@ -1742,8 +2513,7 @@
                     askFlip(Number(card.dataset.index));
                 });
 
-                el.mapBtn.addEventListener("click", openMap);
-                el.startMapBtn.addEventListener("click", openMap);
+                el.mapBtn.addEventListener("click", askMapPassword);
                 el.hideMapBtn.addEventListener("click", closeMap);
                 el.mapCloseBtn.addEventListener("click", closeMap);
                 el.mapOverlay.addEventListener("click", function (event) {
@@ -1781,77 +2551,10 @@
                 });
 
                 el.endTurnBtn.addEventListener("click", askEndTurn);
+                el.homeIconBtn.addEventListener("click", goHome);
 
-                el.rulesBtn.addEventListener("click", function () {
-                    openModal(el.rulesOverlay);
-                });
-                el.rulesCloseBtn.addEventListener("click", closeModal);
-                el.rulesCloseBtnBottom.addEventListener("click", closeModal);
-                el.rulesOverlay.addEventListener("click", function (event) {
-                    if (event.target === el.rulesOverlay) {
-                        closeModal();
-                    }
-                });
-
-                el.againBtn.addEventListener("click", newGame);
-
-                document.addEventListener("keydown", function (event) {
-                    if (!activeOverlay) {
-                        return;
-                    }
-                    if (event.key === "Escape") {
-                        event.preventDefault();
-                        if (activeOverlay === el.mapOverlay) {
-                            closeMap();
-                        } else if (
-                            activeOverlay === el.confirmOverlay
-                        ) {
-                            cancelFlip();
-                        } else if (
-                            activeOverlay === el.endTurnOverlay
-                        ) {
-                            cancelEndTurn();
-                        } else if (activeOverlay === el.finalOverlay) {
-                            closeFinalMap();
-                        } else if (activeOverlay === el.rulesOverlay) {
-                            closeModal();
-                        }
-                        return;
-                    }
-                    if (event.key !== "Tab") {
-                        return;
-                    }
-                    var dialog = activeOverlay.querySelector(".modal");
-                    var focusables = Array.from(
-                        activeOverlay.querySelectorAll(
-                            "button:not([disabled])"
-                        )
-                    );
-                    if (focusables.length === 0) {
-                        return;
-                    }
-                    var first = focusables[0];
-                    var last = focusables[focusables.length - 1];
-                    var current = document.activeElement;
-                    if (current === dialog) {
-                        event.preventDefault();
-                        (event.shiftKey ? last : first).focus();
-                        return;
-                    }
-                    var inside = activeOverlay.contains(current);
-                    if (event.shiftKey && (current === first || !inside)) {
-                        event.preventDefault();
-                        last.focus();
-                    } else if (
-                        !event.shiftKey &&
-                        (current === last || !inside)
-                    ) {
-                        event.preventDefault();
-                        first.focus();
-                    }
-                });
-
-                newGame();
+                renderSettings();
+                showScreen("home");
             })();
         </script>
     </body>
